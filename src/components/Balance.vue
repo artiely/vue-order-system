@@ -1,0 +1,364 @@
+<template >
+  <div class="balance" >
+    <mt-header title="我的余额" fixed style="z-index: 9;" >
+      <mt-button icon="back" @click="back" slot="left" >返回</mt-button >
+    </mt-header >
+
+      <scroller
+              style="background:#fafafa;"
+              class="page-content"
+              :on-refresh="onRefresh"
+              ref="myScroller"
+              :on-infinite="onInfinite"
+             >
+        <div class="balanceBox" >
+          <div class="balanceNum" >0.01</div >
+          <p class="balanceTxt" >总金额(元)</p >
+        </div >
+        <div class="col" >
+          <div class="col1" >
+            <div class="balanceTop" >275.69</div >
+            <div class="balanceBtm" >已用金额(元)</div >
+          </div >
+          <div class="col1" >
+            <div class="balanceTop" >275.69</div >
+            <div class="balanceBtm" >剩余金额(元)</div >
+          </div >
+        </div >
+        <div class="mxBox" >
+          <div class="mxTit">
+            <div class="tit" v-for="(item ,index) in mxTit" :class="{active:mxShow[index]}" @click="mxPay(index)" :index="index">{{item}}</div>
+          </div>
+          <div class="mxItem" v-for="(item,index) in mxUnData" v-if="mxShow[0]" :key="item.id" @click="showDetail(item.id)">
+            <div class="line gray" ><i class="iconfont icon-stealth_fill" ></i ></div >
+            <div class="content">
+              <div>{{item.partyAName}}</div>
+              <div class="textover">{{item.invoiceContent}}</div>
+              <div class="invoiceAmount">{{item.invoiceAmount}}({{item.currencyName}})</div>
+            </div>
+          </div>
+          <div class="mxItem" v-for="(item,index) in mxData" v-if="mxShow[1]" :key="item.id"  @click="showDetail(item.receiveId)">
+            <div class="line" ><i class="iconfont icon-stealth_fill" ></i ></div >
+            <div class="content">
+              <div>{{item.partyAName}}</div>
+              <div class="textover">{{item.invoiceContent}}</div>
+              <div class="invoiceAmount">{{item.invoiceAmount}}({{item.currencyName}})</div>
+            </div>
+          </div>
+        </div >
+
+      </scroller >
+    <mt-popup v-model="payDetail" position="top" style="width: 100%;height: 300px;font-size: 14px" >
+      <scroller :on-infinite="onInfiniteByDetail">
+        <div class="col-d" v-for="(item,index) in detail" :key="index">
+          <div class="col1-d">
+            <div>{{item.price}} </div>
+            <div><span>{{item.currencyName}}</span></div>
+          </div>
+          <div class="col4-d">
+            <div class="textover">{{item.companyName}}</div>
+
+            <div> <span v-cut-time="item.detailStartDate"></span>~<span v-cut-time="item.detailFinishDate"></span> <span>({{item.dealType}})</span></div>
+            <div class="textover">备注:{{item.detailName}}</div>
+          </div>
+        </div>
+        <div v-if="detail.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
+
+      </scroller>
+    </mt-popup >
+    <div v-show="isBackShow" class="backTop" @click="backTop"><i class="iconfont icon-huidaodingbu1"></i></div>
+  </div >
+</template >
+<script type="text/ecmascript-6" >
+  import axios from 'axios'
+  export default {
+    name: 'balance',
+    data () {
+      return {
+        mxData: [],
+        mxUnData:[],
+        mxShow:[true,false],
+        mxTit:['未付款','已付款'],
+        page:1,
+        totalPage:1,
+        unPage:1,
+        unTotalPage:1,
+        payDetail:false,
+        detail:[],
+        isBackShow:false,
+        receiveId:'',//展示明细的id
+        detailPage:0//明细分页
+      }
+    },
+    methods: {
+      back() {
+        this.$router.back()
+      },
+      getMxPaid(cb){
+        let _this = this;
+        let url = localPath+'/invoice/queryPaidCharge';
+        axios({
+          type: 'get',
+          url: url,
+          params: {page: _this.page, limit: 10}
+        }).then(function (r) {
+          console.log("付款的",r)
+          _this.totalPage= r.data.totalPage;
+          _this.mxData = _this.mxData.concat( r.data.list);
+          console.log(r)
+          cb()
+        }).catch(function (r) {
+          console.error('明细出错啦！',r)
+        })
+      },
+      getMxUnPaid(cb){
+        let _this = this;
+        let url = localPath+'/invoice/queryUnPaidCharge';
+        axios({
+          type: 'get',
+          url: url,
+          params: {page: _this.unPage, limit: 10}
+        }).then(function (r) {
+          console.log("未付款的",r)
+          _this.unTotalPage= r.data.totalPage;
+          _this.mxUnData = _this.mxUnData.concat(r.data.list);
+          console.log(r)
+          cb()
+        }).catch(function (r) {
+          console.error('明细出错啦！',r)
+        })
+      },
+      mxPay(index){
+        this.mxShow=[false,false];
+      this.mxShow[index]=true
+      },
+      onRefresh(done){
+        this.page=1;
+        this.unPage=1;
+        this.mxData=[];
+        this.mxUnData=[];
+        this.getMxPaid(function(){
+          done(true)
+        });
+        this.getMxUnPaid(function(){
+          done(true)
+        });
+      },
+      onInfinite(done){
+        console.log('到底了');
+        this.page++;
+        this.unPage++;
+        if(this.mxShow[1]){
+          this.getMxPaid(function(){
+            done(true)
+          });
+        }else if(this.mxShow[0]){
+          this.getMxUnPaid(function(){
+            done(true)
+          });
+        }
+
+      },
+      getDetailData(cb){
+        let url=localPath+'/contractservicedetails/getListByReceiveId';
+        let _this=this;
+        axios({
+          url:url,
+          type:'get',
+          params: {page: _this.detailPage, limit: 10,receiveId:_this.receiveId}
+        }).then(function(r){
+          _this.detail= _this.detail.concat(r.data.list);
+          console.log('详情', r.data.list);
+          cb()
+        })
+      },
+      showDetail(receiveId){
+        let _this=this;
+        this.payDetail=true;
+        this.detailPage=1;
+        this.receiveId=receiveId;
+        this.getDetailData(function(){})
+      },
+      backTop(){
+        this.$refs.myScroller.scrollTo(0,0,false)
+      },
+      showBack(){
+        let _this=this
+        setInterval(() => {
+          let {left,top} = _this.$refs.myScroller.getPosition()
+          if(top>400){
+            _this.isBackShow=true
+          }else{
+            _this.isBackShow=false
+          }
+        }, 500)
+      },
+      onInfiniteByDetail(done){
+        this.detailPage++;
+        this.getDetailData(function(){
+          done(true)
+        })
+      }
+
+    },
+    watch:{
+      'receiveId':{
+        handler(val,oval){
+          if(val!=oval){
+            this.detail=[]
+          }
+        }
+      }
+    },
+    created(){
+      this.getMxPaid(function(){});
+      this.getMxUnPaid(function(){})
+    },
+    mounted(){
+//      this.showBack()
+    }
+  }
+</script >
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped >
+
+  .backTop{
+    position: absolute;
+    bottom: 50px;
+    right: 10px;
+    z-index: 99;
+    width: 40px;
+    height: 40px;
+  }
+  .backTop i{
+    font-size: 40px;
+    line-height:1;
+    color: rgba(38,162,255,.3);
+  }
+  .col-d{
+    display: flex;
+    font-size: 14px;
+    padding:10px 0;
+    border-bottom: 1px dashed #eee;
+    /*border-top: 1px dashed #eee;*/
+  }
+  .col1-d{
+    width:55px;
+    border-right:1px solid #eee;
+    color: #26a2ff;
+    line-height:1.5;
+    padding-top: 5px;
+  }
+  .col4-d{
+    padding-left: 10px;
+    text-align: left;
+    flex: 1;
+    font-size: 12px;
+  }
+  .content{
+    padding-top: 15px;
+  }
+  .mxTit{
+    display: flex;
+  }
+  .invoiceAmount{
+    color: #26a2ff;
+  }
+  .mxItem {
+    height: 100px;
+    padding-left: 20px;
+    position: relative;
+    width: 100%;
+    background: #fff;
+    border-bottom: dashed 1px #eee;
+    overflow: hidden;
+    text-align: left;
+  }
+
+  .line {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    height: 100%;
+    width: 0;
+    border-left: 1px solid #26a2ff;
+  }
+  .line.gray {
+    border-left: 1px solid #ddd;
+  }
+  .line .iconfont {
+    position: absolute;
+    top: 0;
+    left: -8px;
+    color: #26a2ff;
+  }
+  .line.gray .iconfont {
+    position: absolute;
+    top: 0;
+    left: -8px;
+    color: #ddd;
+  }
+  .tit {
+    width: 25%;
+    padding: 10px;
+    text-align: left;
+    cursor: pointer;
+  }
+  .tit.active{
+    color: #26a2ff;
+    background: rgba(38,162,255,.1);
+
+  }
+  .mxBox {
+    width: 100%;
+    background: #fff;
+  }
+
+  .page-content {
+    padding-top: 40px;
+  }
+
+  .col {
+    display: flex;
+    background: #fff;
+    margin-bottom: 10px;
+  }
+
+  .col1 {
+    flex: 1;
+  }
+
+  .balanceTop {
+    padding-top: 10px;
+    color: #26a2ff;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .balanceBtm {
+    padding-bottom: 10px;
+    line-height: 1;
+    color: #333;
+    font-size: 14px;
+  }
+
+  .balanceTxt {
+    color: #fff;
+    margin-top: 0;
+  }
+
+  .balanceBox {
+    height: 100px;
+    width: 100%;
+    background: #26a2ff;
+  }
+
+  .balanceNum {
+    padding-top: 10px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+  }
+</style >
