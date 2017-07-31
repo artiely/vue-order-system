@@ -49,6 +49,7 @@ export default {
 <style scoped>
   .page-content{
     padding-top: 40px;
+    box-sizing:border-box
   }
   .r-t{
     text-align: left;
