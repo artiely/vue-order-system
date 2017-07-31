@@ -1,6 +1,8 @@
-# fwwap
 
-> A Vue.js project
+
+# vue-order-system
+
+> 基于vue的移动端订单系统 UI基于mint-ui
 
 ## Build Setup
 
