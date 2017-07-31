@@ -16,7 +16,7 @@
     </div>
     <mt-actionsheet
             :actions="actions"
-            :closeOnClickModal='false'
+            :closeOnClickModal='true'
             cancelText="取消(cancel)"
             v-model="sheetVisible">
     </mt-actionsheet>
@@ -46,7 +46,7 @@ export default {
   },
   methods:{
     showSheet(){
-      this.sheetVisible=!this.sheetVisible
+      this.sheetVisible=true
     },
     ENFN(){
       Toast('敬请期待完善')

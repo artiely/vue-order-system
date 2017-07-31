@@ -32,9 +32,10 @@
     </scroller >
   </div >
 </template >
-
-<script type="text/ecmascript-6" >
+<script >
   import { mapState } from 'vuex';
+
+import axios from 'axios'
   export default {
     name: 'login',
     data () {
@@ -62,43 +63,34 @@
      },*/
     methods: {
       login(){
-        let _this = this;
-        var data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha;
-        $.ajax({
-          type: "POST",
-          url: localPath + "/sys/login",
-          data: data,
-          dataType: "json",
-          success: function (result) {
-            if (result.code == 0) {//登录成功
-              console.log('登录成功')
-              _this.error = false;
-              _this.token = 'true';
-              $.getJSON(
-                      localPath + '/sys/user/info',
-                      function (r) {
-                        if (r.code == 0) {
-                          let personId = r.user.personId
-                          _this.$store.dispatch('login', personId);
-                          let redirect = decodeURIComponent(_this.$route.query.redirect || '/');
-                          _this.$router.push({
+       
+     let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha+"&loginNum=1";
+        
+         this.$api.login(data).then((res)=>{
+          if(res.code==ERR_OK){
+              this.error=false,
+              this.$api.get_user_id().then((r)=>{
+                  if(r.code==ERR_OK){
+                    let userId = r.user.id
+                          this.$store.dispatch('login', userId);
+                          let redirect = decodeURIComponent(this.$route.query.redirect || '/');
+                          this.$router.push({
                             path: redirect
                           });
-                        } else {
-                          console.error('获取userinfo失败')
-                          _this.error = true;
-                          _this.errorMsg = '连接失败';
-                        }
-                      }
-              );
-
-            } else {
-              _this.error = true;
-              _this.errorMsg = result.msg;
-//                _this.refreshCode();
-            }
+                  }else{
+                     this.error=true,
+                      this.errorMsg='连接失败'
+                  }
+              }).catch(err=>{
+                  console.error(err)
+              })
+          }else{
+            this.error=true,
+            this.errorMsg=res.msg
           }
-        });
+        }).catch(err=>{
+          console.error(err)
+        })  
       },
       back(){
         this.$router.back()

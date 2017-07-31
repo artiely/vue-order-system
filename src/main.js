@@ -8,7 +8,7 @@ import MintUI from 'mint-ui'
 // Vue.component('date-picker', DatePicker)
 
 import 'mint-ui/lib/style.css'
-import  '../statics/mobile/font/iconfont.css'
+import '../statics/mobile/font/iconfont.css'
 import i18n from './i18n/index'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -28,33 +28,35 @@ Vue.use(MintUI)
 import StarRating from 'vue-star-rating'
 Vue.component('star-rating', StarRating);
 
-import {cutTime} from './directive/index'
+import { cutTime } from './directive/index'
 
 Vue.config.productionTip = false;
 
 import store from './store/index'
 
-
+import api from './api'
+Vue.use(api)
+import './api/config'
+console.log("ERROR", ERR_OK)
 import { Indicator } from 'mint-ui';
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  i18n,
-  template: '<App/>',
-  components: {App}
+    el: '#app',
+    router,
+    store,
+    i18n,
+    template: '<App/>',
+    components: { App }
 });
 
-setInterval(function () {
-  var x = navigator.onLine;
-  if (!x) {
-    Indicator.open({
-      text: '网络断开连接...',
-      spinnerType: 'fading-circle'
-    });
-  } else {
-    Indicator.close()
-  }
+setInterval(function() {
+    var x = navigator.onLine;
+    if (!x) {
+        Indicator.open({
+            text: '网络断开连接...',
+            spinnerType: 'fading-circle'
+        });
+    } else {
+        Indicator.close()
+    }
 }, 1500);
-
