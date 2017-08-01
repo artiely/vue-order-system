@@ -22,7 +22,7 @@
         </mt-popup >
         <mt-popup v-model="streetVisible" popup-="popup-fade" position="bottom" style="width: 100%" >
           <div class="page-picker-wrapper" >
-              <mt-picker :slots="streetSlots" ref="picker" class="picker" @change="onStreetChange" :visible-item-count="5" ></mt-picker >
+              <mt-picker :slots="streetSlots" ref="picker" class="picker" @change="onStreetChange"  :visible-item-count="5" ></mt-picker >
           </div >
         </mt-popup >
         <div >
@@ -39,7 +39,7 @@
     </div >
   </div >
 </template >
-<script type="text/ecmascript-6" >
+<script >
   import axios from 'axios'
   import { Toast } from 'mint-ui';
   import s from '../../statics/mobile/json/address4.json'
@@ -101,16 +101,32 @@
         this.$router.back()
       },
       onAddressChange(picker, values) {
+
+/**
+ * 获取当前选择的市的索引 已知市的值 values[1]
+
+ */
+
+
+
+
         let sheng = Object.keys(s);
         let shi = Object.keys(s[values[0]]);
-        let xian = s[values[0]][shi[0]];
+        let index=shi.indexOf(values[1])
+        let xian = s[values[0]][shi[index]];
         this.xianObj = xian;
+
+        console.warn()
+          console.log(picker,values,)
+          console.info("sheng"+sheng,"shi"+shi,"xian"+JSON.stringify(xian) )
         picker.setSlotValues(1, shi);
         this.addressProvince = values[0];
         this.addressCity = values[1];
         this.addressXian = values[2];
         picker.setSlotValues(2, Object.keys(xian));
       },
+
+
       onStreetChange(picker, values){
         this.addressStreet = values[0]
       },
@@ -123,18 +139,23 @@
       showAddM(){
         this.addVisible = !this.addVisible
       },
+      /**
+       * 获取服务点数据
+       */
       getServiceAddress () {
-        var _this = this;
-        $.ajax({
-          url:localPath+"/company/getServiceAddress",
-          dataType: 'json',
-          success: function (r) {
-            if (r.code == 0) {
-              _this.serviceAddress = r.serviceAddress
-            }
+        this.$api.get_service_address().then((res)=>{
+          if(res.code==ERR_OK){
+              this.serviceAddress = res.serviceAddress
+          }else{
+              Toast(res.msg)
           }
+        }).catch(err=>{
+          console.error(err);
         })
       },
+      /**
+       * 保存服务点地址
+       */
       saveAddress(){
         let _this=this;
         let _city='上海市'
@@ -152,40 +173,37 @@
           operationType: 1,
           shortName: _this.companyName //公司名称 暂时无
         };
-        $.ajax({
-          url: localPath+'/company/saveByUser',
-          type: "POST",
-          dataType:'json',
-          data: JSON.stringify(data),
-          contentType: 'application/json',
-          success: function (r) {
-            if (r.code == 0) {
-              console.log(r)
-              Toast('保存成功');
-              _this.addVisible = false;
-              _this.getServiceAddress()
-            }
-          }
 
+        this.$api.save_service_address(data).then(res=>{
+          if(res.code==ERR_OK){
+            Toast('保存成功');
+            this.addVisible = false;
+            this.getServiceAddress()
+          }else{
+            Toast(res.msg);
+          }
+        }).catch(err=>{
+          console.error(err);
         })
+
       },
+      /**
+       * 删除服务点地址
+       */
       deleteAddress(id){
-        var  data={id:id};
-        var _this=this;
+        let  data={id:id};
         MessageBox.confirm('确定删除？').then(actions=>{
-          $.ajax({
-            url: localPath+'/company/deleteByUser',
-            type: "POST",
-            dataType:'json',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            success: function (r) {
-              if (r.code == 0) {
-                Toast('删除成功');
-                _this.getServiceAddress()
-              }
+          this.$api.delete_service_address(data).then(res=>{
+            if(res.code==ERR_OK){
+              Toast('删除成功');
+              this.getServiceAddress()
+            }else{
+              Toast(res.msg);
             }
+          }).catch(err=>{
+            console.error(err)
           })
+
         })
       },
     },
@@ -203,9 +221,9 @@
     },
     mounted(){
       this.$nextTick(() => {
-        setInterval(() => {
+        setTimeout(() => {
           this.addressSlots[0].defaultIndex = 0;
-        }, 1000);
+        }, 200);
       });
 
 
