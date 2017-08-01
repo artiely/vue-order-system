@@ -101,25 +101,11 @@
         this.$router.back()
       },
       onAddressChange(picker, values) {
-
-/**
-
- * 获取当前选择的市的索引 已知市的值 values[1]
-
- */
-
-
-
-
         let sheng = Object.keys(s);
         let shi = Object.keys(s[values[0]]);
         let index=shi.indexOf(values[1])
         let xian = s[values[0]][shi[index]];
         this.xianObj = xian;
-
-        console.warn()
-          console.log(picker,values,)
-          console.info("sheng"+sheng,"shi"+shi,"xian"+JSON.stringify(xian) )
         picker.setSlotValues(1, shi);
         this.addressProvince = values[0];
         this.addressCity = values[1];
