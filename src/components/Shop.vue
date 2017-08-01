@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <mt-header fixed title="预约服务"></mt-header>
-    <scroller class="page-content">
+    <div class="page-content">
       <div class="my-plan">
         <!--<i class="iconfont icon-biezhen"></i>-->
         <div class="entrance assertive"><h4><i class="icon ion-ios-flame"></i>及时雨（Oncall/包月）</h4>
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div style="height: 80px"></div>
-    </scroller>
+    </div>
   </div>
 </template>
 
@@ -75,7 +75,7 @@ export default {
     font-size: 14px;
     margin: 20px auto;
     padding:10px;
-    width: 98%;
+    width: 90%;
     box-shadow: 0px 5px 30px rgba(0,0,0,.2);
   }
   .my-btn{

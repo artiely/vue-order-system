@@ -1,10 +1,10 @@
 <template>
   <div class="home">
-    <!--<transition name="slide-fade" mode="out-in"  appear>-->
+ <transition :name="transitionName"  appear>
     <keep-alive>
-    <router-view ></router-view>
+    <router-view class="Router"></router-view>
       </keep-alive>
-    <!--</transition>-->
+    </transition>
     <mt-tabbar v-model="selected" fixed>
 
       <mt-tab-item id="home">
@@ -35,8 +35,15 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       selected:'home',
-      transitionName: 'slide-left'
+      transitionName: 'slide-right'
     }
+  },
+  beforeRouteUpdate (to, from, next) {
+    const toDepth = to.path.split('/').length
+    const fromDepth = from.path.split('/').length
+    console.log(toDepth,fromDepth)
+    this.transitionName = toDepth > fromDepth ? 'slide-right' : 'slide-left'
+    next()
   },
   watch: {
     selected: function (val, oldVal) {
@@ -103,7 +110,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.Router{
+   position: absolute;
+     width: 100%;
+     transition: all .8s ease;
+     top: 0px;
+     background:#fff
+}
   .home{
     margin: 0;
   }

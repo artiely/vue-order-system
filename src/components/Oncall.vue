@@ -10,8 +10,6 @@
       <div class="companyName" @click.native="toggleopen" >
         <mt-field label="" :state="addressObj.address?'success':'error'" v-model="addressObj.address" readonly @click.native="toggleopen" placeholder="请选择服务点" ></mt-field >
       </div >
-
-
       <!--服务点模态s-->
       <mt-popup v-model="popupVisibleCompany" position="right" style="width: 280px;height: 100%;font-size: 14px" >
         <scroller >

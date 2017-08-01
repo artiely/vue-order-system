@@ -1,8 +1,8 @@
 <template >
   <div id="app" >
-    <!--<transition name="slide-fade" mode="out-in"  appear>-->
-    <router-view  ></router-view >
-      <!--</transition>-->
+    <transition :name="transitionName"   appear>
+    <router-view  class="RouterView"></router-view >
+      </transition>
   </div >
 </template >
 
@@ -13,12 +13,20 @@
     name: 'app',
     data(){
       return {
+         transitionName: 'slide-left'
       }
 
     },
     watch: {
 
     },
+     beforeRouteUpdate (to, from, next) {
+    const toDepth = to.path.split('/').length
+    const fromDepth = from.path.split('/').length
+    console.log(toDepth,fromDepth)
+    this.transitionName = toDepth > fromDepth ? 'slide-right' : 'slide-left'
+    next()
+  },
     created(){
     },
     mounted(){
@@ -27,20 +35,31 @@
   }
 </script >
 
-<style >
+<style type="text/css" >
+.RouterView {
+     position: absolute;
+     width: 100%;
+     transition: all .8s ease;
+     top: 0;
+}
   .cell-swipe .mint-cell-wrapper{
     background: none !important;
   }
-  .slide-fade-enter-active {
-    transition: all .1s ease;
-  }
-  .slide-fade-leave-active {
-    transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  }
-  .slide-fade-enter, .slide-fade-leave-active {
-    transform: translateX(-100%);
-    /*opacity: 0;*/
-  }
+  
+  .slide-left-enter,
+ .slide-right-leave-active {
+     opacity: 0;
+    -webkit-transform: translate(100%, 0);
+    transform: translate(100%, 0);
+    
+}
+
+.slide-left-leave-active,
+.slide-right-enter {
+     opacity: 0;
+    -webkit-transform: translate(-100%, 0);
+    transform: translate(-100% 0);
+}
   .word-wrap
   {
     word-wrap:break-word;

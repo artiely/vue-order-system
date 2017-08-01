@@ -21,8 +21,8 @@
       <div>
         <mt-cell title="日期范围" ></mt-cell >
         <div class="dateWrap">
-          <date-picker class="dateItem" hintText="点击选择日期" :minDate="minDate" v-model="startDate" :underlineShow="false"></date-picker>
-          <date-picker class="dateItem" hintText="点击选择日期" :shouldDisableDate="shouldDisableDate" :minDate="startDate" v-model="endDate" :underlineShow="false"></date-picker>
+        <!--   <date-picker class="dateItem" hintText="点击选择日期" :minDate="minDate" v-model="startDate" :underlineShow="false"></date-picker>
+          <date-picker class="dateItem" hintText="点击选择日期" :shouldDisableDate="shouldDisableDate" :minDate="startDate" v-model="endDate" :underlineShow="false"></date-picker> -->
         </div>
       </div>
       <!--日期e-->
