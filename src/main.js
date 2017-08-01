@@ -9,6 +9,7 @@ import MintUI from 'mint-ui'
 
 import 'mint-ui/lib/style.css'
 import '../statics/mobile/font/iconfont.css'
+import './assets/style/main.less'
 import i18n from './i18n/index'
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'

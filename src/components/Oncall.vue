@@ -1,9 +1,7 @@
 <template >
   <div class="oncall" >
     <mt-header title="及时雨服务" fixed >
-      <router-link to="/shop" slot="left" >
-        <mt-button icon="back" >返回</mt-button >
-      </router-link >
+        <mt-button icon="back" @click.native='back()'  slot="left">返回</mt-button >
     </mt-header >
     <div class="page-content" >
       <mt-cell title="服务点" ></mt-cell >
@@ -270,6 +268,9 @@
       this.getCompanyList()
     },
     methods: {
+      back(){
+        this.$router.back()
+      },
       getCompanyList(){
         var _this = this;
         $.ajax({
