@@ -3,7 +3,6 @@
     <transition :name="transitionName"   appear>
       <router-view  class="RouterView"></router-view >
     </transition>
-
   </div >
 </template >
 <script >
