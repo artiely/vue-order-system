@@ -140,7 +140,8 @@ import axios from 'axios'
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    box-sizing:border-box
   }
 
   .container {

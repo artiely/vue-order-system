@@ -462,6 +462,8 @@
 
   .page-content {
     padding-top: 88px;
+    box-sizing:border-box;
+    height:100vh
   }
 
   .swiper-slide {
