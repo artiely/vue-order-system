@@ -6,6 +6,15 @@ import Index from '@/components/Index'
 import Shop from '@/components/Shop'
 import store from '.././store/index'
 Vue.use(Router);
+
+Router.prototype.goBack = function () {
+  this.isBack = true;
+  window.history.go(-1)
+}
+Router.prototype.back = function () {
+  this.isBack = true;
+  window.history.go(-1)
+}
 // 页面刷新时，重新赋值token
 if (window.sessionStorage.getItem('token')) {
     store.commit('LOGIN', Number(window.sessionStorage.getItem('token')))

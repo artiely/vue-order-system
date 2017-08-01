@@ -63,9 +63,9 @@ import axios from 'axios'
      },*/
     methods: {
       login(){
-       
+
      let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha+"&loginNum=1";
-        
+
          this.$api.login(data).then((res)=>{
           if(res.code==ERR_OK){
               this.error=false,
@@ -90,7 +90,7 @@ import axios from 'axios'
           }
         }).catch(err=>{
           console.error(err)
-        })  
+        })
       },
       back(){
         this.$router.back()
@@ -140,7 +140,7 @@ import axios from 'axios'
     left: 0;
     top: 0;
     width: 100%;
-    height: 100vh;
+    height: 100vh !important;
     box-sizing:border-box
   }
 

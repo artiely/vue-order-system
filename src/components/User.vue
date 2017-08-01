@@ -1,6 +1,6 @@
 <template >
   <div class="login" >
-    <scroller style="background:#fafafa;height:100vh" >
+    <scroller style="background:#fafafa;height:100vh!important" >
       <div class="userbox" >
         <div class="admin" >
           <div class="nikicon" @click="()=>settingVisible=true" ><img src="../.././statics/mobile/img/logo.png" alt="" >

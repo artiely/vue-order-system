@@ -1,9 +1,7 @@
 <template>
   <div class="ma">
     <mt-header title="候鸟服务" fixed>
-      <router-link to="/shop" slot="left">
-        <mt-button icon="back">返回</mt-button>
-      </router-link>
+        <mt-button icon="back" @click.native="back()" slot="left">返回</mt-button>
     </mt-header>
     <div class="page-content">
       <mt-cell title="服务点" ></mt-cell >
@@ -142,6 +140,9 @@ export default {
     this.getServiceAddress()
   },
   methods:{
+    back(){
+      this.$router.back()
+    },
     getServiceAddress () {
       var _this=this;
       $.ajax({

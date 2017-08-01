@@ -16,7 +16,7 @@
     </scroller>
   </div >
 </template >
-<script type="text/ecmascript-6" >
+<script  >
   import axios from 'axios'
   import $ from 'n-zepto'
   import { mapState } from 'vuex';
@@ -31,7 +31,7 @@
     }),
     methods: {
       back() {
-        this.$router.go(-1)
+        this.$router.goBack()
       },
       showOrderDetail(parames){
         this.$store.dispatch('get_order_number',{id:parames.id,oid:parames.oid})
