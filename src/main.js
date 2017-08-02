@@ -29,7 +29,9 @@ Vue.use(MintUI)
 import StarRating from 'vue-star-rating'
 Vue.component('star-rating', StarRating);
 
-import { cutTime } from './directive/index'
+import {
+  cutTime
+} from './directive/index'
 
 Vue.config.productionTip = false;
 
@@ -39,25 +41,29 @@ import api from './api'
 Vue.use(api)
 import './api/config'
 console.log("ERROR", ERR_OK)
-import { Indicator } from 'mint-ui';
+import {
+  Indicator
+} from 'mint-ui';
 /* eslint-disable no-new */
 new Vue({
-    el: '#app',
-    router,
-    store,
-    i18n,
-    template: '<App/>',
-    components: { App }
+  el: '#app',
+  router,
+  store,
+  i18n,
+  template: '<App/>',
+  components: {
+    App
+  }
 });
 
 setInterval(function() {
-    var x = navigator.onLine;
-    if (!x) {
-        Indicator.open({
-            text: '网络断开连接...',
-            spinnerType: 'fading-circle'
-        });
-    } else {
-        Indicator.close()
-    }
+  var x = navigator.onLine;
+  if (!x) {
+    Indicator.open({
+      text: '网络断开连接...',
+      spinnerType: 'fading-circle'
+    });
+  } else {
+    Indicator.close()
+  }
 }, 1500);

@@ -74,7 +74,6 @@
     </mt-popup >
   </div >
 </template >
-
 <script >
 
   import OrderItem from './items/Orderitem.vue'
@@ -151,6 +150,28 @@
         }
         var url_query =
                 '?&limit=8&page=' + _this.query.page + '&sidx=&order=asc&orderStateId=' + _this.query.orderStateId + '&contractId=1950&startDate='+_this.query.startDate+' 00:00:00&endDate='+_this.query.endDate+' 23:59:59&companyId='+_this.query.companyId+'&on='+_this.query.on+'&yh='+_this.query.yh+'&sfzc='+_this.query.sfzc+'&sfxc='+this.query.sfxc+'&sfbx='+this.query.sfbx+'';
+
+
+                let params={
+                  limit:this.query.limit,
+                  page:this.query.page,
+                  order:asc,
+                  orderStateId:this.query.orderStateId,
+                  startDate:this.query.startDate,
+                  endDate:this.query.endDate,
+                  companyId:this.query.companyId,
+                  on:this.query.on,
+                  yh:this.query.yh,
+                  sfzc:this.query.sfzc,
+                  sfxc:this.query.sfxc,
+                  sfbx:this.query.sfbx
+                }
+
+                this.$api.get_order_list(params).then(res=>{
+                  if(res.code==ERR_OK){
+                    console.info(res)
+                  }
+                })
         axios({
           method: 'get',
             url: localPath+'/orderinfo/listVo' + url_query

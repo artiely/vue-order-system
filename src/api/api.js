@@ -60,8 +60,33 @@ const get_user_id = params => {
      })
    }
 
-
-
+/**
+ * [get_order_list 获取订单列表]
+ *  @params:
+ *   {
+ *   limit:'条数',
+ *   page:'页码',
+ *   order:'asc排序',
+ *   orderStateId:'订单状态id',
+ *   contractId:'未知',
+ *   startDate:'开始日期',
+ *   endDate:'结束日期',
+ *   companyId:'公司id',
+ *   on:'订单编号',
+ *   yh:'用户',
+ *   sfzc:'是否驻场 false',
+ *   sfxc:'是否现场 false',
+ *   sfbx:'是否报修 false',
+ *
+ *   }
+ */
+const get_order_list=params=>{
+  return fetch({
+    url:'/orderinfo/listVo',
+    method:'get',
+    params:params
+  })
+}
 
 
 const apiObj = {
