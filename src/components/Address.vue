@@ -3,40 +3,47 @@
     <mt-header title="服务点" fixed style="z-index: 9;" >
       <mt-button icon="back" @click="back" slot="left" >返回</mt-button >
     </mt-header >
-    <div class="page-content" >
-      <mt-cell-swipe v-for="(item,index) in serviceAddress" :key="index" :id="item.companyId" class="cell-swipe" :title="item.allAddress" :right="[
+    <scroller class="page-content" >
+      <mt-cell-swipe v-for="(item,index) in serviceAddress" :key="index" :id="item.companyId" class="cell-swipe"  :right="[
         {
           content: '删除',
           style: {background: 'red', color: '#fff'},
           handler: () => deleteAddress(item.companyId)
         }
-      ]" ></mt-cell-swipe >
-      <mt-popup v-model="addVisible" position="right" :closeOnClickModal="false" :modal="false" style="width: 100%;height: 100%" >
-        <mt-header title="新增服务点" style="z-index: 9;">
-          <mt-button icon="back" @click="showAddM" slot="left" >返回</mt-button >
-        </mt-header >
-        <mt-popup v-model="addressVisible" position="bottom" style="width: 100%" >
-          <div class="page-picker-wrapper" >
-            <mt-picker :slots="addressSlots" class="picker" @change="onAddressChange" :visible-item-count="5" ></mt-picker >
-          </div >
-        </mt-popup >
-        <mt-popup v-model="streetVisible" popup-="popup-fade" position="bottom" style="width: 100%" >
-          <div class="page-picker-wrapper" >
-              <mt-picker :slots="streetSlots" ref="picker" class="picker" @change="onStreetChange"  :visible-item-count="5" ></mt-picker >
-          </div >
-        </mt-popup >
-        <div >
-          <mt-field label="" :state="companyName.length>0?'success':'error'" v-model="companyName"   placeholder="公司名" ></mt-field >
-          <div @click="showAddress" class="cell-ad" >上门服务地址:{{ addressProvince }} {{ addressCity }} {{addressXian}}</div >
-        </div >
-        <div @click="showStreet" class="cell-ad" >选择街道：{{addressStreet}}</div >
+      ]" >
+      <div class="addressBox" slot="title">
+        <h4>公司名称</h4>
+        <p>{{item.allAddress}}</p>
+      </div>
 
-        <textarea placeholder="详细地址" id="" cols="4" rows="3" v-model="desMore" ></textarea >
-        <mt-button size="large" type="danger" style="width:95%;margin: 20px auto;" :disabled="desMore.length<3" @click="saveAddress" >保存</mt-button >
+    </mt-cell-swipe >
+
+      <div style="height: 90px;" ></div >
+    </scroller >
+    <mt-popup v-model="addVisible" position="right" :closeOnClickModal="false" :modal="false" style="width: 100%;height: 100%" >
+      <mt-header title="新增服务点" style="z-index: 9;">
+        <mt-button icon="back" @click="showAddM" slot="left" >返回</mt-button >
+      </mt-header >
+      <mt-popup v-model="addressVisible"  position="bottom" style="width: 100%" >
+        <div class="page-picker-wrapper" >
+          <mt-picker :slots="addressSlots" v-if="addressSlots" class="picker" @change="onAddressChange" :visible-item-count="5" ></mt-picker >
+        </div >
       </mt-popup >
-      <div style="height: 80px;" ></div >
-      <div class="addAddressBtn" @click="showAddM" >新增服务点地址</div >
-    </div >
+      <mt-popup v-model="streetVisible" popup="popup-fade" position="bottom" style="width: 100%" >
+        <div class="page-picker-wrapper" >
+            <mt-picker :slots="streetSlots" v-if="streetSlots" ref="picker" class="picker" @change="onStreetChange"  :visible-item-count="5" ></mt-picker >
+        </div >
+      </mt-popup >
+      <div >
+        <mt-field label="" :state="companyName.length>0?'success':'error'" v-model="companyName"   placeholder="公司名" ></mt-field >
+        <div @click="showAddress" class="cell-ad" >上门服务地址:{{ addressProvince }} {{ addressCity }} {{addressXian}}</div >
+      </div >
+      <div @click="showStreet" class="cell-ad" v-if="noStreet" >选择街道：{{addressStreet}}</div >
+
+      <textarea placeholder="详细地址" id="" cols="4" rows="3" v-model="desMore" ></textarea >
+      <mt-button size="large" type="danger" style="width:95%;margin: 20px auto;" :disabled="desMore.length<3" @click="saveAddress" >保存</mt-button >
+    </mt-popup >
+    <div class="addAddressBtn" @click="showAddM" >新增服务点地址</div >
   </div >
 </template >
 <script >
@@ -93,26 +100,37 @@
         addVisible: false,
         addressVisible: false,
         streetVisible: false,
-        serviceAddress: []
+        serviceAddress: [],
+        noStreet:true
       }
     },
     methods: {
       back() {
         this.$router.back()
       },
+      /**
+       * [onAddressChange 添加服务地址]
+       * @param  {[Object]} picker [picker实例对象]
+       * @param  {[Array]} values [当前选择的值]
+       */
       onAddressChange(picker, values) {
-        let sheng = Object.keys(s);
-        let shi = Object.keys(s[values[0]]);
-        let index=shi.indexOf(values[1])
-        let xian = s[values[0]][shi[index]];
-        this.xianObj = xian;
-        picker.setSlotValues(1, shi);
-        this.addressProvince = values[0];
-        this.addressCity = values[1];
-        this.addressXian = values[2];
-        picker.setSlotValues(2, Object.keys(xian));
+          let sheng = Object.keys(s);
+          let shi = Object.keys(s[values[0]]);
+          let index=shi.indexOf(values[1])
+          let xian = s[values[0]][shi[index]];
+          this.xianObj = xian;
+          picker.setSlotValues(1, shi);
+          this.addressProvince = values[0];
+          this.addressCity = values[1];
+          this.addressXian = values[2];
+          if(!values[2]){
+            this.noStreet=false
+          }else{
+            this.noStreet=true
+          }
+          picker.setSlotValues(2, Object.keys(xian));
+          console.log(values)
       },
-
 
       onStreetChange(picker, values){
         this.addressStreet = values[0]
@@ -124,7 +142,8 @@
         this.streetVisible = true
       },
       showAddM(){
-        this.addVisible = !this.addVisible
+        this.addVisible = !this.addVisible;
+          this.addressSlots[0].defaultIndex = 0;
       },
       /**
        * 获取服务点数据
@@ -152,11 +171,11 @@
           _city=this.addressCity
         }
         let data = {
-          address: this.addressProvince+this.addressCity+this.addressXian+this.addressStreet+this.desMore,
+          address: this.addressProvince+this.addressCity+(this.addressXian?this.addressXian:'')+(this.addressStreet ? this.addressStreet:'') +(this.desMore?this.desMore:''),
           cityName: _city,
           companyname: _this.companyName,
           id: "151",//这个id pc上似乎是固定的
-          newValue:this.addressProvince+this.addressCity+this.addressXian+this.addressStreet+this.desMore,
+          newValue:this.addressProvince+this.addressCity+(this.addressXian?this.addressXian:'')+(this.addressStreet ? this.addressStreet:'')+(this.desMore?this.desMore:''),
           operationType: 1,
           shortName: _this.companyName //公司名称 暂时无
         };
@@ -167,7 +186,8 @@
             this.addVisible = false;
             this.getServiceAddress()
           }else{
-            Toast(res.msg);
+            alert(res.msg)
+            // Toast(res.msg);//Toast的层级不够
           }
         }).catch(err=>{
           console.error(err);
@@ -198,34 +218,36 @@
       'addressXian': {
         handler(val, oval){
           let street = this.xianObj[this.addressXian]
-          this.streetSlots[0].values = street
+          this.streetSlots[0].values = street;
+          if(street.length==0){
+            this.noStreet=false
+          }else{
+            this.noStreet=true
+          }
         }
       }
     },
     created(){
       this.getServiceAddress()
-
     },
     mounted(){
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.addressSlots[0].defaultIndex = 0;
-        }, 200);
-      });
-
-
-
     }
   }
 </script >
 
 <style scoped >
+.page-content{
+
+}
   .cell-swipe {
-    border-bottom: 2px solid #26a2ff;
     background: #fff;
-    padding-bottom: 8px;
     margin-top: 10px;
 
+
+  }
+  .addressBox{
+    width:100%;
+    flex:1
   }
 
   .mint-cell-wrapper {
@@ -259,8 +281,10 @@
     text-align: left;
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background: #f8f8f8;
+    padding-top:40px;
+    box-sizing:border-box;
   }
 
   .cell-ad {
@@ -275,9 +299,6 @@
     margin-top: 10px;
   }
 
-  .address {
-    padding-top: 40px;
-  }
 
   .page-picker-wrapper {
     margin-top: 40px;
