@@ -8,7 +8,8 @@ var config = {
         index: path.resolve(__dirname, '../dist/mobile.html'),
         assetsRoot: path.resolve(__dirname, '../dist'),
         assetsSubDirectory: 'statics/mobile',
-        assetsPublicPath: '/fwone-central/',
+        assetsPublicPath: '/fwone-central/',//测试
+        // assetsPublicPath: '/PT/',//线上
         productionSourceMap: true,
         // Gzip off by default as many popular static hosts such as
         // Surge or Netlify already gzip all static assets for you.
