@@ -41,6 +41,7 @@ import api from './api'
 Vue.use(api)
 import './api/config'
 console.log("ERROR", ERR_OK)
+
 import {
   Indicator
 } from 'mint-ui';
@@ -56,7 +57,7 @@ new Vue({
   }
 });
 
-setInterval(function() {
+setInterval(function () {
   var x = navigator.onLine;
   if (!x) {
     Indicator.open({

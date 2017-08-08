@@ -134,7 +134,7 @@
       </div >
       <div class="content" >
         <div class="content-header" >
-          <div > 工单编号：<span id="oid" >{{orderNum}}</span > <span id="oidbtn" >复制</span ></div >
+          <div > 工单编号：<span id="oid" >{{orderNum}}</span > </div >
         </div >
       </div >
       <div style="height: 80px"></div>
@@ -182,9 +182,6 @@
             </td>
           </tr>
         </table>
-
-
-
       </mt-popup>
   </div >
   </div>
@@ -201,21 +198,6 @@
     props: {item: {}},
     components: {
       vueSlider
-    },
-    beforeRouteEnter (to, from, next) {
-      // 在当前路由改变，但是该组件被复用时调用
-      // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
-      // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
-      // 可以访问组件实例 `this`
-      console.log(to, from, next)
-      console.log("进入详情前")
-      next()
-    },
-    beforeRouteLeave (to, from, next) {
-      // 导航离开该组件的对应路由时调用
-      // 可以访问组件实例 `this`
-      console.log("离开详情前")
-      next()
     },
     data () {
       return {
@@ -245,23 +227,6 @@
       back() {
         this.$router.back();
       },
-      copyText(){
-        // copy oid
-        function Copy(str) {
-          var save = function (e) {
-            e.clipboardData.setData('text/plain', str);
-            e.preventDefault();
-          }
-          document.addEventListener('copy', save);
-          document.execCommand('copy');
-          document.removeEventListener('copy', save);
-          Toast('工单号复制成功！');
-        }
-
-        $('#oidbtn').on('click', function () {
-          Copy($('#oid').text());
-        });
-      },
       getData(){
 
       },
@@ -271,7 +236,7 @@
     },
 
     mounted(){
-      this.copyText();
+
     },
     created() {
       //页面刷新重新赋值
@@ -281,6 +246,9 @@
   }
 </script >
 <style scoped >
+.orderdetail{
+  font-size:12px!important
+}
   .rating{
     float:left
   }

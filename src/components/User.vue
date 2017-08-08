@@ -1,60 +1,63 @@
-<template >
-  <div class="login" >
-    <scroller style="background:#fafafa;height:100vh!important" >
-      <div class="userbox" >
-        <div class="admin" >
-          <div class="nikicon" @click="()=>settingVisible=true" ><img src="../.././statics/mobile/img/logo.png" alt="" >
-          </div >
-          <div class="useritem" >{{state.person.personName}}</div >
-        </div >
-        <div class="companyname" >{{state.person.shortName}}</div >
-        <div class="msgbox" >
-          <div class="msgs" @click="showNotificationList" >
-            <div class="msgitem" >{{customerNotificationList.length}}</div >
-            <div class="msgitem" >通知</div >
+<template>
+  <div class="login">
+    <scroller style="background:#fafafa;height:100vh!important">
+      <div class="userbox">
+        <div class="admin">
+          <div class="nikicon" @click="()=>settingVisible=true"><img src="../.././statics/mobile/img/logo.png" alt="">
+          </div>
+          <div class="useritem">{{userInfo.personName}}</div>
+        </div>
+        <div class="companyname">{{userInfo.shortName}}</div>
+        <div class="msgbox">
+          <div class="msgs" @click="showNotificationList">
+            <div class="msgitem">{{customerNotificationList.length}}</div>
+            <div class="msgitem">通知</div>
 
-          </div >
-          <div class="msgs" @click="showMessage" >
-            <div class="msgitem" >0</div >
-            <div class="msgitem" >消息</div >
-          </div >
-        </div >
-      </div >
-      <div class="flexbox" >
-        <div class="item" @click="goAddress" >
-          <i class="iconfont icon-coordinates" ></i ><br >
+          </div>
+          <div class="msgs" @click="showMessage">
+            <div class="msgitem">0</div>
+            <div class="msgitem">消息</div>
+          </div>
+        </div>
+      </div>
+      <div class="flexbox">
+        <div class="item" @click="goAddress">
+          <i class="iconfont icon-coordinates"></i><br>
           服务点
-        </div >
-        <div class="item" @click="goBalance" >
-          <i class="iconfont icon-coupons" ></i ><br >
+        </div>
+        <div class="item" @click="goBalance">
+          <i class="iconfont icon-coupons"></i><br>
           余额
-        </div >
-        <div class="item" @click="goComplain" >
-          <i class="iconfont icon-shielding" ></i ><br >
+        </div>
+        <div class="item" @click="goComplain">
+          <i class="iconfont icon-shielding"></i><br>
           投诉
-        </div >
-        <div class="item" @click="goUrge" >
-          <i class="iconfont icon-prompt" ></i ><br >
+        </div>
+        <div class="item" @click="goUrge">
+          <i class="iconfont icon-prompt"></i><br>
           催单
-        </div >
+        </div>
 
-      </div >
-    </scroller >
-    <mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left" >
-      <mt-cell title="个人信息" is-link @click.native="showUserInfo" ></mt-cell >
-      <mt-button type="danger" @click="loginOut" size="large" style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;" >退出登录</mt-button >
-    </mt-popup >
-    <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left" >
-      <scroller >
-        <mt-cell v-for="(item,index) in customerNotificationList" :key="index" :title="item.content" is-link @click.native="jumpToInfo(item)" ></mt-cell >
-      </scroller >
-    </mt-popup >
-  </div >
-</template >
+      </div>
+    </scroller>
+    <mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">
+      <mt-cell title="个人信息" is-link @click.native="showUserInfo"></mt-cell>
+      <mt-button type="danger" @click="loginOut" size="large"
+                 style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">退出登录
+      </mt-button>
+    </mt-popup>
+    <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left">
+      <scroller>
+        <mt-cell v-for="(item,index) in customerNotificationList" :key="index" :title="item.content" is-link
+                 @click.native="jumpToInfo(item)"></mt-cell>
+      </scroller>
+    </mt-popup>
+  </div>
+</template>
 
-<script type="text/ecmascript-6" >
-  import { Toast } from 'mint-ui';
-  import { mapState } from 'vuex';
+<script type="text/ecmascript-6">
+  import {Toast} from 'mint-ui';
+  import {mapState} from 'vuex';
   export default {
     name: 'login',
     data () {
@@ -62,10 +65,11 @@
         person: {},
         settingVisible: false,
         customerNotificationList: [],
-        notificationListVisible: false
+        notificationListVisible: false,
+        userInfo: {}
       }
     },
-    computed :mapState ({
+    computed: mapState({
       state: state => state.userInfo,
     }),
     methods: {
@@ -91,61 +95,68 @@
         this.settingVisible = !this.settingVisible
       },
       getCustomerNotification () {
-        var _this = this;
-        $.getJSON(localPath+"/customernotification/queryUnreadList", function (r) {
-          _this.customerNotificationList = r.customerNotificationList
-        });
+        this.$api.get_notification_list().then(res => {
+          if (res.code == ERR_OK) {
+            this.customerNotificationList = res.customerNotificationList
+          } else {
+            alert(res.msg)
+          }
+        }).catch(err => console.error(err))
       },
       showNotificationList(){
         this.notificationListVisible = !this.notificationListVisible
       },
       jumpToInfo(item){
-        var _this=this;
         if (item.type == 44) {
           this.$router.push('/address')
         } else if (item.type == 42) {
           let str = item.content;
           var NO = str.substring(str.indexOf("(") + 4, str.indexOf(")"));
-         let orderObj={
-            name:'order',
-            params:{
-              orderNum:NO
+          let orderObj = {
+            name: 'order',
+            params: {
+              orderNum: NO
             }
           };
           this.$router.push(orderObj);
         }
-        $.ajax({
-          type: "get",
-          dataType: "json",
-          url: localPath+"/customernotification/read/" + item.tableName + "/"+item.tableId,
-          success: function (r) {
-            if (r.code == 0) {
-              Toast('消息已读');
-              _this.getCustomerNotification()
-            }
+        this.$api.read_notification({tableName: item.tableName, tableId: item.tableId}).then(res => {
+          if (res.code == ERR_OK) {
+            Toast('消息已读');
+            this.getCustomerNotification()
+          } else {
+            alert(res.msg)
           }
-        })
+        }).catch(err => console.error(err))
       },
       showMessage(){
         Toast('敬请期待')
+      },
+      getPersonInfo(){
+        this.$api.get_person_info({personId: 4999}).then(res => {
+          if (res.code == ERR_OK) {
+            this.userInfo = res.person
+          }
+        }).catch(err => console.error(err))
       }
     },
     created(){
-      var _this = this;
       this.getCustomerNotification();
-      this.$store.dispatch('person_info')
+      this.getPersonInfo()
+
     },
     mounted(){
 
     }
   }
-</script >
+</script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped >
-.item .iconfont{
-  font-size: 20px;
-}
+<style scoped>
+  .item .iconfont {
+    font-size: 20px;
+  }
+
   .nikicon {
     width: 60px;
     height: 60px;
@@ -225,4 +236,4 @@
   .msgitem {
     flex: 1;
   }
-</style >
+</style>

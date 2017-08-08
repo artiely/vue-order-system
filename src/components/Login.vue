@@ -1,41 +1,41 @@
-<template >
-  <div class="login" >
-    <scroller class="page-content" >
-      <div class="wrapper" >
-        <div class="container" >
+<template>
+  <div class="login">
+    <scroller class="page-content">
+      <div class="wrapper">
+        <div class="container">
 
 
-          <div class="form" ref="form" >
-            <h1 class="elegantshadow" >FWONE</h1 >
-            <div class="errorMeg" v-if="error" >{{errorMsg}}</div >
-            <input type="text" class="fwone" placeholder="用户名" v-model="username" >
-            <input type="password" placeholder="密码" v-model="password" >
-            <button id="login-button" @click="login" >登录</button >
-          </div >
-          <div @click="back" >返回</div >
-        </div >
+          <div class="form" ref="form">
+            <h1 class="elegantshadow">FWONE</h1>
+            <div class="errorMeg" v-if="error">{{errorMsg}}</div>
+            <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model="username">
+            <input type="password" :placeholder="$t('message.Account_password')" v-model="password">
+            <button id="login-button" @click="login">{{$t('message.Login')}}</button>
+          </div>
+          <div @click="back">{{$t('message.Back')}}</div>
+        </div>
 
-        <ul class="bg-bubbles" >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-          <li ></li >
-        </ul >
-      </div >
+        <ul class="bg-bubbles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
 
-    </scroller >
-  </div >
-</template >
-<script >
-  import { mapState } from 'vuex';
+    </scroller>
+  </div>
+</template>
+<script>
+  import {mapState} from 'vuex';
 
-import axios from 'axios'
+  import axios from 'axios'
   export default {
     name: 'login',
     data () {
@@ -51,46 +51,31 @@ import axios from 'axios'
     computed: mapState({
       state: state => state.userInfo,
     }),
-    /* beforeRouteEnter (to, from, next) {
-     //判断路由从哪来
-     console.log("从哪来",from.path,"到哪去",to.path)
-     next()
-     },
-     beforeRouteLeave (to, from, next) {
-     //判断路由从哪来
-     console.log("leave从哪来",from.path,"leave到哪去",to.path)
-     next()
-     },*/
     methods: {
       login(){
-
-     let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha+"&loginNum=1";
-
-         this.$api.login(data).then((res)=>{
-          if(res.code==ERR_OK){
-              this.error=false,
-              this.$api.get_user_id().then((r)=>{
-                  if(r.code==ERR_OK){
-                    let userId = r.user.id
-                          this.$store.dispatch('login', userId);
-                          let redirect = decodeURIComponent(this.$route.query.redirect || '/');
-                          this.$router.push({
-                            path: redirect
-                          });
-                  }else{
-                     this.error=true,
-                      this.errorMsg='连接失败'
-                  }
-              }).catch(err=>{
-                  console.error(err)
-              })
-          }else{
-            this.error=true,
-            this.errorMsg=res.msg
+        let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha + "&loginNum=1";
+        this.$api.login(data).then((res) => {
+          if (res.code == ERR_OK) {
+            this.error = false;
+            this.$api.get_user_id().then((r) => {
+              if (r.code == ERR_OK) {
+                let userId = r.user.id;
+                let personId=r.user.personId;
+                this.$store.dispatch('login', {userId,personId});
+                let redirect = decodeURIComponent(this.$route.query.redirect || '/');
+                this.$router.push({
+                  path: redirect
+                });
+              } else {
+                this.error = true;
+                this.errorMsg = '连接失败'
+              }
+            }).catch(err => console.error(err))
+          } else {
+            this.error = true;
+            this.errorMsg = res.msg
           }
-        }).catch(err=>{
-          console.error(err)
-        })
+        }).catch(err => console.error(err))
       },
       back(){
         this.$router.back()
@@ -108,11 +93,8 @@ import axios from 'axios'
       })
     }
   }
-</script >
-<style scoped lang="less" rel="stylesheet/less" type="text/less" >
-  .fwone:focus {
-    /*transform: translateY(-40px);*/
-  }
+</script>
+<style scoped lang="less" rel="stylesheet/less" type="text/less">
 
   .errorMeg {
     background: rgba(254, 0, 13, 0.87);
@@ -141,7 +123,7 @@ import axios from 'axios'
     top: 0;
     width: 100%;
     height: 100vh !important;
-    box-sizing:border-box
+    box-sizing: border-box
   }
 
   .container {
@@ -322,4 +304,4 @@ import axios from 'axios'
     }
   }
 
-</style >
+</style>

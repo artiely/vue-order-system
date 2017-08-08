@@ -12,10 +12,9 @@
         }
       ]" >
       <div class="addressBox" slot="title">
-        <h4>公司名称</h4>
+        <h4>{{item.companyName}}</h4>
         <p>{{item.allAddress}}</p>
       </div>
-
     </mt-cell-swipe >
 
       <div style="height: 90px;" ></div >
@@ -47,7 +46,6 @@
   </div >
 </template >
 <script >
-  import axios from 'axios'
   import { Toast } from 'mint-ui';
   import s from '../../statics/mobile/json/address4.json'
   import { MessageBox } from 'mint-ui';
