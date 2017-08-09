@@ -3,12 +3,16 @@
     <div style="position: absolute;top: 0;left: 0;right: 0;z-index: 9">
       <header class="sBox " style="height: 40px;background:#fff;z-index: 99">
         <div style="height: 44px">
-          <mt-search style="height: 44px" v-model="query.on" cancel-text="取消" placeholder="工单号"></mt-search>
+          <mt-search style="height: 44px" v-model="query.on" :cancel-text="$t('message.Cancel')" :placeholder="$t('message.NO')"></mt-search>
         </div>
       </header>
       <header class="mint-header">
-        <swiper :options="swiperOption" ref="mySwiper" style="height: 40px;padding-right: 45px" class="CN_swiper"
-                v-if="lang=='CN'">
+        <swiper v-if="lang=='CN'"
+                :options="swiperOption"
+                ref="mySwiper"
+                style="height: 40px;padding-right: 45px"
+                class="CN_swiper"
+        >
           <!-- slides -->
           <swiper-slide v-for="(item,index) in status" @click.native="dosearch(item)" :index="index" :key="index"
                         :class="{'active':item.orderStateId==query.orderStateId}">
@@ -16,8 +20,11 @@
             <mt-badge size="small" type="error" v-show="item.count>0">{{item.count}}</mt-badge>
           </swiper-slide>
         </swiper>
-        <swiper :options="swiperOption" ref="mySwiper" style="height: 40px;padding-right: 45px" class="EN_swiper"
-                v-if="lang=='EN'">
+
+
+        <swiper v-if="lang=='EN'" :options="swiperOption" ref="mySwiper" style="height: 40px;padding-right: 45px"
+                class="EN_swiper"
+        >
           <!-- slides -->
           <swiper-slide v-for="(item,index) in status" @click.native="dosearch(item)" :index="index" :key="index"
                         :class="{'active':item.orderStateId==query.orderStateId}">
@@ -25,10 +32,18 @@
             <mt-badge size="small" type="error" v-show="item.count>0">{{item.count}}</mt-badge>
           </swiper-slide>
         </swiper>
+
         <i class="iconfont icon-guanjiaowangtubiao35" @click="toggleopen"></i>
       </header>
     </div>
-    <scroller class="page-content" :on-refresh="onRefresh" ref="myScroller" :on-infinite="onInfinite">
+    <scroller
+      class="page-content"
+      :on-refresh="onRefresh"
+      ref="myScroller"
+      :on-infinite="onInfinite"
+      :refreshText="$t('message.Pull_to_refresh')"
+      :noDataText="$t('message.No_more_data')"
+    >
       <div v-if="orderinfo.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
       <order-item :item="item" v-for="(item,index) in orderinfo" :key="index" v-on:getsp="getScrollPosition"
                   v-on:refresh="onRefresh"></order-item>
@@ -44,44 +59,42 @@
           </mt-button>
         </div>
         <div class="my-title">
-          按服务点选择
+          {{$t('message.Service_location')}}
         </div>
         <select v-model="query.companyId" style="width: 100%;height: 30px" placeholder="点击选择">
           <option :value="item.companyId" v-for="(item,index) in serviceAddress" :key="index">{{item.companyName}}
           </option>
         </select>
         <div class="my-title">
-          按用户选择
+          {{$t('message.User')}}
         </div>
         <select v-model="query.yh" style="width: 100%;height: 30px" placeholder="点击选择">
           <option :value="item.id" v-for="(item,index) in yhArr" :key="index">{{item.personName}}</option>
         </select>
         <div class="my-title">
-          其他选择
+          {{$t('message.Other')}}
         </div>
-        <mt-cell class="my-cell" title="显示我的报修">
+        <mt-cell class="my-cell" :title="$t('message.Report_by_me')">
           <mt-switch v-model="query.sfbx"></mt-switch>
         </mt-cell>
-        <mt-cell class="my-cell" title="显示驻场工单">
+        <mt-cell class="my-cell" :title="$t('message.Display_MA')">
           <mt-switch v-model="query.sfzc"></mt-switch>
         </mt-cell>
-        <mt-cell class="my-cell" title="显示现场工单">
+        <mt-cell class="my-cell" :title="$t('message.Display_on_call')">
           <mt-switch v-model="query.sfxc"></mt-switch>
         </mt-cell>
         <div style="height: 60px;width: 100%"></div>
       </scroller>
       <div class="b_btn" @click="hiddenPop">
-        <div style="width: 40%;float: left;background: #eee" @click="resetQuery">重置</div>
-        <div style="width: 60%;float:right;background: #ea5a49;color: #fff" @click="onRefresh">完成</div>
+        <div style="width: 40%;float: left;background: #eee" @click="resetQuery">{{$t('message.Reset')}}</div>
+        <div style="width: 60%;float:right;background: #ea5a49;color: #fff" @click="onRefresh">{{$t('message.Done')}}</div>
       </div>
     </mt-popup>
   </div>
 </template>
 <script type="text/javascript">
   import OrderItem from './items/Orderitem.vue'
-  import {
-    Toast
-  } from 'mint-ui';
+  import {Toast} from 'mint-ui';
   import moment from 'moment'
   export default {
     name: 'order',
@@ -111,25 +124,25 @@
         },
         rangeDate: [{
           id: 1,
-          text: '上月'
+          text: this.$t('message.Last_months')
         }, {
           id: 2,
-          text: '本月'
+          text: this.$t('message.This_months')
         }, {
           id: 3,
-          text: '近三月'
+          text: this.$t('message.Last_3_months')
         }, {
           id: 4,
-          text: '近半年'
+          text: this.$t('message.Last_6_months')
         }, {
           id: 5,
-          text: '今年'
+          text: this.$t('message.This_year')
         }, {
           id: 6,
-          text: '去年'
+          text: this.$t('message.Last_year')
         }, {
           id: 7,
-          text: '时间不限'
+          text: this.$t('message.No_time_limit')
         }],
         rangeDateActive: 3,
         serviceAddress: [],
@@ -184,12 +197,11 @@
           onTransitionStart(swiper) {
           }
         },
-        lang: 'CN'
       }
     },
     watch: {
       'query.companyId': {
-        handler(val) {
+        handler() {
           this.getYh()
         }
       },
@@ -202,6 +214,9 @@
     computed: {
       swiper() {
         return this.$refs.mySwiper.swiper
+      },
+      lang(){
+        return this.$store.state.userInfo.lang
       }
     },
     methods: {
@@ -251,48 +266,6 @@
             this.status[5].count = count['8']
             this.status[6].count = count['9']
             this.status[7].count = count['7']
-            /*this.status = [
-             {
-             name: this.$t('message.Unprocessed'),
-             count: count['1'],
-             orderStateId: 1
-             },
-             {
-             name: this.$t('message.Delayed'),
-             count: count['2'],
-             orderStateId: 2
-             },
-             {
-             name: this.$t('message.Processing'),
-             count: count['3'],
-             orderStateId: 3
-             },
-             {
-             name: this.$t('message.To_rate'),
-             count: count['4'],
-             orderStateId: 4
-             },
-             {
-             name: this.$t('message.Awaiting_payment'),
-             count: count['6'],
-             orderStateId: 6
-             },
-             {
-             name: this.$t('message.Cancelled'),
-             count: count['8'],
-             orderStateId: 8
-             },
-             {
-             name: this.$t('message.Completed'),
-             count: count['9'],
-             orderStateId: 9
-             },
-             {
-             name: this.$t('message.All_orders'),
-             count: count['7'],
-             orderStateId: 7
-             },
-             ]*/
           } else {
             Toast(res.msg)
           }
@@ -352,49 +325,7 @@
         let p = this.$refs.myScroller.getPosition();
         sessionStorage.setItem('scrollTop', p.top)
       },
-      dateRangePick() {
-        let _this = this;
-        //筛选所选择的日期范围。。一月前 一年前...
-        var vonBtn = $('.von-button-bar').find('.button');
-        vonBtn.click(function () {
-          vonBtn.addClass('button-outline');
-          let _rangeDate = $(this).removeClass('button-outline').text();
-          _this.query.page = 1;
-          _this.totalPage = 1;
-          switch (_rangeDate) {
-            case '上月':
-              _this.query.startDate = moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
-              _this.query.endDate = moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
-              break;
-            case '本月':
-              _this.query.startDate = moment().startOf('month').format('YYYY-MM-DD');
-              _this.query.endDate = moment().format('YYYY-MM-DD');
-              break;
-            case '近三月':
-              _this.query.startDate = moment().subtract(3, 'month').startOf('month').format('YYYY-MM-DD');
-              _this.query.endDate = moment().format('YYYY-MM-DD');
-              break;
-            case '近半年':
-              _this.query.startDate = moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD');
-              _this.query.endDate = moment().format('YYYY-MM-DD');
-              break;
-            case '今年':
-              _this.query.startDate = moment().startOf('year').startOf('month').format('YYYY-MM-DD');
-              _this.query.endDate = moment().format('YYYY-MM-DD');
-              break;
-            case '去年':
-              _this.query.startDate = moment().subtract(1, 'year').startOf('year').format('YYYY-MM-DD');
-              _this.query.endDate = moment().subtract(1, 'year').endOf('year').format('YYYY-MM-DD');
-              break;
-            case '时间不限':
-              _this.query.startDate = moment([2012, 9, 18]).format('YYYY-MM-DD');
-              _this.query.endDate = moment().format('YYYY-MM-DD');
-              break;
-          }
-        })
 
-
-      },
       /**
        * 获取服务点
        */
@@ -431,40 +362,40 @@
         this.query.sfzc = false;
         this.query.sfxc = false;
         this.query.sfbx = false;
-        this.onRefresh();
-        Toast('重置成功')
+        this._init();
+        Toast(this.$t('message.Reset_success'))
       },
       hiddenPop() {
         this.popupVisible = false;
       },
       choiceRangeDate(item) {
         this.rangeDateActive = item.id
-        switch (item.text) {
-          case '上月':
+        switch (item.id) {
+          case 1:
             this.query.startDate = moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
             this.query.endDate = moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
             break;
-          case '本月':
+          case 2:
             this.query.startDate = moment().startOf('month').format('YYYY-MM-DD');
             this.query.endDate = moment().format('YYYY-MM-DD');
             break;
-          case '近三月':
+          case 3:
             this.query.startDate = moment().subtract(3, 'month').startOf('month').format('YYYY-MM-DD');
             this.query.endDate = moment().format('YYYY-MM-DD');
             break;
-          case '近半年':
+          case 4:
             this.query.startDate = moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD');
             this.query.endDate = moment().format('YYYY-MM-DD');
             break;
-          case '今年':
+          case 5:
             this.query.startDate = moment().startOf('year').startOf('month').format('YYYY-MM-DD');
             this.query.endDate = moment().format('YYYY-MM-DD');
             break;
-          case '去年':
+          case 6:
             this.query.startDate = moment().subtract(1, 'year').startOf('year').format('YYYY-MM-DD');
             this.query.endDate = moment().subtract(1, 'year').endOf('year').format('YYYY-MM-DD');
             break;
-          case '时间不限':
+          case 7:
             this.query.startDate = moment([2012, 9, 18]).format('YYYY-MM-DD');
             this.query.endDate = moment().format('YYYY-MM-DD');
             break;
@@ -485,16 +416,12 @@
       this.getdata()
     },
     activated(){
-      let lang = window.localStorage.getItem('lang');
-      if (lang) {
-        this.lang = lang
-      }
+
     },
 
     mounted() {
       var _this = this;
       // 筛选 获得用户选择的日期范围
-      this.dateRangePick();
       this.getServiceAddress();
 
       this.$nextTick(() => {
@@ -515,6 +442,15 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+
+  .mint-button.active {
+    color: #000
+  }
+
+  .active {
+    color: #333 !important;
+  }
+
   .CN_swiper {
     .swiper-slide {
       width: 15%;

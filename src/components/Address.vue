@@ -1,12 +1,12 @@
 <template >
   <div class="address" >
-    <mt-header title="服务点" fixed style="z-index: 9;" >
-      <mt-button icon="back" @click="back" slot="left" >返回</mt-button >
+    <mt-header :title="$t('message.Address')" fixed style="z-index: 9;" >
+      <mt-button icon="back" @click="back" slot="left" >{{$t('message.Back')}}</mt-button >
     </mt-header >
     <scroller class="page-content" >
       <mt-cell-swipe v-for="(item,index) in serviceAddress" :key="index" :id="item.companyId" class="cell-swipe"  :right="[
         {
-          content: '删除',
+          content: $t('message.Delete'),
           style: {background: 'red', color: '#fff'},
           handler: () => deleteAddress(item.companyId)
         }
@@ -20,8 +20,8 @@
       <div style="height: 90px;" ></div >
     </scroller >
     <mt-popup v-model="addVisible" position="right" :closeOnClickModal="false" :modal="false" style="width: 100%;height: 100%" >
-      <mt-header title="新增服务点" style="z-index: 9;">
-        <mt-button icon="back" @click="showAddM" slot="left" >返回</mt-button >
+      <mt-header :title="$t('message.Add')" style="z-index: 9;">
+        <mt-button icon="back" @click="showAddM" slot="left" >{{$t('message.Back')}}</mt-button >
       </mt-header >
       <mt-popup v-model="addressVisible"  position="bottom" style="width: 100%" >
         <div class="page-picker-wrapper" >
@@ -34,15 +34,15 @@
         </div >
       </mt-popup >
       <div >
-        <mt-field label="" :state="companyName.length>0?'success':'error'" v-model="companyName"   placeholder="公司名" ></mt-field >
-        <div @click="showAddress" class="cell-ad" >上门服务地址:{{ addressProvince }} {{ addressCity }} {{addressXian}}</div >
+        <mt-field label="" :state="companyName.length>0?'success':'error'" v-model="companyName"   :placeholder="$t('message.Company')" ></mt-field >
+        <div @click="showAddress" class="cell-ad" >{{ $t('message.Area')}}:{{ addressProvince }} {{ addressCity }} {{addressXian}}</div >
       </div >
-      <div @click="showStreet" class="cell-ad" v-if="noStreet" >选择街道：{{addressStreet}}</div >
+      <div @click="showStreet" class="cell-ad" v-if="noStreet" >{{ $t('message.Street')}}：{{addressStreet}}</div >
 
-      <textarea placeholder="详细地址" id="" cols="4" rows="3" v-model="desMore" ></textarea >
-      <mt-button size="large" type="danger" style="width:95%;margin: 20px auto;" :disabled="desMore.length<3" @click="saveAddress" >保存</mt-button >
+      <textarea :placeholder="$t('message.Detailed_address')" id="" cols="4" rows="3" v-model="desMore" ></textarea >
+      <mt-button size="large" type="danger" style="width:95%;margin: 20px auto;" :disabled="desMore.length<3" @click="saveAddress" >{{$t('message.Save')}}</mt-button >
     </mt-popup >
-    <div class="addAddressBtn" @click="showAddM" >新增服务点地址</div >
+    <div class="addAddressBtn" @click="showAddM" >{{ $t('message.Add')}}</div >
   </div >
 </template >
 <script >

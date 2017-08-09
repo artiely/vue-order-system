@@ -215,6 +215,10 @@ const get_notification_list = params => {
   })
 }
 
+/**
+ * 读取消息
+ * @param params
+ */
 const read_notification = params => {
   return fetch({
     url: `/customernotification/read/${params.tableNmae}/${params.tableId}`,
@@ -222,6 +226,36 @@ const read_notification = params => {
   })
 }
 
+/**
+ * 获取子单
+ * @param callId
+ */
+const get_sub_order = params => {
+  return fetch({
+    url: "/orderinfo/evaluateCallDetailList",
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 评价子单
+ * @params
+ * callDetailIds:["523524"], 当前子单的id
+ * comments:"追评2",评论的内容
+ * onSiteScore:"1",现场工程师的评分(驻场)
+ * score:1,总的评分
+ * seatsScore:0, 坐席工程师的评分(非驻场)
+ * serviceDeskScore:"1" 服务台的评分
+ */
+
+const rating_sub_order = params => {
+  return fetch({
+    url: '/orderinfo/evaluateByCallDetailIds',
+    method: "post",
+    data: params
+  })
+}
 const apiObj = {
   login,
   get_user_id,
@@ -239,7 +273,9 @@ const apiObj = {
   get_reminder_list,
   get_person_info,
   get_notification_list,
-  read_notification
+  read_notification,
+  get_sub_order,
+  rating_sub_order
 }
 
 export default apiObj

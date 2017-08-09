@@ -1,25 +1,27 @@
 <template>
-  <div class="balance">
-    <mt-header title="我的催单" fixed style="z-index: 9;">
-      <mt-button icon="back" @click="back" slot="left">返回</mt-button>
+  <div class="urge">
+    <mt-header :title="$t('message.Call_reminder')" fixed style="z-index: 9;">
+      <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
-    <scroller :on-refresh="onRefresh" ref="myScroller" class="page-content" :on-infinite="onInfinite">
+    <scroller :on-refresh="onRefresh" ref="myScroller" class="page-content" :on-infinite="onInfinite"
+              :refreshText="$t('message.Pull_to_refresh')"
+              :noDataText="$t('message.No_more_data')">
       <div style="background:#f8f8f8;">
         <table class="order-item" v-for="(item,index) in orderList" :key="index"
                @click="showOrderDetail({id:item.callId,oid:item.orderNumber})">
           <tr>
-            <td colspan="2">订单号：{{item.orderNumber}}</td>
+            <td colspan="2"> <span class="label">{{$t('message.NO')}}：</span>{{item.orderNumber}}</td>
           </tr>
           <tr>
-            <td>报修人：</td>
+            <td> <span class="label">{{$t('message.Requestor')}}：</span></td>
             <td>{{item.processName}}</td>
           </tr>
           <tr v-if="item.companyName">
-            <td>报修公司：</td>
+            <td> <span class="label">{{$t('message.Company')}}：</span></td>
             <td>{{item.companyName}}</td>
           </tr>
           <tr>
-            <td>最后可上门时间：</td>
+            <td><span class="label">{{$t('message.Appointment_time')}}：</span></td>
             <td>{{item.processDate}}</td>
           </tr>
         </table>
@@ -32,7 +34,7 @@
   import $ from 'n-zepto'
   import {mapState} from 'vuex';
   export default {
-    name: 'balance',
+    name: 'urge',
     data () {
       return {
         orderList: [],
@@ -86,8 +88,12 @@
   }
 </script>
 <style scoped>
+  span.label{
+    color: #999;
+  }
   .page-content {
     padding-top: 40px;
+    font-size: 14px;
   }
 
   .order-item {

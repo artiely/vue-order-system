@@ -6,6 +6,7 @@ Vue.use(Vuex);
 const state = {//状态
   token: null, //就是userid
   personId: '',
+  lang:''
 };
 
 const mutations = {//状态只能通过此改变
@@ -21,6 +22,9 @@ const mutations = {//状态只能通过此改变
     state.token = null;
     sessionStorage.removeItem('token');
   },
+  ['SET_LANG'](state,payload){
+    state.lang=payload
+  }
 };
 const actions = {
   login: ({commit}, payload) => {

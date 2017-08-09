@@ -1,7 +1,21 @@
+.pull-right{
+  float: right;
+}
+
+.pull-left{
+  float: left;
+}
+.clearfix::after{
+  content: '';
+  clear: both;
+  display: block;
+  height:0;
+  overflow: hidden;
+}
 .RouterView {
   position: absolute;
   width: 100%;
-  transition: all 0.38s ease-out;
+  transition: all 0.28s ease-out;
   top: 0;
   height: 100vh;
 }

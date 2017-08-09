@@ -32,6 +32,7 @@ Vue.component('star-rating', StarRating);
 import {
   cutTime
 } from './directive/index'
+import $ from  'n-zepto'
 
 Vue.config.productionTip = false;
 

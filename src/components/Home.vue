@@ -36,7 +36,6 @@
     watch: {
       selected: function(val, oldVal) {
         // 这里就可以通过 val 的值变更来确定
-        console.log(val)
         switch (val) {
           case '1':
             this.$router.push({
@@ -75,9 +74,7 @@
 
     methods: {
       selectPath() {
-        console.log('home-router', this.$route.path)
         var urlmark = this.$route.path;
-        console.log(urlmark)
         switch (urlmark) {
           case '/home':
             this.selected = '1';
@@ -111,7 +108,7 @@
   .Router {
     position: absolute;
     width: 100%;
-    transition: all .38s ease-out;
+    transition: all .28s ease-out;
     top: 0px;
     background: #fff;
     height: 100vh
