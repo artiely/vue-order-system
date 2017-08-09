@@ -256,7 +256,41 @@ const rating_sub_order = params => {
     data: params
   })
 }
-const apiObj = {
+
+/**
+ * 催单
+ * @param callId
+ */
+const reminder_order = params => {
+  return fetch({
+    url: "/callreminder/save",
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 投诉
+ * @params
+ * callId:"211677", //callId
+ * comments:"",
+ * complainDesc:"123", //投诉内容
+ * complainTarget:[1, 1, 1],
+ * contentId:1, //投诉内容  12345 响应不及时-其他
+ * copyComplainTarget:[], //废弃
+ * isEngineer:0,//废弃
+ * isOther:0,//废弃
+ * isServiceCenter:1,//废弃
+ * tsName:["服务台", "工程师", "其他"]//废弃
+ */
+const complain_order = params => {
+  return fetch({
+    url: "/customercomplain/save",
+    method: 'post',
+    data: params
+  })
+}
+const apiList = {
   login,
   get_user_id,
   get_service_address,
@@ -275,7 +309,9 @@ const apiObj = {
   get_notification_list,
   read_notification,
   get_sub_order,
-  rating_sub_order
+  rating_sub_order,
+  reminder_order,
+  complain_order
 }
 
-export default apiObj
+export default apiList

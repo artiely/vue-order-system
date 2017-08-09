@@ -1,7 +1,13 @@
 <template>
-  <table class="order-item">
+  <div style="width: 100%">
+  <table class="order-item" style="width: 100%">
     <tr class="item-header">
-      <td colspan="3">{{item.companyname}}</td>
+      <td colspan="3">
+        <div class="flex-box">
+          <div class="company-tit">{{item.companyname}}</div>
+          <div v-if="item.payway==1 && orderStateId==6" class="pay-btn">支付</div>
+        </div>
+      </td>
     </tr>
     <tr class="item-body">
       <td rowspan="3" width="70" class="text-center" style="border-right: 1px solid #eee;">
@@ -11,12 +17,12 @@
         <span v-if="item.busniesstypeid==1"><i
           class="iconfont icon-customerservice_fill"></i><br>{{$t('message.Telephone')}} </span>
       </td>
-      <td class="text-left"><span v-if="item.description.length!=0">{{item.description[0].yh}} </span></td>
+      <td class="text-left" ><span v-if="item.description.length!=0">{{item.description[0].yh}} </span></td>
       <td rowspan="3" width="20">
         <a v-if="item.orderstateid>0" @click="goDetail(item)" class="text-center orderBtn"
         >{{$t('message.Detail')}}
         </a>
-        <a v-if="item.orderstateid==0" @click="goDelete(item)" class="text-center orderBtn cancleBtn"
+        <a v-if="item.orderstateid==0 && orderStateId!=8" @click="goDelete(item)" class="text-center orderBtn cancleBtn"
         >{{$t('message.Cancel')}}</a>
       </td>
     </tr>
@@ -27,6 +33,7 @@
       <td class="text-left">{{$t('message.NO')}}:{{item.ordernumber}} </td>
     </tr>
   </table>
+  </div>
 </template>
 <script type="text/ecmascript-6">
   import {MessageBox} from 'mint-ui';
@@ -35,7 +42,8 @@
   export default {
     name: 'order-item',
     props: {
-      item: {}
+      item: {},
+      orderStateId:''
     },
     data() {
       return {}
@@ -72,6 +80,19 @@
   }
 </script>
 <style scoped>
+  .pay-btn{
+    float: right;
+    background: #ffbd17;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: -4px;
+  }
+  .company-tit{
+    width: 200px;
+    float: left;
+    overflow: hidden;white-space: nowrap;text-overflow: ellipsis;
+  }
   .orderBtn {
     padding: 10px;
     display: block;

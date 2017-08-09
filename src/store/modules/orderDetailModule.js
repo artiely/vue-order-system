@@ -30,9 +30,9 @@ const mutations = { //状态只能通过此改变
 const actions = {
 
   new_detail: ({commit}, payload) => {
-    commit('GET_ORDER_NUMBER', payload)
+    commit('GET_ORDER_NUMBER', payload);
     api.get_order_detail({callId: state.callId}).then(res => {
-      commit('NEW_DETAIL', res)
+      commit('NEW_DETAIL', res);
       if (res.code == ERR_OK) {
         commit('NEW_DETAIL', res) //根据id获取数据
       } else {

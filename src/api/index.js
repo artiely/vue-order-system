@@ -1,5 +1,5 @@
 //导入模块
-import apiObj from './api';
+import apiList from './api';
 
 const install = function(Vue) {
     if (install.installed) return
@@ -9,7 +9,7 @@ const install = function(Vue) {
     Object.defineProperties(Vue.prototype, {
         $api: {
             get() {
-                return apiObj
+                return apiList
             }
         }
     })

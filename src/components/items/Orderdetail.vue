@@ -162,9 +162,8 @@
           <div style="height: 80px"></div>
         </scroller>
         <div class="footerBar">
-          <button size="small" class="footerBtn" v-if="status>0 && status<2">催单</button>
-
-          <button size="small" class="footerBtn" v-if="status>=3">投诉</button>
+          <button size="small" class="footerBtn" v-if="status>=0 && status<2" @click="reminder">催单</button>
+          <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">投诉</button>
           <button size="small" class="footerBtn" v-if="status>=5">发票</button>
         </div>
         <!--评价-->
@@ -223,7 +222,8 @@
           </table>
           <mt-field placeholder="服务周到吗?（写够15字才是好同志）" type="textarea" rows="3" v-model="evaluate"></mt-field>
           <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">加油！还差字{{evaluate_num}}就可以发布了。</small>
-          <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">发布</mt-button>
+          <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">发布
+          </mt-button>
 
         </mt-popup>
         <!--评价/-->
@@ -236,7 +236,24 @@
           <mt-header title="投诉" fixed style="z-index: 9;">
             <mt-button icon="back" @click="toushuVisible=!toushuVisible" slot="left">返回</mt-button>
           </mt-header>
-          投诉
+          <scroller style="padding-top: 40px;text-align: left">
+            <mt-radio
+              title="投诉原因"
+              v-model="reasonId"
+              align="right"
+              :options="reason">
+            </mt-radio>
+            <mt-checklist
+              title="投诉部门"
+              v-model="departmentIds"
+              align="left"
+              :options="department">
+            </mt-checklist>
+            <mt-field placeholder="投诉与建议" type="textarea" rows="3" v-model="complainTxt"></mt-field>
+            <mt-button type="primary" size="large" :disabled="complainTxt.length==0" @click.native="toComplain">提交
+            </mt-button>
+            <div style="height: 80px;"></div>
+          </scroller>
         </mt-popup>
         <!--投诉/-->
       </div>
@@ -272,7 +289,45 @@
         ratingToEngineer: 0,
         ratingToAll: 0,
         subList: [],
-        evaluate: ''
+        evaluate: '',
+        complainTxt: '',
+        reason: [
+          {
+            label: '响应不及时',
+            value: '1',
+          },
+          {
+            label: '工程师能力低',
+            value: '2'
+          },
+          {
+            label: '工程师态度问题',
+            value: '3'
+          },
+          {
+            label: '工程师更换频繁',
+            value: '4'
+          },
+          {
+            label: '其他',
+            value: '5'
+          }
+        ],
+        reasonId: '1',
+        department: [
+          {
+            label: "工程师",
+            value: '1'
+          },
+          {
+            label: "服务台",
+            value: '2'
+          }, {
+            label: "其他",
+            value: '3'
+          }
+        ],
+        departmentIds: ['3']
       }
     },
     watch: {
@@ -294,20 +349,36 @@
       status: state => state.detail.detail.status,
       evaluate_num(){
         return 15 - this.evaluate.length >= 0 ? 15 - this.evaluate.length : 0
+      },
+      complainTarget(){
+        let arr = [0, 0, 0]
+        for (let i = 0; i < 3; i++) {
+          if (this.departmentIds[i] == '1') {
+            arr[0] = 1
+          }
+          if (this.departmentIds[i] == '2') {
+            arr[1] = 1
+          }
+          if (this.departmentIds[i] == '3') {
+            arr[2] = 1
+          }
+        }
+        return arr
       }
     }),
     methods: {
       back() {
         this.$router.back();
       },
-      getData(){
+      getData() {
 
       },
-      pingjia(){
+      pingjia()  {
         this.pingjiaVisible = !this.pingjiaVisible,
           this.getSubOrder()
-      },
-      getSubOrder(){
+      }
+      ,
+      getSubOrder() {
         this.$api.get_sub_order({callId: this.state.callId}).then(res => {
           if (res.code == ERR_OK) {
             this.subList = res.callDetailList
@@ -315,19 +386,50 @@
             alert(res.msg)
           }
         }).catch(err => console.error(err))
-      },
-      RatingSubOrder(){
+      }
+      ,
+      RatingSubOrder() {
         let data = {
           callDetailIds: ["523524"],
           comments: this.evaluate,
-          onSiteScore: "1",
+          onSiteScore: 0,
           score: this.ratingToAll,
           seatsScore: 0,
           serviceDeskScore: this.ratingToService
+        };
+        if (this.state.type == 5) {//是驻场
+          data.onSiteScore = this.ratingToEngineer
+        } else {
+          data.seatsScore = this.ratingToEngineer
         }
         this.$api.rating_sub_order(data).then(res => {
-          console.log(res)
+          console.error("评论未完成" + res)
         })
+      },
+      reminder(){
+        this.$api.reminder_order({callid: this.state.callId}).then(res => {
+          if (res.code == ERR_OK) {
+            alert(res.msg)
+          } else {
+            alert(res.msg)
+          }
+        }).catch(err => console.error(err))
+      } ,
+      toComplain(){
+        let data = {
+          callId: this.state.callId,
+          complainDesc: this.complainTxt,
+          complainTarget: this.complainTarget,
+          contentId: this.reasonId
+        };
+        this.$api.complain_order(data).then(res => {
+            if(res.code==ERR_OK){
+                Toast('投诉成功');
+                this.toushuVisible=false
+            }else{
+              alert(res.msg)
+            }
+        }).catch(err=>console.error(err))
       }
 
     },
@@ -335,9 +437,13 @@
     mounted(){
 
     },
-    created() {
+    created(){
       //页面刷新重新赋值
-      this.$store.dispatch('new_detail', {oid: sessionStorage.getItem('oid'), id: sessionStorage.getItem('id'),type:sessionStorage.getItem('type')})
+      this.$store.dispatch('new_detail', {
+        oid: sessionStorage.getItem('oid'),
+        id: sessionStorage.getItem('id'),
+        type: sessionStorage.getItem('type')
+      })
     }
   }
 </script>
