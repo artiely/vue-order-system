@@ -11,39 +11,39 @@
         <div class="msgbox">
           <div class="msgs" @click="showNotificationList">
             <div class="msgitem">{{customerNotificationList.length}}</div>
-            <div class="msgitem">通知</div>
+            <div class="msgitem">{{$t('message.Notifications')}}</div>
 
           </div>
           <div class="msgs" @click="showMessage">
             <div class="msgitem">0</div>
-            <div class="msgitem">消息</div>
+            <div class="msgitem">{{$t('message.Message')}}</div>
           </div>
         </div>
       </div>
       <div class="flexbox">
         <div class="item" @click="goAddress">
           <i class="iconfont icon-coordinates"></i><br>
-          服务点
+          {{$t('message.Address')}}
         </div>
         <div class="item" @click="goBalance">
           <i class="iconfont icon-coupons"></i><br>
-          余额
+          {{$t('message.Payment')}}
         </div>
         <div class="item" @click="goComplain">
           <i class="iconfont icon-shielding"></i><br>
-          投诉
+          {{$t('message.complaint')}}
         </div>
         <div class="item" @click="goUrge">
           <i class="iconfont icon-prompt"></i><br>
-          催单
+          {{$t('message.Reminder')}}
         </div>
 
       </div>
     </scroller>
     <mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">
-      <mt-cell title="个人信息" is-link @click.native="showUserInfo"></mt-cell>
+      <mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>
       <mt-button type="danger" @click="loginOut" size="large"
-                 style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">退出登录
+                 style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">{{$t('message.Logout')}}
       </mt-button>
     </mt-popup>
     <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left">
@@ -87,8 +87,7 @@
       },
       loginOut(){
         this.$store.commit('LOGOUT')
-        this.$router.push({path: '/'});
-        console.log('退出成功')
+        this.$router.push({path: '/index',name:'index'});
       },
       showUserInfo(){
         Toast('敬请期待');
@@ -155,6 +154,9 @@
 <style scoped>
   .item .iconfont {
     font-size: 20px;
+  }
+  .item{
+    font-size: 14px;
   }
 
   .nikicon {
@@ -231,6 +233,7 @@
 
   .msgs {
     flex: 1;
+    font-size: 14px;
   }
 
   .msgitem {

@@ -172,6 +172,8 @@ router.beforeEach((to, from, next) => {
   let lang = window.localStorage.getItem('lang')
   if (lang) {
     i18n.locale = lang
+    console.log(store)
+    store.commit('SET_LANG',lang)
   }
 
   if (to.meta.requiresAuth) {

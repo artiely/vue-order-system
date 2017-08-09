@@ -1,21 +1,27 @@
 <template>
   <div class="balance">
-    <mt-header title="我的投诉" fixed style="z-index: 9;">
-      <mt-button icon="back" @click="back" slot="left">返回</mt-button>
+    <mt-header :title="$t('message.My_complains')" fixed style="z-index: 9;">
+      <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <mt-navbar v-model="selected" fixed style="top: 40px;">
-      <mt-tab-item id="1">待受理
+      <mt-tab-item id="1">{{$t('message.Unprocessed')}}
         <mt-badge type="error" size="small">{{count[0]}}</mt-badge>
       </mt-tab-item>
-      <mt-tab-item id="2">已受理
+      <mt-tab-item id="2">{{$t('message.Processed')}}
         <mt-badge type="success" size="small">{{count[1]}}</mt-badge>
       </mt-tab-item>
-      <mt-tab-item id="3">已完成
+      <mt-tab-item id="3">{{$t('message.Completed')}}
         <mt-badge type="primary" size="small">{{count[2]}}</mt-badge>
       </mt-tab-item>
     </mt-navbar>
     <!-- tab-container -->
-    <scroller :on-infinite="onInfinite" :on-refresh="onRefresh" class="page-content">
+    <scroller
+      :on-infinite="onInfinite"
+      :on-refresh="onRefresh"
+      class="page-content"
+      :refreshText="$t('message.Pull_to_refresh')"
+      :noDataText="$t('message.No_more_data')"
+    >
       <mt-tab-container v-model="selected" class="content">
         <mt-tab-container-item id="1" class="container">
           <div v-if="dataList1.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
@@ -28,24 +34,24 @@
             </div>
             <div @click="showComplainDetail(index)">
               <div class="cellBody">
-                <div class="td1">状态</div>
-                <div class="td2"><span v-if="item.status==0" class="span redbg ">待受理</span>
-                  <span v-if="item.status==1" class="span yellowbg">受理中</span>
-                  <span v-if="item.status==2" class="span greenbg">已受理</span>
-                  <span v-if="item.status==3" class="span bluebg">已完成</span></div>
+                <div class="td1">{{$t('message.Order_status')}}</div>
+                <div class="td2"><span v-if="item.status==0" class="span redbg ">{{$t('message.Unprocessed')}}</span>
+                  <span v-if="item.status==1" class="span yellowbg">{{$t('message.Processing')}}</span>
+                  <span v-if="item.status==2" class="span greenbg">{{$t('message.Processed')}}</span>
+                  <span v-if="item.status==3" class="span bluebg">{{$t('message.Completed')}}</span></div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉人</div>
+                <div class="td1">{{$t('message.Complainant')}}</div>
                 <div class="td2 textover">
                   {{item.createPersonname}}@ {{item.createCompanyShortName}}
                 </div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉内容</div>
+                <div class="td1">{{$t('message.Complains_details')}}</div>
                 <div class="td2 textover">{{item.complainDesc}}</div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉时间</div>
+                <div class="td1">{{$t('message.Create_time')}}</div>
                 <div class="td2 textover">{{item.createDate}}</div>
               </div>
             </div>
@@ -61,25 +67,25 @@
             <div>
             </div>
             <div class="cellBody">
-              <div class="td1">状态</div>
-              <div class="td2"><span v-if="item.status==0" class="span redbg ">待受理</span>
-                <span v-if="item.status==1" class="span yellowbg">受理中</span>
-                <span v-if="item.status==2" class="span greenbg">已受理</span>
-                <span v-if="item.status==3" class="span bluebg">已完成</span></div>
+              <div class="td1">{{$t('message.Order_status')}}</div>
+              <div class="td2"><span v-if="item.status==0" class="span redbg ">{{$t('message.Unprocessed')}}</span>
+                <span v-if="item.status==1" class="span yellowbg">{{$t('message.Processing')}}</span>
+                <span v-if="item.status==2" class="span greenbg">{{$t('message.Processed')}}</span>
+                <span v-if="item.status==3" class="span bluebg">{{$t('message.Completed')}}</span></div>
             </div>
             <div @click="showComplainDetail(index)">
               <div class="cellBody">
-                <div class="td1">投诉人</div>
+                <div class="td1">{{$t('message.Complainant')}}</div>
                 <div class="td2 textover">
                   {{item.createPersonname}}@ {{item.createCompanyShortName}}
                 </div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉内容</div>
+                <div class="td1">{{$t('message.Complains_details')}}</div>
                 <div class="td2 textover">{{item.complainDesc}}</div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉时间</div>
+                <div class="td1">{{$t('message.Create_time')}}</div>
                 <div class="td2 textover">{{item.createDate}}</div>
               </div>
             </div>
@@ -96,24 +102,24 @@
             </div>
             <div @click="showComplainDetail(index)">
               <div class="cellBody">
-                <div class="td1">状态</div>
-                <div class="td2"><span v-if="item.status==0" class="span redbg ">待受理</span>
-                  <span v-if="item.status==1" class="span yellowbg">受理中</span>
-                  <span v-if="item.status==2" class="span greenbg">已受理</span>
-                  <span v-if="item.status==3" class="span bluebg">已完成</span></div>
+                <div class="td1">{{$t('message.Order_status')}}</div>
+                <div class="td2"><span v-if="item.status==0" class="span redbg ">{{$t('message.Unprocessed')}}</span>
+                  <span v-if="item.status==1" class="span yellowbg">{{$t('message.Processing')}}</span>
+                  <span v-if="item.status==2" class="span greenbg">{{$t('message.Processed')}}</span>
+                  <span v-if="item.status==3" class="span bluebg">{{$t('message.Completed')}}</span></div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉人</div>
+                <div class="td1">{{$t('message.Complainant')}}</div>
                 <div class="td2 textover">
                   {{item.createPersonname}}@ {{item.createCompanyShortName}}
                 </div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉内容</div>
+                <div class="td1">{{$t('message.Complains_details')}}</div>
                 <div class="td2 textover">{{item.complainDesc}}</div>
               </div>
               <div class="cellBody">
-                <div class="td1">投诉时间</div>
+                <div class="td1">{{$t('message.Create_time')}}</div>
                 <div class="td2 textover">{{item.createDate}}</div>
               </div>
             </div>
@@ -122,52 +128,51 @@
       </mt-tab-container>
     </scroller>
     <mt-popup v-model="complainDetail" position="right" style="width: 100%;height: 100%;font-size: 14px">
-      <mt-header title="详情" fixed style="z-index: 9;">
-        <mt-button icon="back" @click="showComplainDetail" slot="left">返回</mt-button>
+      <mt-header :title="$t('message.Back')" fixed style="z-index: 9;">
+        <mt-button icon="back" @click="showComplainDetail" slot="left">{{$t('message.Back')}}</mt-button>
       </mt-header>
       <scroller class="detail-content">
-        <div>投诉主体-
+        <div> <span class="label">{{$t('message.Cause_complaint')}}-</span>
           <span v-if="detailData.contentId">
-            <span v-if="detailData.contentId==1">响应不及时</span>
-            <span v-if="detailData.contentId==2">工程师解决能力低</span>
-            <span v-if="detailData.contentId==3">工程师态度问题</span>
-            <span v-if="detailData.contentId==4">工程师更换频繁</span>
-            <span v-if="detailData.contentId==5">其他</span>
+            <span v-if="detailData.contentId==1">{{$t('message.Response_not_timely')}}</span>
+            <span v-if="detailData.contentId==2">{{$t('message.Engineer_issues')}}</span>
+            <span v-if="detailData.contentId==3">{{$t('message.Attitude_issues')}}</span>
+            <span v-if="detailData.contentId==4">{{$t('message.Engineers_frequently')}}</span>
+            <span v-if="detailData.contentId==5">{{$t('message.Other')}}</span>
           </span>
         </div>
-        <div class="ts-tit">投诉信息</div>
-        <div>投诉人： {{detailData.createPersonname}} @{{detailData.createCompanyShortName}}</div>
-        <div>投诉时间：{{detailData.createDate}}</div>
-        <div>工单编号：{{detailData.orderNumber}}</div>
-        <div>投诉对象：
-          <span v-if="complainTargetObj[0]==1">工程师</span>
-          <span v-if="complainTargetObj[1]==1">服务台</span>
-          <span v-if="complainTargetObj[2]==1">其他</span>
+        <div class="ts-tit">{{$t('message.Complaints')}}</div>
+        <div><span class="label">{{$t('message.Complainant')}}：</span> {{detailData.createPersonname}} @{{detailData.createCompanyShortName}}</div>
+        <div><span class="label">{{$t('message.Create_time')}}：</span>{{detailData.createDate}}</div>
+        <div><span class="label">{{$t('message.NO')}}：</span>{{detailData.orderNumber}}</div>
+        <div><span class="label">{{$t('message.Complaints_department')}}：</span>
+          <span v-if="complainTargetObj[0]==1">{{$t('message.Enginner')}}</span>
+          <span v-if="complainTargetObj[1]==1">{{$t('message.Service_center')}}</span>
+          <span v-if="complainTargetObj[2]==1">{{$t('message.Other')}}</span>
         </div>
-        <div>投诉内容：
+        <div> <span class="label">{{ $t('message.Complains_details') }}：</span>
           <div v-html="detailData.complainDesc"></div>
         </div>
-        <div class="ts-tit">处理结果</div>
+        <div class="ts-tit">{{$t('message.Result')}}</div>
         <div v-if="selected==1">
-          您的投诉正在受理中...请稍等...
+          {{$t('message.Complaint_wait')}}
         </div>
         <div v-if="selected>1">
-          <div>处理人：{{detailData.processPersonname}}</div>
-          <div>处理时间：{{detailData.processDate}}</div>
-          <div>处理回复：
+          <div> <span class="label">{{$t('message.Received_by')}}：</span>{{detailData.processPersonname}}</div>
+          <div><span class="label">{{$t('message.Process_time')}}：</span>{{detailData.processDate}}</div>
+          <div><span class="label">{{$t('message.Reply')}}：</span>
             <div v-html="detailData.processNotes"></div>
           </div>
-          <div class="ts-tit">评价</div>
-          <div>请您对本次处理结果进行评价</div>
-
+          <div class="ts-tit">{{$t('message.Rating')}}</div>
+          <div><span class="label">{{$t('message.Rating_processing_result')}}</span></div>
           <div class="rating">
             <star-rating :star-size="30" v-model="detailData.rating" :show-rating="false" :inline="true"></star-rating>
-            <span v-if="detailData.rating==0" class="text ">未评价</span>
-            <span v-if="detailData.rating==1" class="text redbg">服务待跟进</span>
-            <span v-if="detailData.rating==2" class="text yellowbg">不满意</span>
-            <span v-if="detailData.rating==3" class="text bluebg">一般</span>
-            <span v-if="detailData.rating==4" class="text bluebg">满意</span>
-            <span v-if="detailData.rating==5" class="text greenbg">非常满意</span>
+            <span v-if="detailData.rating==0" class="text ">{{$t('message.Please_score')}}</span>
+            <span v-if="detailData.rating==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+            <span v-if="detailData.rating==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+            <span v-if="detailData.rating==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+            <span v-if="detailData.rating==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+            <span v-if="detailData.rating==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
           </div>
         </div>
         <div style="height: 80px"></div>
@@ -224,7 +229,7 @@
         }
       },
       onRefresh(done){
-       this._init(() => done(true))
+        this._init(() => done(true))
       },
       onInfinite(done){
         if (this.selected == 1) {
@@ -275,9 +280,9 @@
         })
       },
       _init(cb){
-        this.get_complain({page: 1, limit: 10, status: this.state1},cb)
-        this.get_complain({page: 1, limit: 10, status: this.state2},cb)
-        this.get_complain({page: 1, limit: 10, status: this.state3},cb)
+        this.get_complain({page: 1, limit: 10, status: this.state1}, cb)
+        this.get_complain({page: 1, limit: 10, status: this.state2}, cb)
+        this.get_complain({page: 1, limit: 10, status: this.state3}, cb)
         this.get_count()
       }
     },
@@ -312,6 +317,9 @@
 
 </script>
 <style scoped>
+  span.label{
+    color: #999;
+  }
   .ts-tit {
     padding: 6px 0;
     background: #fafafa;
@@ -354,7 +362,7 @@
     display: flex;
     background: #f8f8f8;
     padding: 4px;
-    line-height:30px;
+    line-height: 30px;
   }
 
   .cellBody {
