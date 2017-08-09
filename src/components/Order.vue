@@ -45,7 +45,7 @@
       :noDataText="$t('message.No_more_data')"
     >
       <div v-if="orderinfo.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
-      <order-item :item="item" v-for="(item,index) in orderinfo" :key="index" v-on:getsp="getScrollPosition"
+      <order-item :item="item" :orderStateId="query.orderStateId" v-for="(item,index) in orderinfo" :key="index" v-on:getsp="getScrollPosition"
                   v-on:refresh="onRefresh"></order-item>
     </scroller>
     <mt-popup v-model="popupVisible" position="right" style="height: 100%;width: 280px;">
@@ -87,7 +87,7 @@
       </scroller>
       <div class="b_btn" @click="hiddenPop">
         <div style="width: 40%;float: left;background: #eee" @click="resetQuery">{{$t('message.Reset')}}</div>
-        <div style="width: 60%;float:right;background: #ea5a49;color: #fff" @click="onRefresh">{{$t('message.Done')}}</div>
+        <div style="width: 60%;float:right;background: #ea5a49;color: #fff" @click="getdata">{{$t('message.Done')}}</div>
       </div>
     </mt-popup>
   </div>
@@ -319,7 +319,7 @@
         this.getdata()
       },
       toggleopen() { //筛选的
-        this.popupVisible = !this.popupVisible
+        this.popupVisible = true
       },
       getScrollPosition() { //记录滚动条的位置 绑定在子组件order-item v-on:getsp
         let p = this.$refs.myScroller.getPosition();
@@ -362,7 +362,7 @@
         this.query.sfzc = false;
         this.query.sfxc = false;
         this.query.sfbx = false;
-        this._init();
+        this.getdata();
         Toast(this.$t('message.Reset_success'))
       },
       hiddenPop() {
