@@ -5,12 +5,12 @@
       <td colspan="3">
         <div class="flex-box">
           <div class="company-tit">{{item.companyname}}</div>
-          <div v-if="item.payway==1 && orderStateId==6" class="pay-btn">支付</div>
+          <div v-if="item.payway==1 && orderStateId==6" class="pay-btn">{{$t('message.Pay')}}</div>
         </div>
       </td>
     </tr>
     <tr class="item-body">
-      <td rowspan="3" width="70" class="text-center" style="border-right: 1px solid #eee;">
+      <td rowspan="4" width="70" class="text-center" style="border-right: 1px solid #eee;">
         <span v-if="item.busniesstypeid==5"><i class="iconfont icon-coordinates_fill"></i><br>{{$t('message.On_site')}} </span>
         <span v-if="item.busniesstypeid==2"><i
           class="iconfont icon-computer_fill"></i><br>{{$t('message.Remote_desktop')}} </span>
@@ -18,7 +18,7 @@
           class="iconfont icon-customerservice_fill"></i><br>{{$t('message.Telephone')}} </span>
       </td>
       <td class="text-left" ><span v-if="item.description.length!=0">{{item.description[0].yh}} </span></td>
-      <td rowspan="3" width="20">
+      <td rowspan="4" width="20">
         <a v-if="item.orderstateid>0" @click="goDetail(item)" class="text-center orderBtn"
         >{{$t('message.Detail')}}
         </a>
@@ -29,8 +29,13 @@
     <tr class="item-body nopadding">
       <td class="text-left"> {{item.reporttime}}</td>
     </tr>
-    <tr class="item-body">
+    <tr class="item-body nopadding">
       <td class="text-left">{{$t('message.NO')}}:{{item.ordernumber}} </td>
+    </tr>
+    <tr class="item-body ">
+      <td class="text-left"> <div  v-if="item.description">
+        <span style="color: #888" v-for="desc in item.description" v-if="item.description.length>0">{{desc.faultDescription}} </span>
+        </div></td>
     </tr>
   </table>
   </div>

@@ -3,14 +3,19 @@
 import Vue from 'vue'
 import router from './router'
 import MintUI from 'mint-ui'
-// import 'muse-components/styles/base.less' // 加载基础的样式 muse-ui/src
-// import DatePicker from 'muse-components/datePicker'
-// Vue.component('date-picker', DatePicker)
-
 import 'mint-ui/lib/style.css'
 import '../statics/mobile/font/iconfont.css'
 import './assets/style/main.less'
 import i18n from './i18n/index'
+
+// import 'muse-components/styles/base.less' // 加载基础的样式
+// import appBar from 'muse-components/appBar'
+import MuseUI from 'muse-ui'
+import 'muse-ui/dist/muse-ui.css'
+// import 'muse-ui/dist/theme-carbon.css' // 使用 carbon 主题
+Vue.use(MuseUI)
+// ..
+// Vue.component('app-bar', appBar)
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 Vue.use(VueAwesomeSwiper)
@@ -43,9 +48,7 @@ Vue.use(api)
 import './api/config'
 console.log("ERROR", ERR_OK)
 
-import {
-  Indicator
-} from 'mint-ui';
+import {Indicator} from 'mint-ui';
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

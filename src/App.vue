@@ -1,35 +1,35 @@
-<template >
-  <div id="app" >
-    <transition :name="transitionName"   appear>
-        <keep-alive>
-          <router-view  class="RouterView"></router-view >
-        </keep-alive>
+<template>
+  <div id="app">
+    <transition :name="transitionName" appear>
+      <keep-alive>
+        <router-view class="RouterView"></router-view>
+      </keep-alive>
     </transition>
-  </div >
-</template >
-<script >
+  </div>
+</template>
+<script>
   export default {
     name: 'app',
     data(){
       return {
-         transitionName: 'slide-left'
+        transitionName: 'slide-left'
       }
     },
-    watch:{
+    watch: {
       '$route': {
         handler(val, oval) {
-          console.log("p路径改变了", val)
-          let isBack=this.$router.isBack;
+          let isBack = this.$router.isBack;
           if (isBack) {
-              this.transitionName = 'slide-right'
-            } else {
-              this.transitionName = 'slide-left'
+            this.transitionName = 'slide-right'
+            if(val.path=='/login'){
+              this.$router.push('/index')
             }
-            this.$router.isBack = false
-          console.info("isback",isBack)
-
+          } else {
+            this.transitionName = 'slide-left'
+          }
+          this.$router.isBack = false
         }
       },
     },
   }
-</script >
+</script>

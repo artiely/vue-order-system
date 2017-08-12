@@ -46,7 +46,7 @@
                  style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">{{$t('message.Logout')}}
       </mt-button>
     </mt-popup>
-    <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left">
+    <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left" v-if="customerNotificationList.length>0">
       <scroller>
         <mt-cell v-for="(item,index) in customerNotificationList" :key="index" :title="item.content" is-link
                  @click.native="jumpToInfo(item)"></mt-cell>
@@ -88,6 +88,7 @@
       loginOut(){
         this.$store.commit('LOGOUT')
         this.$router.push({path: '/index',name:'index'});
+        this.settingVisible=false
       },
       showUserInfo(){
         Toast('敬请期待');
@@ -132,7 +133,7 @@
         Toast('敬请期待')
       },
       getPersonInfo(){
-        this.$api.get_person_info({personId: 4999}).then(res => {
+        this.$api.get_person_info({personId: this.state.personId}).then(res => {
           if (res.code == ERR_OK) {
             this.userInfo = res.person
           }

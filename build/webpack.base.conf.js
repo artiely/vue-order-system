@@ -7,12 +7,6 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
-const museUiThemePath = path.join(  //muse ui 官方配置
-  __dirname,
-  'node_modules',
-  'muse-ui',
-  'src/styles/themes/variables/default.less'
-)
 
 module.exports = {
   entry: {
@@ -30,7 +24,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
-      'muse-components': 'muse-ui/src' //muse ui 官方配置
+      'muse-components': 'muse-ui/src'
     }
   },
   module: {
@@ -61,7 +55,7 @@ module.exports = {
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       },
-      { //muse ui 官方配置
+      {
         test: /muse-ui.src.*?js$/,
         loader: 'babel-loader'
       }

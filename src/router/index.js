@@ -18,8 +18,7 @@ Router.prototype.back = function () {
 }
 // 页面刷新时，重新赋值token
 if (window.sessionStorage.getItem('token')) {
-  // alert(window.sessionStorage.getItem('token'))
-  store.commit('LOGIN', {userId: Number(window.sessionStorage.getItem('token'))})
+  store.commit('LOGIN', {userId: Number(window.sessionStorage.getItem('token')),personId:Number(window.sessionStorage.getItem('personId'))})
 }
 if (window.sessionStorage.getItem('person')) {
   store.commit('PERSON_INFO', window.sessionStorage.getItem('person'))
@@ -175,6 +174,8 @@ router.beforeEach((to, from, next) => {
     console.log(store)
     store.commit('SET_LANG',lang)
   }
+
+
 
   if (to.meta.requiresAuth) {
     if (store.state.userInfo.token != null && store.state.userInfo.token != undefined) {
