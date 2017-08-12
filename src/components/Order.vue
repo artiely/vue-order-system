@@ -51,7 +51,13 @@
     <mt-popup v-model="popupVisible" position="right" style="height: 100%;width: 280px;">
       <scroller class="filter_scroller">
         <div class="my-title">
-          按时间选择 / 服务时间
+      {{$t('message.Range_date')}}
+        </div>
+        <div style="text-align: left">
+          <mt-radio
+            v-model="query.timeType"
+            :options="[{label:this.$t('message.Report_time'),value:'0'},{label:this.$t('message.Appointment_time'),value:'1'}]">
+          </mt-radio>
         </div>
         <div class="">
           <mt-button class="bt-margin" :class="{'active':rangeDateActive==item.id}" v-for="(item,index) in rangeDate"
@@ -120,7 +126,8 @@
           yh: '',
           sfzc: false,
           sfxc: false,
-          sfbx: false
+          sfbx: false,
+          timeType:'0',//查询类型 报修时间/服务时间 0/1
         },
         rangeDate: [{
           id: 1,
@@ -233,7 +240,8 @@
           yh: this.query.yh,
           sfzc: this.query.sfzc,
           sfxc: this.query.sfxc,
-          sfbx: this.query.sfbx
+          sfbx: this.query.sfbx,
+          timeType:this.query.timeType
         }
 
         this.$api.get_order_list(params).then(res => {

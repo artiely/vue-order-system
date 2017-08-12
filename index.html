@@ -97,11 +97,17 @@
     .loading span:nth-child(5) {
       -webkit-animation-delay: 0.65s;
     }
+    .bottomTip{
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #ff4949;
+    }
   </style>
 </head>
 
 <body>
-  <div class="scene">
+  <div class="scene" id="scene">
     <img src="statics/mobile/img/logo.png" alt="">
     <div class="loading">
       <span></span>
@@ -110,7 +116,8 @@
       <span></span>
       <span></span>
     </div>
-    <p style="color: #fff;font-size: 12px;text-align: center">欢迎访问群思订单系统</p>
+    <p class="bottomTip">欢迎访问群思订单系统</p>
+    <p class="bottomTip">Welcome to the Fwone order system</p>
   </div>
   <div id="app">
 
@@ -118,10 +125,9 @@
   <!-- built files will be auto injected -->
 </body>
 <script>
-  $(".scene").hide(300)
-  /* window.onload=function(){
-     $(".scene").hide(300)
-   }*/
+   window.onload=function(){
+     document.getElementById('scene').style.display='none'
+   }
 </script>
 
 </html>

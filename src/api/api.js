@@ -77,7 +77,7 @@ const delete_service_address = params => {
  *   sfzc:'是否驻场 false',
  *   sfxc:'是否现场 false',
  *   sfbx:'是否报修 false',
- *
+ *   timeType:0/1 保修时间/服务时间
  *   }
  */
 const get_order_list = params => {
@@ -228,7 +228,7 @@ const read_notification = params => {
 
 /**
  * 获取子单
- * @param callId
+ * @param callId [String] 这个接口呢是用来判断是不是报修人的单 用来判断是否展示评论按钮
  */
 const get_sub_order = params => {
   return fetch({
@@ -290,6 +290,60 @@ const complain_order = params => {
     data: params
   })
 }
+
+/**
+ * 获取价格曲线
+ * @param params
+ */
+const get_price_line = params => {
+  return fetch({
+    url: '/oncall/getOncallReservationTime',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * oncall 下单
+ * @param params
+ */
+const save_price_oncall = params => {
+  return fetch({
+    url: '/oncall/saveOncallPrice',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 获取MA价格
+ * @param params
+ * {
+ * amonut：1//工程师数量
+ * companyIds：[1223] //公司id
+ * faultDesc:"",
+ * isReset:1,
+ * isWorkDay:0
+ * trDateFrom:"2017-08-11"
+ * trDateTo:"2017-08-11"
+ * trTimeFrom:"09:00"
+ * trTimeTo:"18:00"
+ * }
+ */
+const get_price_Ma = params => {
+  return fetch({
+    url: "/Tr/getTrPrice",
+    method: 'post',
+    data: params
+  })
+}
+const save_price_Ma = params => {
+  return fetch({
+    url: '/Tr/saveTrOrder',
+    method: 'post',
+    data: params
+  })
+}
 const apiList = {
   login,
   get_user_id,
@@ -311,7 +365,11 @@ const apiList = {
   get_sub_order,
   rating_sub_order,
   reminder_order,
-  complain_order
+  complain_order,
+  get_price_line,
+  save_price_oncall,
+  get_price_Ma,
+  save_price_Ma
 }
 
 export default apiList

@@ -127,7 +127,6 @@
             this.noStreet=true
           }
           picker.setSlotValues(2, Object.keys(xian));
-          console.log(values)
       },
 
       onStreetChange(picker, values){
@@ -175,12 +174,12 @@
           id: "151",//这个id pc上似乎是固定的
           newValue:this.addressProvince+this.addressCity+(this.addressXian?this.addressXian:'')+(this.addressStreet ? this.addressStreet:'')+(this.desMore?this.desMore:''),
           operationType: 1,
-          shortName: _this.companyName //公司名称 暂时无
+          shortName: _this.companyName
         };
 
         this.$api.save_service_address(data).then(res=>{
           if(res.code==ERR_OK){
-            Toast('保存成功');
+            Toast(this.$t('message.Save_successful'));
             this.addVisible = false;
             this.getServiceAddress()
           }else{
@@ -197,18 +196,25 @@
        */
       deleteAddress(id){
         let  data={id:id};
-        MessageBox.confirm('确定删除？').then(actions=>{
-          this.$api.delete_service_address(data).then(res=>{
-            if(res.code==ERR_OK){
-              Toast('删除成功');
-              this.getServiceAddress()
-            }else{
-              Toast(res.msg);
-            }
-          }).catch(err=>{
-            console.error(err)
-          })
-
+        MessageBox({
+          message:this.$t('message.Sure_delete'),
+          title:'',
+          showCancelButton: true,
+          confirmButtonText:this.$t('message.Ok'),
+          cancelButtonText:this.$t('message.Cancel')
+        }).then(actions=>{
+          if(actions=='confirm'){
+            this.$api.delete_service_address(data).then(res=>{
+              if(res.code==ERR_OK){
+                Toast(this.$t('message.Del_success'));
+                this.getServiceAddress()
+              }else{
+                Toast(res.msg);
+              }
+            }).catch(err=>{
+              console.error(err)
+            })
+          }
         })
       },
     },

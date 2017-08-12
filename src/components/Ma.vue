@@ -1,65 +1,145 @@
 <template>
   <div class="ma">
-    <mt-header title="候鸟服务" fixed>
-        <mt-button icon="back" @click.native="back()" slot="left">返回</mt-button>
+    <mt-header :title="$t('message.Residency_service')" fixed style="z-index: 7;">
+      <mt-button icon="back" @click.native="back()" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <div class="page-content">
-      <mt-cell title="服务点" ></mt-cell >
-      <div class="companyName" @click.native="toggleOpen" >
-        <mt-field label="" :state="stateTip" v-model="addressTip" readonly @click.native="toggleOpen" placeholder="请选择服务点" ></mt-field >
-      </div >
+      <mt-cell :title="$t('message.Service_location')"></mt-cell>
+      <div class="companyName" @click.native="toggleOpen">
+        <mt-field label="" :state="stateTip" v-model="addressObj.label" readonly @click.native="toggleOpen"
+                  :placeholder="$t('message.Choose_location')"></mt-field>
+      </div>
       <!--服务点模态s-->
-      <mt-popup v-model="popupVisibleCompany" position="right" style="width: 280px;height: 100%;font-size: 14px;text-align: left" >
-        <scroller >
-          <mt-checklist title="服务点列表" v-model="checkValue" :options='serviceAddress' ></mt-checklist >
-        </scroller >
-      </mt-popup >
+      <mt-popup v-model="popupVisibleCompany" position="right"
+                style="width: 280px;height: 100%;font-size: 14px;text-align: left">
+        <scroller>
+          <mt-radio :title="$t('message.Location_list')" v-model="checkValue" :options='serviceAddress'></mt-radio>
+        </scroller>
+      </mt-popup>
 
+
+      <!--其他s-->
+      <div>
+        <mt-cell class="my-cell" :title="$t('message.Lunch_break')">
+          <mt-switch v-model="query.sfwx"></mt-switch>
+        </mt-cell>
+        <mt-cell class="my-cell" :title="$t('message.Working_day')">
+          <mt-switch v-model="query.sfgzr"></mt-switch>
+        </mt-cell>
+        <mt-cell class="my-cell" :title="$t('message.Engineer_Headcount')">
+          <select v-model="query.rysl" class="select">
+            <option :value="item" v-for="item in query.ryzs">{{item}}</option>
+          </select>
+        </mt-cell>
+      </div>
+      <!--其他e-->
       <!--日期s-->
       <div>
-        <mt-cell title="日期范围" ></mt-cell >
+        <mt-cell :title="$t('message.Range_date')"></mt-cell>
         <div class="dateWrap">
-        <!--   <date-picker class="dateItem" hintText="点击选择日期" :minDate="minDate" v-model="startDate" :underlineShow="false"></date-picker>
-          <date-picker class="dateItem" hintText="点击选择日期" :shouldDisableDate="shouldDisableDate" :minDate="startDate" v-model="endDate" :underlineShow="false"></date-picker> -->
+          <!--   <date-picker class="dateItem" hintText="点击选择日期" :minDate="minDate" v-model="startDate" :underlineShow="false"></date-picker>
+
+            <date-picker class="dateItem" hintText="点击选择日期" :shouldDisableDate="shouldDisableDate" :minDate="startDate" v-model="endDate" :underlineShow="false"></date-picker> -->
+
+          <mu-date-picker
+            class="dateItem"
+            :hintText="$t('message.Start_date')"
+            :minDate="minDate"
+            v-model="startDate"
+            :underlineShow="false"
+            :okLabel="$t('message.Ok')"
+            :cancelLabel="$t('message.Cancel')"
+            :shouldDisableDate="disableWeekends"/>
+          <mu-date-picker
+            class="dateItem"
+            :hintText="$t('message.End_date')"
+            :shouldDisableDate="disableWeekends"
+            :minDate="startDate"
+            v-model="endDate"
+            :underlineShow="false"
+            :okLabel="$t('message.Ok')"
+            :cancelLabel="$t('message.Cancel')"
+          />
         </div>
       </div>
       <!--日期e-->
-
       <!--时间s-->
-      <div class="flexBox" >
-        <mt-cell title="时间范围" ></mt-cell >
-        <vue-slider ref="slider" v-model="rangeTimeOption.rangeTimeValue" :processStyle="rangeTimeOption.processStyle" :bgStyle="rangeTimeOption.bgStyle" :dotSize="rangeTimeOption.dotSize" :min="rangeTimeOption.min" :max="rangeTimeOption.max" :formatter="rangeTimeOption.formatter" :tooltipStyle="rangeTimeOption.tooltipStyle"  ></vue-slider >
-        <div style="height: 20px;" ></div >
-      </div >
-      <!--时间e-->
-      <!--其他s-->
-      <div>
-        <mt-cell class="my-cell" title="是否午休" >
-          <mt-switch v-model="query.sfwx" ></mt-switch >
-        </mt-cell >
-        <mt-cell class="my-cell" title="仅限工作日" >
-          <mt-switch v-model="query.sfgzr" ></mt-switch >
-        </mt-cell >
-        <mt-cell class="my-cell" title="工程师数量" >
-          <select v-model="query.rysl" class="select">
-            <option :value="item" v-for="item in query.ryzs" >{{item}}</option >
-          </select >
-        </mt-cell >
+      <div class="flexBox">
+        <mt-cell :title="$t('message.Range_time')"></mt-cell>
+        <vue-slider
+          ref="slider"
+          v-model="rangeTimeOption.rangeTimeValue"
+          :processStyle="rangeTimeOption.processStyle"
+          :bgStyle="rangeTimeOption.bgStyle"
+          :dotSize="rangeTimeOption.dotSize"
+          :min="rangeTimeOption.min"
+          :max="rangeTimeOption.max"
+          :formatter="rangeTimeOption.formatter"
+          :tooltipStyle="rangeTimeOption.tooltipStyle"
+          :real-time="true"
+        ></vue-slider>
+        <div style="height: 20px;"></div>
       </div>
-      <!--其他e-->
-    <div>
-      <mt-cell class="my-cell" title="需求描述" >
-      </mt-cell >
-      <textarea  rows="4 " placeholder="简单描述故障..."></textarea>
-    </div>
+      <!--时间e-->
+      <div>
+        <mt-cell class="my-cell" :title="$t('message.Fault_description')">
+        </mt-cell>
+        <mt-field type="textarea" rows="4" :placeholder="$t('message.Please_describe')" v-model="faultDesc"></mt-field>
+      </div>
+      <div>
+        <mt-button type="primary" size="large" @click.native="getPriceMa" :disabled="checkValue==''||faultDesc==''">
+          {{$t('message.Cost_Estimation')}}
+        </mt-button>
+      </div>
+      <!--服务时间选择组件e-->
+      <div class="flexBox">
+        <mt-cell :title="$t('message.Can_time_list')" v-if="trPriceList.length>0"></mt-cell>
+        <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+          <tr v-for="(item,index) in trPriceList" :key="index" :index="index" class="timeItem"
+              v-if="trPriceList.length>0">
+            <td>{{item.trDate}}</td>
+            <td><span class="label">￥{{item.unitPrice}}</span></td>
+            <td @click="selectTime(index)">{{item.trTimeFrom}}</td>
+            <td @click="selectTime(index)">{{item.trTimeTo}}</td>
+            <td @click="deleteDate(index)" class="del">{{$t('message.Delete')}}</td>
+          </tr>
+        </table>
+      </div>
+      <div style="height: 100px;"></div>
 
-      <div class="footerBar" >
-        <div class="b_btn" >
-          <mt-button class="an_order"  @click="anOrder"  type="danger" :disabled="checkValue.length==0">
-            预约服务
-          </mt-button >
-        </div >
-      </div >
+      <div class="footerBar">
+        <div class="b_btn" style="z-index:7">
+          <mt-button class="an_order" @click.native="anOrder" type="danger" :disabled="trPriceList.length==0">
+            {{$t('message.Confirm')}}
+          </mt-button>
+        </div>
+      </div>
+      <!--单个调整-->
+      <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 200px;font-size: 14px"
+                v-if="popupVisibleSelectTime">
+        <div style="height: 30px;"></div>
+        <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+          <tr class="timeItem">
+            <td>{{trPriceList[selectIndex].trDate}}</td>
+            <td><span class="label">￥{{trPriceList[selectIndex].unitPrice}}</span></td>
+            <td>{{trPriceList[selectIndex].trTimeFrom}}</td>
+            <td>{{trPriceList[selectIndex].trTimeTo}}</td>
+          </tr>
+        </table>
+        <div style="height: 50px;"></div>
+        <vue-slider
+          ref="slider2"
+          v-model="selectRangeValue"
+          :processStyle="rangeTimeOption.processStyle"
+          :bgStyle="rangeTimeOption.bgStyle"
+          :dotSize="rangeTimeOption.dotSize"
+          :min="rangeTimeOption.min"
+          :max="rangeTimeOption.max"
+          :formatter="rangeTimeOption.formatter"
+          :real-time="true"
+          :tooltipStyle="rangeTimeOption.tooltipStyle"></vue-slider>
+      </mt-popup>
+      <!--单个调整/-->
 
     </div>
   </div>
@@ -67,135 +147,211 @@
 
 <script>
   import moment from 'moment'
-  import { Toast } from 'mint-ui';
+  import {Toast} from 'mint-ui';
   import vueSlider from 'vue-slider-component'
-export default {
-  name: 'ma',
-  components: {
-    vueSlider
-  },
-  data () {
-    return {
-      addressTip:'',
-      stateTip:'error',
-      popupVisibleCompany:false,
-      checkValue:[],companyOptions:[],
-      serviceAddress:[],
-      minDate:moment().format('YYYY-MM-DD'),
-      startDate: moment().format('YYYY-MM-DD'),
-      endDate: moment().format('YYYY-MM-DD'),
-      rangeTimeOption: {
-        rangeTimeValue: [8 * 60, 18 * 60],
-        formatter: function (value) {
-          let HS = parseInt(value / 60).toString().length < 2 ? '0' + parseInt(value / 60) : parseInt(value / 60);
-          let MS = (value % 60).toString().length < 2 ? '0' + (value % 60) : (value % 60);
-          var formatTime = HS + ':' + MS;
-          return formatTime
+  export default {
+    name: 'ma',
+    components: {
+      vueSlider
+    },
+    data () {
+      return {
+        addressTip: '',
+        stateTip: 'error',
+        popupVisibleCompany: false,
+        checkValue: '',
+        companyOptions: [],
+        serviceAddress: [],
+        addressObj: {},
+        minDate: moment().format('YYYY-MM-DD'),
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().format('YYYY-MM-DD'),
+        rangeTime: ['08:00', '18:00'],
+        rangeTimeOption: {
+          rangeTimeValue: [8 * 60, 18 * 60],
+          formatter: function (value) {
+            let HS = parseInt(value / 60).toString().length < 2 ? '0' + parseInt(value / 60) : parseInt(value / 60);
+            let MS = (value % 60).toString().length < 2 ? '0' + (value % 60) : (value % 60);
+            let formatTime = HS + ':' + MS;
+            return formatTime
+          },
+          processStyle: {
+            "height": '2px',
+            "backgroundColor": "#26a2ff",
+          }, tooltipStyle: {
+            "backgroundColor": "#26a2ff",
+            "borderColor": "#26a2ff"
+          },
+          bgStyle: {
+            "height": '2px'
+          },
+          dotSize: 30,
+          min: 0,
+          max: 24 * 60,
         },
-        processStyle: {
-          "height": '2px',
-          "backgroundColor": "#26a2ff",
-        }, tooltipStyle: {
-          "backgroundColor": "#26a2ff",
-          "borderColor": "#26a2ff"
+        query: {
+          sfwx: false,
+          sfgzr: false,
+          rysl: 1,
+          ryzs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         },
-        bgStyle: {
-          "height": '2px'
-        },
-        dotSize: 30,
-        min: 0,
-        max: 24 * 60,
+        faultDesc: '',
+        trPriceList: [],
+        popupVisibleSelectTime: false,
+        selectIndex: 0,
+        selectRangeValue: []
+
+      }
+    },
+    watch: {
+      'checkValue': {
+        handler: function (val) {
+          this.addressObj = JSON.parse(val)
+          this.stateTip = 'success'
+        }
       },
-      query:{
-        sfwx:false,
-        sfgzr:false,
-        rysl:1,
-        ryzs:[1,2,3,4,5,6,7,8,9,10]
-
-      }
-    }
-  },
-  watch:{
-    'checkValue':{
-      handler: function (val) {
-        if(val.length==0){
-          this.addressTip =''
-          this.stateTip="error"
-        }else{
-          this.addressTip = '您已选择'+val.length+'个服务点'
-          this.stateTip="success"
+      'startDate': {
+        handler: function (val, oldVal) {
+          if (moment(val).valueOf() > moment(this.endDate).valueOf()) {
+            this.endDate = val;
+          }
         }
-
-      }
-    },
-    'startDate': {
-      handler: function (val, oldVal) {
-        if(moment(val).valueOf()>moment(this.endDate).valueOf()){
-          this.endDate=val;
+      },
+      'rangeTimeOption.rangeTimeValue': {
+        handler(value){
+          let arr = []
+          if (value) {
+            for (let i = 0; i < value.length; i++) {
+              let HS = parseInt(value[i] / 60).toString().length < 2 ? '0' + parseInt(value[i] / 60) : parseInt(value[i] / 60);
+              let MS = (value[i] % 60).toString().length < 2 ? '0' + (value[i] % 60) : (value[i] % 60);
+              let formatTime = HS + ':' + MS;
+              arr.push(formatTime)
+            }
+            this.rangeTime = arr
+          }
+        }
+      },
+      'selectRangeValue': {
+        handler(value){
+          let arr = []
+          if (value) {
+            for (let i = 0; i < value.length; i++) {
+              let HS = parseInt(value[i] / 60).toString().length < 2 ? '0' + parseInt(value[i] / 60) : parseInt(value[i] / 60);
+              let MS = (value[i] % 60).toString().length < 2 ? '0' + (value[i] % 60) : (value[i] % 60);
+              let formatTime = HS + ':' + MS;
+              arr.push(formatTime)
+            }
+            this.trPriceList[this.selectIndex].trTimeFrom = arr[0]
+            this.trPriceList[this.selectIndex].trTimeTo = arr[1]
+          }
         }
       }
     },
-  },
-  created(){
-    this.getServiceAddress()
-  },
-  methods:{
-    back(){
-      this.$router.back()
+    created(){
+      this.getServiceAddress()
     },
-    getServiceAddress () {
-      var _this=this;
-      $.ajax({
-        url: localPath+"/company/getServiceAddress",
-        dataType:'json',
-        success: function (r) {
-          if (r.code == 0) {
-            let _temp=[];
-            let _data=r.serviceAddress
-            for(var i=0;i<_data.length;i++){
+    methods: {
+      back(){
+        this.$router.back()
+      },
+      getServiceAddress () {
+        this.$api.get_service_address().then(res => {
+          if (res.code == ERR_OK) {
+            let _temp = [];
+            let _data = res.serviceAddress
+            for (let i = 0; i < _data.length; i++) {
               _temp.push({
-                label:_data[i].allAddress,
-                value:_data[i].companyId
+                label: _data[i].allAddress,
+                value: JSON.stringify({label: _data[i].allAddress, id: _data[i].companyId})
               })
             }
-            _this.serviceAddress = _temp
+            this.serviceAddress = _temp
+          } else {
+            alert(res.msg)
           }
-        }
-      })
-    },
-    shouldDisableDate(date){
-      return moment(this.startDate).valueOf()>moment(date).valueOf()
-    },
-    toggleOpen(){
-      this.popupVisibleCompany = !this.popupVisibleCompany
-    },
-    anOrder(){
-      let newData=[];
-      for(var i=0;i< x.length;i++){
-//要计算价格 没法继续
-      }
-      $.ajax({
-        url: localPath+'/Tr/saveTrOrder',
-        data: JSON.stringify(newData),
-        type: "POST",
-        dataType:'json',
-        success: function (r) {
-          if (r.code == 0) {
-            Toast("下单成功")
-          }else{
-            Toast('系统忙，请稍后重试')
-          }
+        }).catch(err => console.error(err))
 
+      },
+      toggleOpen(){
+        this.popupVisibleCompany = !this.popupVisibleCompany
+      },
+      disableWeekends(date){
+        if (this.query.sfgzr) {
+          return date.getDay() === 0 || date.getDay() === 6
+        } else {
+          return
         }
-      })
+
+      },
+      selectTime(index){
+        this.popupVisibleSelectTime = true;
+        this.selectIndex = index;
+        this.selectRangeValue = [this.rangeTimeOption.rangeTimeValue[0], this.rangeTimeOption.rangeTimeValue[1]]
+        setTimeout(() => {
+          this.$refs.slider2.refresh();
+        }, 400)
+      },
+      deleteDate(index){
+        this.trPriceList.splice(index, 1)
+        Toast(this.$t('message.Del_success'));
+      },
+      getPriceMa(){
+        let data = {
+          amonut: this.query.rysl,
+          companyIds: ["12317"],
+          faultDesc: this.faultDesc,
+          isReset: this.query.sfwx ? 1 : 0,
+          isWorkDay: this.query.sfgzr ? 1 : 0,
+          trDateFrom: this.startDate,
+          trDateTo: this.endDate,
+          trTimeFrom: this.rangeTime[0],
+          trTimeTo: this.rangeTime[1],
+        }
+        this.$api.get_price_Ma(data).then(res => {
+          if (res.code == ERR_OK) {
+            this.trPriceList = res.trPriceList
+          }
+        })
+      },
+      anOrder(){
+        var data = this.trPriceList;
+        //cb 数据映射
+        function ObjStory(orgId, amount, CallDetailEntity, reservationTimeEntity) //声明对象
+        {
+          this.orgId = orgId;
+          this.amount = amount;
+          this.CallDetailEntity = CallDetailEntity;
+          this.reservationTimeEntity = reservationTimeEntity;
+        }
+
+        let newData = [];
+        for (let i = 0; i < data.length; i++) {
+          newData.push(new ObjStory(data[i].companyId, data[i].amount, {
+            "faultDesc": data[i].faultDesc,
+            "isLunchBreak": data[i].isRest
+          }, {
+            "reservationDate": data[i].trDate,
+            "startTime": data[i].trTimeFrom,
+            "endTime": data[i].trTimeTo
+
+          }))
+        }
+        this.$api.save_price_Ma(newData).then(res => {
+          if (res.code == ERR_OK) {
+            Toast(this.$t('message.Checkout_success'));
+            this.trPriceList=[]
+          } else {
+            alert(res.msg)
+          }
+        }).catch(err => console.error(err))
+      }
     }
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .select{
+  .select {
     height: 32px;
     width: 52px;
     border: 1px solid #d9d9d9;
@@ -204,17 +360,19 @@ export default {
     background: #fff;
   }
 
-.page-content{
-  padding-top: 40px;
-  text-align: left;
-  padding-bottom: 40px;
-}
-.dateWrap{
-  display: flex;
-}
-.dateItem{
-  flex: 1;
-  text-indent:6px;;
-  width: 50%;
-}
+  .page-content {
+    padding-top: 40px;
+    text-align: left;
+    padding-bottom: 40px;
+  }
+
+  .dateWrap {
+    display: flex;
+  }
+
+  .dateItem {
+    flex: 1;
+    text-indent: 6px;;
+    width: 50%;
+  }
 </style>

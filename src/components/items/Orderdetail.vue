@@ -97,7 +97,7 @@
                 <tr>
                   <td></td>
                   <td>
-                    <button size="small" class="footerBtn pull-right" v-if="status>=3" @click="pingjia">评价</button>
+                    <button size="small" class="footerBtn pull-right" v-if="status>=3&&subList.length>0" @click="pingjia">{{$t('message.To_rate')}}</button>
                   </td>
                 </tr>
               </table>
@@ -162,67 +162,67 @@
           <div style="height: 80px"></div>
         </scroller>
         <div class="footerBar">
-          <button size="small" class="footerBtn" v-if="status>=0 && status<2" @click="reminder">催单</button>
-          <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">投诉</button>
-          <button size="small" class="footerBtn" v-if="status>=5">发票</button>
+          <button size="small" class="footerBtn" v-if="status>=0 && status<2" @click="reminder">{{$t('message.Reminder')}}</button>
+          <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">{{$t('message.complaint')}}</button>
+          <!--<button size="small" class="footerBtn" v-if="status>=5">发票</button>-->
         </div>
         <!--评价-->
         <mt-popup
           v-model="pingjiaVisible"
           position="top" style="width: 100%;height: 100%;">
-          <mt-header title="评价" fixed style="z-index: 9;">
-            <mt-button icon="back" @click="pingjiaVisible=!pingjiaVisible" slot="left">返回</mt-button>
+          <mt-header :title="$t('message.Service_level')" fixed style="z-index: 9;">
+            <mt-button icon="back" @click="pingjiaVisible=!pingjiaVisible" slot="left">{{$t('message.Back')}}</mt-button>
           </mt-header>
           <div style="height: 40px;"></div>
-          <table>
+          <table style="text-align: left">
             <tr>
-              <td>服务台：</td>
+              <td width="50">{{$t('message.Service_center')}}：</td>
               <td>
                 <div class="rating">
                   <star-rating :star-size="30" v-model="ratingToService" :show-rating="false"
                                :inline="true"></star-rating>
-                  <span v-if="ratingToService==0" class="text ">未评价</span>
-                  <span v-if="ratingToService==1" class="text redbg">服务待跟进</span>
-                  <span v-if="ratingToService==2" class="text yellowbg">不满意</span>
-                  <span v-if="ratingToService==3" class="text bluebg">一般</span>
-                  <span v-if="ratingToService==4" class="text bluebg">满意</span>
-                  <span v-if="ratingToService==5" class="text greenbg">非常满意</span>
+                  <span v-if="ratingToService==0" class="text ">{{$t('message.Unvalued')}}</span>
+                  <span v-if="ratingToService==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                  <span v-if="ratingToService==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                  <span v-if="ratingToService==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                  <span v-if="ratingToService==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                  <span v-if="ratingToService==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td> 工程师：</td>
+              <td width="50"> {{$t('message.Engineer')}}：</td>
               <td>
                 <div class="rating">
                   <star-rating :star-size="30" v-model="ratingToEngineer" :show-rating="false"
                                :inline="true"></star-rating>
-                  <span v-if="ratingToEngineer==0" class="text ">未评价</span>
-                  <span v-if="ratingToEngineer==1" class="text redbg">服务待跟进</span>
-                  <span v-if="ratingToEngineer==2" class="text yellowbg">不满意</span>
-                  <span v-if="ratingToEngineer==3" class="text bluebg">一般</span>
-                  <span v-if="ratingToEngineer==4" class="text bluebg">满意</span>
-                  <span v-if="ratingToEngineer==5" class="text greenbg">非常满意</span>
+                  <span v-if="ratingToEngineer==0" class="text ">{{$t('message.Unvalued')}}</span>
+                  <span v-if="ratingToEngineer==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                  <span v-if="ratingToEngineer==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                  <span v-if="ratingToEngineer==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                  <span v-if="ratingToEngineer==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                  <span v-if="ratingToEngineer==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td> 总&nbsp;&nbsp;&nbsp;&nbsp;体：</td>
+              <td width="50"> {{$t('message.Overall')}}：</td>
               <td>
                 <div class="rating">
                   <star-rating :star-size="30" v-model="ratingToAll" :show-rating="false" :inline="true"></star-rating>
-                  <span v-if="ratingToAll==0" class="text ">未评价</span>
-                  <span v-if="ratingToAll==1" class="text redbg">服务待跟进</span>
-                  <span v-if="ratingToAll==2" class="text yellowbg">不满意</span>
-                  <span v-if="ratingToAll==3" class="text bluebg">一般</span>
-                  <span v-if="ratingToAll==4" class="text bluebg">满意</span>
-                  <span v-if="ratingToAll==5" class="text greenbg">非常满意</span>
+                  <span v-if="ratingToAll==0" class="text ">{{$t('message.Unvalued')}}</span>
+                  <span v-if="ratingToAll==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                  <span v-if="ratingToAll==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                  <span v-if="ratingToAll==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                  <span v-if="ratingToAll==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                  <span v-if="ratingToAll==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
                 </div>
               </td>
             </tr>
           </table>
-          <mt-field placeholder="服务周到吗?（写够15字才是好同志）" type="textarea" rows="3" v-model="evaluate"></mt-field>
-          <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">加油！还差字{{evaluate_num}}就可以发布了。</small>
-          <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">发布
+          <mt-field :placeholder="$t('message.Rate_placeholder')" type="textarea" rows="3" v-model="evaluate"></mt-field>
+          <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">{{$t('message.Publish_tip',{Num:evaluate_num})}}</small>
+          <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">{{$t('message.Publish')}}
           </mt-button>
 
         </mt-popup>
@@ -233,24 +233,24 @@
           position="top"
           style="width: 100%;height: 100%"
         >
-          <mt-header title="投诉" fixed style="z-index: 9;">
-            <mt-button icon="back" @click="toushuVisible=!toushuVisible" slot="left">返回</mt-button>
+          <mt-header :title="$t('message.complaint')" fixed style="z-index: 9;">
+            <mt-button icon="back" @click="toushuVisible=!toushuVisible" slot="left">{{$t('message.Back')}}</mt-button>
           </mt-header>
-          <scroller style="padding-top: 40px;text-align: left">
+          <scroller style="padding-top: 40px;text-align: left" >
             <mt-radio
-              title="投诉原因"
+              :title="$t('message.Cause_complaint')"
               v-model="reasonId"
               align="right"
               :options="reason">
             </mt-radio>
             <mt-checklist
-              title="投诉部门"
+              :title="$t('message.Complaints_department')"
               v-model="departmentIds"
               align="left"
               :options="department">
             </mt-checklist>
-            <mt-field placeholder="投诉与建议" type="textarea" rows="3" v-model="complainTxt"></mt-field>
-            <mt-button type="primary" size="large" :disabled="complainTxt.length==0" @click.native="toComplain">提交
+            <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3" v-model="complainTxt"></mt-field>
+            <mt-button type="primary" size="large" :disabled="complainTxt.length==0" @click.native="toComplain">{{$t('message.Submit')}}
             </mt-button>
             <div style="height: 80px;"></div>
           </scroller>
@@ -293,37 +293,37 @@
         complainTxt: '',
         reason: [
           {
-            label: '响应不及时',
+            label: this.$t('message.Response_not_timely'),
             value: '1',
           },
           {
-            label: '工程师能力低',
+            label: this.$t('message.Engineer_issues'),
             value: '2'
           },
           {
-            label: '工程师态度问题',
+            label: this.$t('message.Attitude_issues'),
             value: '3'
           },
           {
-            label: '工程师更换频繁',
+            label: this.$t('message.Engineers_frequently'),
             value: '4'
           },
           {
-            label: '其他',
+            label: this.$t('message.Other'),
             value: '5'
           }
         ],
-        reasonId: '1',
+        reasonId: '5',
         department: [
           {
-            label: "工程师",
+            label: this.$t('message.Engineer'),
             value: '1'
           },
           {
-            label: "服务台",
+            label: this.$t('message.Service_center'),
             value: '2'
           }, {
-            label: "其他",
+            label: this.$t('message.Other'),
             value: '3'
           }
         ],
@@ -374,20 +374,17 @@
 
       },
       pingjia()  {
-        this.pingjiaVisible = !this.pingjiaVisible,
-          this.getSubOrder()
-      }
-      ,
+        this.pingjiaVisible = !this.pingjiaVisible
+      },
       getSubOrder() {
-        this.$api.get_sub_order({callId: this.state.callId}).then(res => {
+        this.$api.get_sub_order({callId: this.state.callId.toString()}).then(res => {
           if (res.code == ERR_OK) {
             this.subList = res.callDetailList
           } else {
             alert(res.msg)
           }
         }).catch(err => console.error(err))
-      }
-      ,
+      },
       RatingSubOrder() {
         let data = {
           callDetailIds: ["523524"],
@@ -424,7 +421,7 @@
         };
         this.$api.complain_order(data).then(res => {
             if(res.code==ERR_OK){
-                Toast('投诉成功');
+                Toast(this.$t('message.Complaints_successfully'));
                 this.toushuVisible=false
             }else{
               alert(res.msg)
@@ -444,6 +441,9 @@
         id: sessionStorage.getItem('id'),
         type: sessionStorage.getItem('type')
       })
+    },
+    activated(){
+      this.getSubOrder()
     }
   }
 </script>

@@ -27,7 +27,6 @@
     name: 'home',
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App',
         selected: '1',
         transitionName: 'slide-right'
       }
@@ -36,6 +35,7 @@
     watch: {
       selected: function(val, oldVal) {
         // 这里就可以通过 val 的值变更来确定
+        console.info(val)
         switch (val) {
           case '1':
             this.$router.push({
@@ -68,6 +68,13 @@
           this.transitionName='slide-right'
         }
       },
+      $route:{
+          handler(val){
+            if(val.path=='/index'){
+                this.selected='1'
+            }
+          }
+      }
 
 
     },
