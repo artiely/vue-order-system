@@ -108,7 +108,9 @@
             <table v-for="item in detailData.engineers">
               <tr>
                 <td rowspan="3">
-                  <div class="en-icon"></div>
+                  <div class="en-icon" style="line-height: 100px;">
+                    <span v-if="">暂无...</span>
+                  </div>
                 </td>
                 <td>{{$t('message.Name')}}：</td>
                 <td>{{item.engineername}}</td>

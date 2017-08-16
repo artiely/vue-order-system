@@ -337,11 +337,52 @@ const get_price_Ma = params => {
     data: params
   })
 }
+
+/**
+ * Ma下单
+ * @param params
+ */
 const save_price_Ma = params => {
   return fetch({
     url: '/Tr/saveTrOrder',
     method: 'post',
     data: params
+  })
+}
+
+/**
+ * 付款的
+ * @param params
+ */
+const get_paid_charge = params => {
+  return fetch({
+    url: '/invoice/queryPaidCharge',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 未付款的
+ * @param params
+ */
+const get_unpaid_charge = params => {
+  return fetch({
+    url: '/invoice/queryUnPaidCharge',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 获取付款的明细
+ * @param params
+ */
+const get_contract_detail=params=>{
+  return fetch({
+    url:'/contractservicedetails/getListByReceiveId',
+    method:'get',
+    params:params
   })
 }
 const apiList = {
@@ -369,7 +410,11 @@ const apiList = {
   get_price_line,
   save_price_oncall,
   get_price_Ma,
-  save_price_Ma
+  save_price_Ma,
+  get_paid_charge,
+  get_unpaid_charge,
+  get_contract_detail
+
 }
 
 export default apiList

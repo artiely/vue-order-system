@@ -34,8 +34,6 @@
 </template>
 <script>
   import {mapState} from 'vuex';
-
-  import axios from 'axios'
   export default {
     name: 'login',
     data () {
@@ -82,15 +80,7 @@
       }
     },
     mounted(){
-      $('input').focus(function () {
-        $('form').css({
-          'transform': 'translateY(-80px)'
-        })
-      }).blur(function () {
-        $('form').css({
-          'transform': 'translateY(0px)'
-        })
-      })
+
     }
   }
 </script>
