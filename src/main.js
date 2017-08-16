@@ -11,9 +11,12 @@ import i18n from './i18n/index'
 // import 'muse-components/styles/base.less' // 加载基础的样式
 // import appBar from 'muse-components/appBar'
 import MuseUI from 'muse-ui'
-import 'muse-ui/dist/muse-ui.css'
+// import 'muse-ui/dist/muse-ui.css'
 // import 'muse-ui/dist/theme-carbon.css' // 使用 carbon 主题
 Vue.use(MuseUI)
+// import 'muse-components/styles/base.less' // 加载基础的样式
+// import dataPicker from 'muse-components/appBar'
+// Vue.use(dataPicker)
 // ..
 // Vue.component('app-bar', appBar)
 
@@ -37,7 +40,8 @@ Vue.component('star-rating', StarRating);
 import {
   cutTime
 } from './directive/index'
-import $ from  'n-zepto'
+
+
 
 Vue.config.productionTip = false;
 
