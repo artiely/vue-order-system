@@ -402,7 +402,7 @@
           data.seatsScore = this.ratingToEngineer
         }
         this.$api.rating_sub_order(data).then(res => {
-          console.error("评论未完成" + res)
+          console.error("评论未完成 需要calldetailId" + res)
         })
       },
       reminder(){
