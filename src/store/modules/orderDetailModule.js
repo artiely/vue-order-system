@@ -26,6 +26,10 @@ const mutations = { //状态只能通过此改变
     sessionStorage.id = payload.id;
     sessionStorage.type = payload.type;
   },
+  ['SET_ORDER_NUMBER'](state, payload){
+    state.oid = payload;
+    sessionStorage.oid = payload
+  }
 };
 const actions = {
 

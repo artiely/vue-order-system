@@ -4,21 +4,16 @@ import Vue from 'vue'
 import router from './router'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
-import '../statics/mobile/font/iconfont.css'
+import './assets/font/iconfont.css'
 import './assets/style/main.less'
 import i18n from './i18n/index'
 
-// import 'muse-components/styles/base.less' // 加载基础的样式
-// import appBar from 'muse-components/appBar'
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
+
 import MuseUI from 'muse-ui'
-// import 'muse-ui/dist/muse-ui.css'
-// import 'muse-ui/dist/theme-carbon.css' // 使用 carbon 主题
+import 'muse-ui/dist/muse-ui.css'
 Vue.use(MuseUI)
-// import 'muse-components/styles/base.less' // 加载基础的样式
-// import dataPicker from 'muse-components/appBar'
-// Vue.use(dataPicker)
-// ..
-// Vue.component('app-bar', appBar)
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 Vue.use(VueAwesomeSwiper)

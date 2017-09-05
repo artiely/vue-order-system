@@ -4,10 +4,16 @@
       <mt-button icon="back" @click.native="back()" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <div class="page-content">
-      <mt-cell :title="$t('message.Service_location')"></mt-cell>
+      <div class="wrapper-box">
+      <mt-cell  class="title-box">
+        <span class="title" slot="title">
+          {{$t('message.Service_location')}}
+        </span>
+      </mt-cell>
       <div class="companyName" @click.native="toggleOpen">
         <mt-field label="" :state="stateTip" v-model="addressObj.label" readonly @click.native="toggleOpen"
                   :placeholder="$t('message.Choose_location')"></mt-field>
+      </div>
       </div>
       <!--服务点模态s-->
       <mt-popup v-model="popupVisibleCompany" position="right"
@@ -34,13 +40,13 @@
       </div>
       <!--其他e-->
       <!--日期s-->
-      <div>
-        <mt-cell :title="$t('message.Range_date')"></mt-cell>
+      <div class="wrapper-box">
+        <mt-cell  class="title-box">
+          <span class="title" slot="title">
+            {{$t('message.Range_date')}}
+          </span>
+        </mt-cell>
         <div class="dateWrap">
-          <!--   <date-picker class="dateItem" hintText="点击选择日期" :minDate="minDate" v-model="startDate" :underlineShow="false"></date-picker>
-
-            <date-picker class="dateItem" hintText="点击选择日期" :shouldDisableDate="shouldDisableDate" :minDate="startDate" v-model="endDate" :underlineShow="false"></date-picker> -->
-
           <mu-date-picker
             class="dateItem"
             :hintText="$t('message.Start_date')"
@@ -64,8 +70,10 @@
       </div>
       <!--日期e-->
       <!--时间s-->
-      <div class="flexBox">
-        <mt-cell :title="$t('message.Range_time')"></mt-cell>
+      <div class="flexBox wrapper-box">
+        <mt-cell class="title-box">
+          <span class="title" slot="title">{{$t('message.Range_time')}}</span>
+        </mt-cell>
         <vue-slider
           ref="slider"
           v-model="rangeTimeOption.rangeTimeValue"
@@ -81,8 +89,9 @@
         <div style="height: 20px;"></div>
       </div>
       <!--时间e-->
-      <div>
-        <mt-cell class="my-cell" :title="$t('message.Fault_description')">
+      <div class="wrapper-box">
+        <mt-cell class="my-cell title-box">
+          <span class="title" slot="title">{{$t('message.Fault_description')}}</span>
         </mt-cell>
         <mt-field type="textarea" rows="4" :placeholder="$t('message.Please_describe')" v-model="faultDesc"></mt-field>
       </div>
@@ -351,6 +360,20 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .ma{
+    background: #eee;
+  }
+  .wrapper-box{
+    margin-bottom: 10px;
+    background: #fff;
+  }
+  .title-box.mint-cell{
+    min-height: 24px;
+  }
+  .title{
+    font-size: 10px;
+    color: #999;
+  }
   .select {
     height: 32px;
     width: 52px;

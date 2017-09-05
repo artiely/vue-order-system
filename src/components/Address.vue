@@ -46,7 +46,6 @@
   </div >
 </template >
 <script >
-  import { Toast } from 'mint-ui';
   import s from '../../statics/mobile/json/address4.json'
   import { MessageBox } from 'mint-ui';
   export default {
@@ -150,7 +149,7 @@
           if(res.code==ERR_OK){
               this.serviceAddress = res.serviceAddress
           }else{
-              Toast(res.msg)
+              this.$toast(res.msg)
           }
         }).catch(err=>{
           console.error(err);
@@ -179,12 +178,11 @@
 
         this.$api.save_service_address(data).then(res=>{
           if(res.code==ERR_OK){
-            Toast(this.$t('message.Save_successful'));
+            this.$toast(this.$t('message.Save_successful'));
             this.addVisible = false;
             this.getServiceAddress()
           }else{
             alert(res.msg)
-            // Toast(res.msg);//Toast的层级不够
           }
         }).catch(err=>{
           console.error(err);
@@ -206,10 +204,10 @@
           if(actions=='confirm'){
             this.$api.delete_service_address(data).then(res=>{
               if(res.code==ERR_OK){
-                Toast(this.$t('message.Del_success'));
+                this.$toast(this.$t('message.Del_success'));
                 this.getServiceAddress()
               }else{
-                Toast(res.msg);
+                this.$toast(res.msg);
               }
             }).catch(err=>{
               console.error(err)

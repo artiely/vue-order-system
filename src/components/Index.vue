@@ -3,13 +3,13 @@
     <mt-header fixed title="FWONE">
       <mt-button icon="more" slot="right" @click="showSheet"></mt-button>
     </mt-header>
-    <div class="page-content">
-      <swiper :options="swiperOption" class="swiper-box">
-        <div class="swiper-slide" v-for="banner in banners">
-          <img :src="banner">
-        </div>
-      </swiper>
-    </div>
+    <!--<div class="page-content">-->
+      <!--<swiper :options="swiperOption" class="swiper-box">-->
+        <!--<div class="swiper-slide" v-for="banner in banners">-->
+          <!--<img :src="banner">-->
+        <!--</div>-->
+      <!--</swiper>-->
+    <!--</div>-->
     <div>
       <p>{{$t('message.des')}}</p>
       <p>{{$t('message.title')}}</p>
@@ -20,9 +20,6 @@
 </template>
 
 <script>
-  import {
-    Toast
-  } from 'mint-ui';
   export default {
     name: 'index',
     data() {
@@ -47,7 +44,6 @@
         this.sheetVisible = true
       },
       ENFN() {
-        Toast('敬请期待完善')
         this.locale = 0
         window.location.reload()
       },
@@ -66,6 +62,8 @@
           window.localStorage.setItem('lang', 'EN')
         }
       }
+    },
+    created(){
     },
     mounted() {
       this.actions = [{

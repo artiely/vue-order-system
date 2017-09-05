@@ -12,7 +12,7 @@ export default function fetch(options) {
       //设置默认根地址
       baseURL: SERVER_BASE_URL,
       //设置请求超时设置
-      timeout: 5000,
+      timeout: 20000,
       //设置请求时的header
       headers: {},
 
@@ -22,7 +22,7 @@ export default function fetch(options) {
       config => {
 
         // config.headers.Authorization = "token";
-        console.log("config", config)
+        // console.log("config", config)
         return config;
       },
       err => {
@@ -33,24 +33,22 @@ export default function fetch(options) {
     // http response 拦截器
     instance.interceptors.response.use(
       response => {
-
         return response;
       },
       error => {
-
-        if (error.response) {
-          switch (error.response.status) {
-            case 401:
-              // 返回 401 清除token信息并跳转到登录页面
-              store.commit(types.LOGOUT);
-              router.replace({
-                path: 'login',
-                query: {redirect: router.currentRoute.fullPath}
-              })
-          }
-        }
-        console.log(  `来自配置文件的error`)
-        return Promise.reject(error.response.data) // 返回接口返回的错误信息
+        // if (error.response) {
+        //   switch (error.response.status) {
+        //     case 401:
+        //       // 返回 401 清除token信息并跳转到登录页面
+        //       store.commit(types.LOGOUT);
+        //       router.replace({
+        //         path: 'login',
+        //         query: {redirect: router.currentRoute.fullPath}
+        //       })
+        //   }
+        // }
+        console.error(  `来自配置文件的error`,error)
+        return Promise.reject(error) // 返回接口返回的错误信息
       });
 
     //请求处理
@@ -64,6 +62,7 @@ export default function fetch(options) {
          setUserInfo(null)
          router.replace({name: "login"})
          }*/
+        console.log(res)
         resolve(res.data)
         return false
         // Message.warning(msg)

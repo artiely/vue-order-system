@@ -6,87 +6,114 @@ import Index from '@/components/Index'
 import Shop from '@/components/Shop'
 import store from '.././store/index'
 import i18n from '@/i18n'
-Vue.use(Router);
+Vue.use(Router)
 
 Router.prototype.goBack = function () {
-  this.isBack = true;
+  this.isBack = true
   window.history.go(-1)
 }
 Router.prototype.back = function () {
-  this.isBack = true;
+  this.isBack = true
   window.history.go(-1)
 }
 // 页面刷新时，重新赋值token
 if (window.sessionStorage.getItem('token')) {
-  store.commit('LOGIN', {userId: Number(window.sessionStorage.getItem('token')),personId:Number(window.sessionStorage.getItem('personId'))})
+  store.commit('LOGIN', {
+    userId: Number(window.sessionStorage.getItem('token')),
+    personId: Number(window.sessionStorage.getItem('personId'))
+  })
 }
 if (window.sessionStorage.getItem('person')) {
   store.commit('PERSON_INFO', window.sessionStorage.getItem('person'))
 }
-import {Indicator} from 'mint-ui';
+import { Indicator } from 'mint-ui'
 const Order = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/Order'], () => {
-    resolve(require('@/components/Order'));
+    resolve(require('@/components/Order'))
     Indicator.close()
   })
-};
+}
 const User = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/User'], () => {
-    resolve(require('@/components/User'));
+    resolve(require('@/components/User'))
     Indicator.close()
   })
-};
+}
 const Ma = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/Ma'], () => {
-    resolve(require('@/components/Ma'));
+    resolve(require('@/components/Ma'))
     Indicator.close()
   })
-};
+}
 const Oncall = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/Oncall'], () => {
-    resolve(require('@/components/Oncall'));
+    resolve(require('@/components/Oncall'))
     Indicator.close()
   })
-};
+}
 const Balance = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/Balance'], () => {
-    resolve(require('@/components/Balance'));
+    resolve(require('@/components/Balance'))
     Indicator.close()
   })
-};
+}
 const Complain = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/Complain'], () => {
-    resolve(require('@/components/Complain'));
+    resolve(require('@/components/Complain'))
     Indicator.close()
   })
-};
+}
 const Address = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/Address'], () => {
-    resolve(require('@/components/Address'));
+    resolve(require('@/components/Address'))
     Indicator.close()
   })
-};
+}
 const Urge = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/Urge'], () => {
-    resolve(require('@/components/Urge'));
+    resolve(require('@/components/Urge'))
     Indicator.close()
   })
-};
+}
 const Orderdetail = resolve => {
-  Indicator.open();
+  Indicator.open()
   require.ensure(['@/components/items/Orderdetail'], () => {
-    resolve(require('@/components/items/Orderdetail'));
+    resolve(require('@/components/items/Orderdetail'))
     Indicator.close()
   })
-};
+}
+
+const Pay = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Pay'], () => {
+    resolve(require('@/components/Pay'))
+    Indicator.close()
+  })
+}
+
+const Register = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Register'], () => {
+    resolve(require('@/components/Register'))
+    Indicator.close()
+  })
+}
+
+const Type = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Type'], () => {
+    resolve(require('@/components/Type'))
+    Indicator.close()
+  })
+}
 
 const routes = [{
   path: '/login',
@@ -160,22 +187,39 @@ const routes = [{
     name: 'urge',
     meta: {requiresAuth: true},
     component: Urge
+  },
+  {
+    path: '/pay',
+    name: 'pay',
+    meta: {requiresAuth: true},
+    component: Pay
+  },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {requiresAuth: false},
+    component: Register
+  },
+  {
+    path: '/type',
+    name: 'type',
+    meta: {requiresAuth: false},
+    component: Type
   }
-];
+]
 
 const router = new Router({
   routes
-});
+})
 router.beforeEach((to, from, next) => {
   // 语言
   let lang = window.localStorage.getItem('lang')
-  if (lang) {
-    i18n.locale = lang
-    console.log(store)
-    store.commit('SET_LANG',lang)
+  if (!lang) {
+    lang = 'CN'
   }
-
-
+  i18n.locale = lang
+  console.log('当前语言*', lang)
+  store.commit('SET_LANG', lang)
 
   if (to.meta.requiresAuth) {
     if (store.state.userInfo.token != null && store.state.userInfo.token != undefined) {
@@ -184,11 +228,11 @@ router.beforeEach((to, from, next) => {
       next({
         path: '/login',
         query: {redirect: to.fullPath}
-      });
+      })
     }
   } else {
     next()
   }
-});
+})
 
-export default router;
+export default router
