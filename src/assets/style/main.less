@@ -12,6 +12,18 @@
   height:0;
   overflow: hidden;
 }
+.textover {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.textover3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
 .mint-toast{
   z-index: 3000;
 }
@@ -21,6 +33,11 @@
   transition: all 0.28s ease-out;
   top: 0;
   height: 100vh;
+}
+.pay {
+  .mint-radiolist-title {
+    margin: 0 !important;
+  }
 }
 
 .cell-swipe .mint-cell-wrapper {
@@ -239,12 +256,7 @@ body {
   border-bottom-right-radius: 5px;
 }
 
-.textover {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 
 .rating {
   line-height: 35px;

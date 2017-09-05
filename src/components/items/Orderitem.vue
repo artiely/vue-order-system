@@ -4,8 +4,9 @@
     <tr class="item-header">
       <td colspan="3">
         <div class="flex-box">
-          <div class="company-tit">{{item.companyname}}</div>
-          <div v-if="item.payway==1 && orderStateId==6" class="pay-btn">{{$t('message.Pay')}}</div>
+          <div class="company-tit" >{{item.companyname}}</div>
+          <!-- payway 等于1 并且是在支付状态下的单就显示支付按钮 -->
+          <div v-if="item.payway==1 && orderStateId==6" class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}</div>
         </div>
       </td>
     </tr>
@@ -27,14 +28,14 @@
       </td>
     </tr>
     <tr class="item-body nopadding">
-      <td class="text-left"> {{item.reporttime}}</td>
+      <td class="text-left" style="font-size: 12px"> {{item.reporttime}}</td>
     </tr>
     <tr class="item-body nopadding">
-      <td class="text-left">{{$t('message.NO')}}:{{item.ordernumber}} </td>
+      <td class="text-left" style="font-size: 12px">{{$t('message.NO')}}:{{item.ordernumber}} </td>
     </tr>
     <tr class="item-body ">
       <td class="text-left"> <div  v-if="item.description">
-        <span style="color: #888" v-for="desc in item.description" v-if="item.description.length>0">{{desc.faultDescription}} </span>
+        <span style="color: #888;font-size: 11px" class="textover3" v-for="desc in item.description" v-if="item.description.length>0">{{desc.faultDescription}} </span>
         </div></td>
     </tr>
   </table>
@@ -79,7 +80,9 @@
           });
         });
       },
-
+      toPay(oid){
+       this.$router.push({name:'pay',params:{oid:oid}})
+      }
     },
 
   }

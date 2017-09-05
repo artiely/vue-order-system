@@ -10,11 +10,11 @@ import fetch from './fetch'
  */
 const login = params => {
   return fetch({
-    url: "/sys/login",
+    url: '/sys/login',
     method: 'post',
     data: params
   })
-};
+}
 /**
  * 获取用户的id 此处暂时作为token使用
  */
@@ -24,7 +24,7 @@ const get_user_id = params => {
     method: 'get',
     params: params
   })
-};
+}
 
 /**
  * 获取服务点
@@ -32,11 +32,11 @@ const get_user_id = params => {
 
 const get_service_address = params => {
   return fetch({
-    url: "/company/getServiceAddress",
+    url: '/company/getServiceAddress',
     method: 'get',
     params: params
   })
-};
+}
 
 /**
  * 保存服务点地址
@@ -47,7 +47,7 @@ const save_service_address = params => {
     method: 'post',
     data: params
   })
-};
+}
 
 /**
  * 删除服务点地址
@@ -137,7 +137,7 @@ const get_order_detail = params => {
 const delete_order_updata = params => {
   return fetch({
     url: '/orderinfo/update',
-    method: "post",
+    method: 'post',
     data: params
   })
 }
@@ -232,7 +232,7 @@ const read_notification = params => {
  */
 const get_sub_order = params => {
   return fetch({
-    url: "/orderinfo/evaluateCallDetailList",
+    url: '/orderinfo/evaluateCallDetailList',
     method: 'post',
     data: params
   })
@@ -252,7 +252,7 @@ const get_sub_order = params => {
 const rating_sub_order = params => {
   return fetch({
     url: '/orderinfo/evaluateByCallDetailIds',
-    method: "post",
+    method: 'post',
     data: params
   })
 }
@@ -263,7 +263,7 @@ const rating_sub_order = params => {
  */
 const reminder_order = params => {
   return fetch({
-    url: "/callreminder/save",
+    url: '/callreminder/save',
     method: 'post',
     data: params
   })
@@ -285,7 +285,7 @@ const reminder_order = params => {
  */
 const complain_order = params => {
   return fetch({
-    url: "/customercomplain/save",
+    url: '/customercomplain/save',
     method: 'post',
     data: params
   })
@@ -332,7 +332,7 @@ const save_price_oncall = params => {
  */
 const get_price_Ma = params => {
   return fetch({
-    url: "/Tr/getTrPrice",
+    url: '/Tr/getTrPrice',
     method: 'post',
     data: params
   })
@@ -378,13 +378,144 @@ const get_unpaid_charge = params => {
  * 获取付款的明细
  * @param params
  */
-const get_contract_detail=params=>{
+const get_contract_detail = params => {
   return fetch({
-    url:'/contractservicedetails/getListByReceiveId',
-    method:'get',
-    params:params
+    url: '/contractservicedetails/getListByReceiveId',
+    method: 'get',
+    params: params
   })
 }
+
+/**
+ * 获取子单历史评价
+ * @param params
+ */
+const get_rating_history = params => {
+  return fetch({
+    url: '/orderinfo/queryEvaluateByCallDetailId',
+    method: 'get',
+    params: params
+  })
+}
+/**
+ * 支付
+ * @param params
+ */
+const post_pay_ment = params => {
+  return fetch({
+    url: '/fwonePay/scanPay',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 获取支付服务明细
+ * @param params
+ */
+const get_call_detail = params => {
+  return fetch({
+    url: '/calldetail/simpleList',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 验证邮箱是否存在
+ * @param params
+ */
+const CHECK_EMAIL = params => {
+  return fetch({
+    url: '/sys/user/checkRegistEmail',
+    method: 'get',
+    params: params
+  })
+}
+/**
+ * 注册
+ * @param params
+ */
+const REGISTER = params => {
+  return fetch({
+    url: '/sys/user/saveEmailAndPsw',
+    method: 'post',
+    data: params
+  })
+}
+
+
+/**
+ * 验证token是否过期
+ * @param params
+ */
+const CHECK_TOKEN = params => {
+  return fetch({
+    url: '/sys/user/checkRegistTime',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 信息登记
+ * @param params
+ */
+const POST_USER_INFO = params => {
+  return fetch({
+    url: '/person/saveBasicInfo',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 获取公司/个人注册信息
+ * @param params
+ */
+const GET_REGISTER_INFO = params => {
+  return fetch({
+    url: '/person/getRegistInfo',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 获取公司/个人修改保存
+ * @param params
+ */
+const UPDATE_REGISTER_INFO = params => {
+  return fetch({
+    url: '/person/updateRegistInfo',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 保存注册个人信息
+ * @param params
+ */
+const SAVE_USER_INFO = params => {
+  return fetch({
+    url: '/person/saveBasicInfo',
+    method: 'post',
+    data: params
+  })
+}
+/**
+ * 短信验证码
+ * @param params
+ */
+const GET_MSG_CODE = params => {
+  return fetch({
+    url: '/mobileMsg/sendMobileMsg',
+    method: 'get',
+    params: params
+  })
+}
+
 const apiList = {
   login,
   get_user_id,
@@ -413,7 +544,18 @@ const apiList = {
   save_price_Ma,
   get_paid_charge,
   get_unpaid_charge,
-  get_contract_detail
+  get_contract_detail,
+  get_rating_history,
+  post_pay_ment,
+  get_call_detail,
+  CHECK_EMAIL,
+  REGISTER,
+  CHECK_TOKEN,
+  POST_USER_INFO,
+  GET_REGISTER_INFO,
+  UPDATE_REGISTER_INFO,
+  SAVE_USER_INFO,
+  GET_MSG_CODE
 
 }
 

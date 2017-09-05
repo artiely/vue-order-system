@@ -4,10 +4,14 @@
       <mt-button icon="back" @click.native='back()' slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <div class="page-content">
-      <mt-cell :title="$t('message.Address')"></mt-cell>
+      <div class="wrapper-box">
+      <mt-cell class="title-box">
+        <span slot="title" class="title">{{$t('message.Address')}}</span>
+      </mt-cell>
       <div class="companyName" @click.native="toggleopen">
         <mt-field label="" :state="addressObj.address?'success':'error'" v-model="addressObj.address" readonly
                   @click.native="toggleopen" :placeholder="$t('message.Choose_location')"></mt-field>
+      </div>
       </div>
       <!--服务点模态s-->
       <mt-popup v-model="popupVisibleCompany" position="right" style="width: 280px;height: 100%;font-size: 14px">
@@ -18,11 +22,15 @@
 
       <!--服务点模态e-->
       <!--服务日期快捷选择按钮s-->
+      <div class="wrapper-box">
       <button-bar theme="assertive" :tab-items="promotions" :tab-index="promotionIndex"
                   :on-tab-click="index => promotionIndex = index" @click.native="showmodal"></button-bar>
+      </div>
       <!--服务日期快捷选择按钮e-->
-      <div v-if="popupVisibleTime" class="">
-        <mt-cell :title="$t('message.Range_date')"></mt-cell>
+      <div v-if="popupVisibleTime" class="wrapper-box">
+        <mt-cell  class="title-box">
+          <span class="title" slot="title">{{$t('message.Range_date')}}</span>
+        </mt-cell>
         <div class="dateWrap">
           <mu-date-picker class="dateItem" :hintText="$t('message.Start_date')" :minDate="minDate" v-model="startDate"
                           :underlineShow="false" :okLabel="$t('message.Ok')" :cancelLabel="$t('message.Cancel')"/>
@@ -31,8 +39,11 @@
         </div>
       </div>
       <!--服务时间选择组件s-->
+      <div class="wrapper-box">
       <div class="flexBox">
-        <mt-cell :title="$t('message.Range_time')"></mt-cell>
+        <mt-cell  class="title-box">
+          <span class="title" slot="title">{{$t('message.Range_time')}}</span>
+        </mt-cell>
         <vue-slider ref="slider"
                     v-model="rangeTimeOption.rangeTimeValue"
                     :processStyle="rangeTimeOption.processStyle"
@@ -46,9 +57,13 @@
         ></vue-slider>
         <div style="height: 20px;"></div>
       </div>
+      </div>
       <!--服务时间选择组件e-->
+      <div class="wrapper-box">
       <div class="flexBox">
-        <mt-cell :title="$t('message.Can_time_list')"></mt-cell>
+        <mt-cell class="title-box">
+          <span class="title" slot="title">{{$t('message.Can_time_list')}}</span>
+        </mt-cell>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
           <tr v-for="(item,index) in timeMap" :key="index" :index="index" class="timeItem" v-if="timeMap.length>0">
             <td>{{item.date}}</td>
@@ -59,8 +74,10 @@
           </tr>
         </table>
       </div>
-      <div>
-        <mt-cell class="my-cell" :title="$t('message.Fault_description')">
+      </div>
+      <div class="wrapper-box">
+        <mt-cell class="my-cell title-box" >
+          <span slot="title" class="title">{{$t('message.Fault_description')}}</span>
         </mt-cell>
         <mt-field  :placeholder="$t('message.Please_describe')" type="textarea" rows="4" v-model="faultDesc"></mt-field>
       </div>
@@ -542,6 +559,20 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .oncall{
+    background: #eee;
+  }
+  .wrapper-box{
+    margin-bottom: 10px;
+    background: #fff;
+  }
+  .title-box.mint-cell{
+    min-height: 24px;
+  }
+  .title{
+    font-size: 10px;
+    color: #999;
+  }
 .an_order{
   border-radius: 0!important;
 }

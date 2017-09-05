@@ -2,16 +2,16 @@
 var path = require('path')
 //var targetPath='http://172.16.7.203:80';
 
-var config = {
+const config = {
   build: {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/mobile.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'statics/mobile',
-    assetsPublicPath: '/fwone-central/',
-    baseServerUrl: 'http://172.16.3.48:8080/fwone-central', // 测试
-    // baseServerUrl: 'c.fwone.com/fwone-central', // 上线
-    // assetsPublicPath: '/PT/',//线上
+    assetsPublicPath: '/PT/',
+    // baseServerUrl: 'http://172.16.3.48:8080/PT', // 测试
+    baseServerUrl: 'http://localhost:8087/PT', // 本地
+    // baseServerUrl: 'c.fwone.com/PT', // 上线
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
@@ -27,11 +27,11 @@ var config = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8087,
+    port: 8088,
     autoOpenBrowser: true,
     assetsSubDirectory: 'statics/mobile',
-    assetsPublicPath: '/', //改为../ 启动会报404
-    baseServerUrl: 'http://172.16.7.248:8087/fwone-central',// 本地
+    assetsPublicPath: '/',
+    baseServerUrl: 'http://localhost:8088/PT',// 本地
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
@@ -41,7 +41,7 @@ var config = {
     cssSourceMap: false
   }
 }
-const targetPath = 'http://172.16.3.48:8080' //服务器的地址 可以使www.fwone.com
+const targetPath = 'http://localhost:8087' //服务器的地址 可以使www.fwone.com
 const pathX = '/*' //如果打包后接口地址为fwone-central/orderinfo/* 则pathX='/*' 如果是/orderinfo/* 则pathX=''
 var keysArr = [
   pathX + '/orderinfo/**/*',
@@ -56,6 +56,8 @@ var keysArr = [
   pathX + '/contractservicedetails/**/*',
   pathX + '/customercomplain/**/*',
   pathX + '/callreminder/**/*',
+  pathX + '/fwonePay/**/*',
+  pathX + '/mobileMsg/**/*'
 ]
 for (let i = 0; i < keysArr.length; i++) {
   config.dev.proxyTable[keysArr[i]] = {

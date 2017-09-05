@@ -97,7 +97,9 @@
                 <tr>
                   <td></td>
                   <td>
-                    <button size="small" class="footerBtn pull-right" v-if="status>=3&&subList.length>0" @click="pingjia">{{$t('message.To_rate')}}</button>
+                    <button size="small" class="footerBtn pull-right" v-if="status>=3&&subList.length>0"
+                            @click="pingjia(subitem.id)">{{$t('message.Rate')}}
+                    </button>
                   </td>
                 </tr>
               </table>
@@ -109,7 +111,7 @@
               <tr>
                 <td rowspan="3">
                   <div class="en-icon" style="line-height: 100px;">
-                    <span v-if="">暂无...</span>
+                    <span v-if="">{{$t('message.No_found')}}</span>
                   </div>
                 </td>
                 <td>{{$t('message.Name')}}：</td>
@@ -165,7 +167,9 @@
         </scroller>
         <div class="footerBar">
           <button size="small" class="footerBtn" v-if="status>=0 && status<2" @click="reminder">{{$t('message.Reminder')}}</button>
-          <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">{{$t('message.complaint')}}</button>
+          <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">
+            {{$t('message.complaint')}}
+          </button>
           <!--<button size="small" class="footerBtn" v-if="status>=5">发票</button>-->
         </div>
         <!--评价-->
@@ -173,9 +177,10 @@
           v-model="pingjiaVisible"
           position="top" style="width: 100%;height: 100%;">
           <mt-header :title="$t('message.Service_level')" fixed style="z-index: 9;">
-            <mt-button icon="back" @click="pingjiaVisible=!pingjiaVisible" slot="left">{{$t('message.Back')}}</mt-button>
+            <mt-button icon="back" @click="pingjiaVisible=!pingjiaVisible" slot="left">{{$t('message.Back')}}
+            </mt-button>
           </mt-header>
-          <div style="height: 40px;"></div>
+          <scroller style="padding-top:40px">
           <table style="text-align: left">
             <tr>
               <td width="50">{{$t('message.Service_center')}}：</td>
@@ -222,11 +227,33 @@
               </td>
             </tr>
           </table>
-          <mt-field :placeholder="$t('message.Rate_placeholder')" type="textarea" rows="3" v-model="evaluate"></mt-field>
-          <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">{{$t('message.Publish_tip',{Num:evaluate_num})}}</small>
-          <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">{{$t('message.Publish')}}
+          <mt-field :placeholder="$t('message.Rate_placeholder')" type="textarea" rows="3"
+                    v-model="evaluate"></mt-field>
+          <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">
+            {{$t('message.Publish_tip', {Num: evaluate_num})}}
+          </small>
+          <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">
+            {{$t('message.Publish')}}
           </mt-button>
 
+          <div v-if="ratingHistoryList.length>0">
+            <h3 style="padding: 20px 0 0 0;margin: 0">历史评论：</h3>
+            <mt-cell v-for="item in ratingHistoryList" >
+              <div slot="title" style="text-align: left;font-size: 12px">
+                <p >满意度：
+                  <span v-if="item.score==0" class="text ">{{$t('message.Unvalued')}}</span>
+                  <span v-if="item.score==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                  <span v-if="item.score==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                  <span v-if="item.score==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                  <span v-if="item.score==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                  <span v-if="item.score==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
+                </p>
+                <p style="font-size: 10px;text-align: left;color: #999;line-height: 1.2;">{{item.comments}}</p>
+              </div>
+            </mt-cell>
+          </div>
+            <div style="height: 100px;"></div>
+          </scroller>
         </mt-popup>
         <!--评价/-->
         <!--投诉-->
@@ -238,7 +265,7 @@
           <mt-header :title="$t('message.complaint')" fixed style="z-index: 9;">
             <mt-button icon="back" @click="toushuVisible=!toushuVisible" slot="left">{{$t('message.Back')}}</mt-button>
           </mt-header>
-          <scroller style="padding-top: 40px;text-align: left" >
+          <scroller style="padding-top: 40px;text-align: left">
             <mt-radio
               :title="$t('message.Cause_complaint')"
               v-model="reasonId"
@@ -251,8 +278,10 @@
               align="left"
               :options="department">
             </mt-checklist>
-            <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3" v-model="complainTxt"></mt-field>
-            <mt-button type="primary" size="large" :disabled="complainTxt.length==0" @click.native="toComplain">{{$t('message.Submit')}}
+            <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3"
+                      v-model="complainTxt"></mt-field>
+            <mt-button type="primary" size="large" :disabled="complainTxt.length==0" @click.native="toComplain">
+              {{$t('message.Submit')}}
             </mt-button>
             <div style="height: 80px;"></div>
           </scroller>
@@ -263,10 +292,10 @@
   </transition>
 </template>
 <script type="text/ecmascript-6">
-  import {Toast} from 'mint-ui';
+  import { Toast } from 'mint-ui';
   import vueSlider from 'vue-slider-component'
-  import {mapState} from 'vuex';
-  import {Indicator} from 'mint-ui';
+  import { mapState } from 'vuex';
+  import { Indicator } from 'mint-ui';
   export default {
     name: 'orderdetail',
     props: {item: {}},
@@ -286,9 +315,11 @@
         },
         some: '',
         pingjiaVisible: false,
+        callDetailId: '',// 提交评价子单的id
         toushuVisible: false,
         ratingToService: 0,
         ratingToEngineer: 0,
+        ratingHistoryList:[],
         ratingToAll: 0,
         subList: [],
         evaluate: '',
@@ -375,8 +406,10 @@
       getData() {
 
       },
-      pingjia()  {
+      pingjia(id)  {
+        this.callDetailId = id
         this.pingjiaVisible = !this.pingjiaVisible
+        this._ratingHistory()
       },
       getSubOrder() {
         this.$api.get_sub_order({callId: this.state.callId.toString()}).then(res => {
@@ -387,9 +420,12 @@
           }
         }).catch(err => console.error(err))
       },
+      /**
+       * 评价子单
+       * */
       RatingSubOrder() {
         let data = {
-          callDetailIds: ["523524"],
+          callDetailIds: [this.callDetailId],
           comments: this.evaluate,
           onSiteScore: 0,
           score: this.ratingToAll,
@@ -402,7 +438,24 @@
           data.seatsScore = this.ratingToEngineer
         }
         this.$api.rating_sub_order(data).then(res => {
-          console.error("评论未完成 需要calldetailId" + res)
+          if (res.code === ERR_OK) {
+            this.$toast('评论成功')
+            this._ratingHistory()
+          } else {
+            alert(res.msg)
+          }
+        })
+      },
+      /**
+       * 子单评价历史
+       */
+      _ratingHistory(){
+        this.$api.get_rating_history({callDetailId:this.callDetailId}).then(res => {
+            if(res.code==ERR_OK){
+              this.ratingHistoryList=res.evaluateByCallDetailId.reverse() //结果倒叙
+            }else{
+              alert(res.msg)
+            }
         })
       },
       reminder(){
@@ -413,7 +466,7 @@
             alert(res.msg)
           }
         }).catch(err => console.error(err))
-      } ,
+      },
       toComplain(){
         let data = {
           callId: this.state.callId,
@@ -422,13 +475,13 @@
           contentId: this.reasonId
         };
         this.$api.complain_order(data).then(res => {
-            if(res.code==ERR_OK){
-                Toast(this.$t('message.Complaints_successfully'));
-                this.toushuVisible=false
-            }else{
-              alert(res.msg)
-            }
-        }).catch(err=>console.error(err))
+          if (res.code == ERR_OK) {
+            Toast(this.$t('message.Complaints_successfully'));
+            this.toushuVisible = false
+          } else {
+            alert(res.msg)
+          }
+        }).catch(err => console.error(err))
       }
 
     },
@@ -456,6 +509,10 @@
 
   .rating {
     float: left
+  }
+  .text{
+    border-radius: 10px;
+    padding:2px 4px;
   }
 
   .fade-enter-active, .fade-leave-active {
