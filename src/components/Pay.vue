@@ -136,7 +136,7 @@
         <mt-button icon="back" @click="invoiceHide" slot="left"></mt-button>
         <mt-button @click="invoiceHide" slot="right">{{$t('message.Done')}}</mt-button>
       </mt-header>
-      <scroller class="page-content">
+      <div class="page-content">
         <label class="zf-cell">
           <input type="radio" name="invoice" v-model="invoice.invoiceType" value="0">
           {{$t('message.Without_the_invoice')}} <i class="iconfont icon-right" v-if="invoice.invoiceType=='0'"></i>
@@ -165,13 +165,14 @@
           <mt-field type="text" :placeholder="$t('message.Bill-to_address')" v-model="invoice.invoiceAddress"
                     v-show="invoice.invoiceType!=0"></mt-field>
         </div>
-      </scroller>
+      </div>
     </mt-popup>
     <!--发票/-->
   </div>
 </template>
 <script>
   import { mapState } from 'vuex'
+//  import $ from 'n-zepto'
   export default {
     name: 'pay',
     data () {
@@ -285,6 +286,7 @@
         let postData = Object.assign({}, data, this.invoice)
         if (this.disabled || !this.orderPrice) {return} // 有价格并且发票信息完整
         this.$api.post_pay_ment(postData).then(res => {
+//          $('body').append(res)
           document.body.innerHTML += res
           setTimeout(() => {
             document.forms['rppaysubmit'].submit();
@@ -443,7 +445,9 @@
 
   .page-content {
     padding-top: 40px;
+    height: 100vh;
     background: #f8f8f8;
+    overflow: scroll;
   }
 
   .countStyle {

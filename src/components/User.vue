@@ -139,8 +139,9 @@
         this.settingVisible=false
       },
       showUserInfo(){
-        Toast('敬请期待');
-        this.settingVisible = !this.settingVisible
+//        Toast('敬请期待');
+        this.$router.push('/type?edit=-1')
+//        this.settingVisible = !this.settingVisible
       },
       getCustomerNotification () {
         this.$api.get_notification_list().then(res => {
