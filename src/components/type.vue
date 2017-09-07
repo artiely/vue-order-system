@@ -27,7 +27,7 @@
             <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
             <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field label="管理员手机号" v-model="form.phone" :errorText="error.phone" labelFloat/>
+            <mu-text-field label="管理员手机号" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
             <div class="help">手机号为登录账号</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
@@ -125,8 +125,8 @@
           code: '',
           pwd: '',
           pwd2: '',
-          hasPhone:false, //判断手机是否被注册
-          x:0
+          hasPhone: false, //判断手机是否被注册
+          x: 0
         },
         token: true,
         fail: true,
@@ -191,40 +191,62 @@
       }
     },
     watch: {
+      'form.typeId': {
+        handler(){
+          this.error.company = '',
+            this.error.mark = '',
+            this.error.companyIdNum = '',
+            this.error.userName = '',
+            this.error.idCard = '',
+            this.error.pwd = '',
+            this.error.pwd2 = ''
+          this.error.phone = '',
+            this.error.code = ''
+        },
+        deep: true
+      },
       form: {
         handler(val){
           if (this.form.typeId == '2') {
             if (val.company == '') {
               this.error.company = '必填项'
+              return
             } else {
               this.error.company = ''
             }
             let re = /^[a-z]+$/i
             if (val.mark == '') {
               this.error.mark = '必填项'
+              return
             } else if (!re.test(val.mark)) {
               this.error.mark = '标示只能为字母'
+              return
             } else {
               this.error.mark = ''
             }
 
             if (val.companyIdNum == '') {
               this.error.companyIdNum = '必填项'
+              return
             } else if (val.companyIdNum.toString().length !== 15 && val.companyIdNum.toString().length !== 18) {
               this.error.companyIdNum = '请输入正确的营业执照注册号'
+              return
             } else {
               this.error.companyIdNum = ''
             }
             if (val.userName == '') {
               this.error.userName = '必填项'
+              return
             } else {
               this.error.userName = ''
             }
             let re2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{4}$/
             if (val.idCard == '') {
               this.error.idCard = '必填项'
+              return
             } else if (!re2.test(val.idCard)) {
               this.error.idCard = '格式错误'
+              return
             } else {
               this.error.idCard = ''
             }
@@ -233,13 +255,19 @@
               let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
               if (val.phone == '') {
                 this.error.phone = '必填项'
+                return
               } else if (!re3.test(val.phone)) {
                 this.error.phone = '格式错误'
+                return
+              } else if (this.isWechat && val.hasPhone) {
+                this.error.phone = '手机号已被注册'
+                return
               } else {
                 this.error.phone = ''
               }
               if (val.code == '') {
                 this.error.code = '必填项'
+                return
               } else {
                 this.error.code = ''
               }
@@ -283,12 +311,12 @@
                 this.error.phone = ''
               } else if (!re3.test(val.phone)) {
                 this.error.phone = '格式错误'
-              } else if(val.hasPhone){
+              } else if (val.hasPhone) {
                 this.error.phone = '手机号已被注册'
-              }else {
+              } else {
                 this.error.phone = ''
               }
-              if (val.phone.length == 11 && val.code == '') {
+              if (val.phone.length == 11 && val.code == '') {  // 以下填写了手机号才是必填项
                 this.error.code = '必填项'
               } else {
                 this.error.code = ''
