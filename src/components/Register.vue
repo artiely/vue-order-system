@@ -8,19 +8,25 @@
         </mt-navbar>
         <div style="background:#fff;">
           <div v-if="selected==1">
-            <mu-text-field label="邮箱" v-model="form.email" type="email" :errorText="error.email" name="email" labelFloat   fullWidth @blur="checkEmail"/>
+            <mu-text-field label="邮箱" v-model="form.email" type="email" :errorText="error.email" name="email" labelFloat
+                           fullWidth @blur="checkEmail"/>
           </div>
+
           <div v-if="selected==2">
-            <mu-text-field label="手机号" v-model="form.phone" type="number" :errorText="error.phone" name="phone"   labelFloat fullWidth @blur="checkPhone"/>
-            <div style="text-align: left">
-              <mu-text-field label="验证码" v-model="form.code" type="text" :errorText="error.code" name="code" labelFloat   style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
-            </div>
+            <mu-text-field label="手机号" v-model="form.phone" type="number" :errorText="error.phone" name="phone"
+                           labelFloat fullWidth @blur="checkPhone"/>
+
           </div>
-          <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat    fullWidth/>
+          <div style="text-align: left" v-if="selected==2">
+            <mu-text-field label="短信验证码" v-model="form.code" type="text" :errorText="error.code" name="code" labelFloat
+                           style="width: 60%"/>
+            <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
+          </div>
+          <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+                         fullWidth/>
 
-          <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2" labelFloat  fullWidth/>
-
+          <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2" labelFloat
+                         fullWidth/>
           <button class="Button--primary Button--blue" @click="register">注册</button>
         </div>
       </div>
@@ -39,11 +45,13 @@
           pwd2: '',
           email: '',
           phone: '',
-          code: ''
+          hasPhone: false, // 手机号已被注册
+          hasEmail: false,
+          code: '',
+          x: 0 // 占位（用来触发watch）
         },
         fail: true,
         isDanger: false,
-        hasEmail: false
       }
     },
     computed: {
@@ -65,43 +73,64 @@
       }
     },
     watch: {
+      selected: {
+        handler(){
+          this.form.pwd = ''
+          this.form.pwd2 = ''
+          this.form.x = 0
+        }
+      },
       form: {
         handler(val){
           if (this.selected == '1') {
             let re = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
             if (val.email == '') {
               this.error.email = '必填项'
+              return
             } else if (!re.test(val.email)) {
               this.error.email = '格式错误'
+              return
+            } else if (val.hasEmail) {
+              this.error.email = '已被注册'
+              return
             } else {
               this.error.email = ''
             }
           } else {
             if (val.phone == '') {
               this.error.phone = '必填项'
+              return
             } else if (val.phone.toString().length != 11) {
               this.error.phone = '格式错误'
+              return
+            } else if (val.hasPhone) {
+              this.error.phone = '已被注册'
+              return
             } else {
               this.error.phone = ''
             }
             if (val.code == '') {
               this.error.code = '必填项'
+              return
             } else {
               this.error.code = ''
             }
           }
-
           if (val.pwd == '') {
             this.error.pwd = '必填项'
+            return
           } else if (val.pwd.length < 6) {
             this.error.pwd = '至少6位'
+            return
           } else {
             this.error.pwd = ''
           }
           if (val.pwd2 == '') {
             this.error.pwd2 = '必填项'
+            return
           } else if (val.pwd2 != val.pwd) {
             this.error.pwd2 = '密码不一致'
+            return
           } else {
             this.error.pwd2 = ''
           }
@@ -127,9 +156,11 @@
         this.$api.CHECK_EMAIL({email: this.form.email}).then(res => {
           if (res.code === 0) {
             if (res.state === '-1') {
-              this.error.email = '邮箱已经注册'
+              this.form.hasEmail = true
+              this.$set(this.form, this.form.x, this.form.x++)
             } else {
-              this.error.email = ''
+              this.form.hasEmail = false
+              this.$set(this.form, this.form.x, this.form.x--)
             }
           } else {
             alert(JSON.stringify(res))
@@ -140,10 +171,12 @@
         this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
           console.log(res)
           if (res.code === 0) {
-            if (res.state === '0') {
-              this.error.phone = '已经注册'
+            if (res.state == '0') {
+              this.form.hasPhone = true
+              this.$set(this.form, this.form.x, this.form.x++)
             } else {
-              this.error.phone = ''
+              this.form.hasPhone = false
+              this.$set(this.form, this.form.x, this.form.x--)
             }
           } else {
             alert(JSON.stringify(res))
@@ -157,7 +190,8 @@
           } else { // 手机号
             this._postInfoByMobile()
           }
-
+        } else {
+          alert('请完善信息')
         }
       },
       getMsgCode () {
@@ -209,7 +243,7 @@
         this.$api.REGISTER_BY_MOBILE(data).then(res => {
           if (res.code === 0) {
             if (res.state === '1') { // 成功
-              this.router.push('/type')
+              this.$router.push('/type')
             } else if (res.state == '2') { // 不正确
               alert('验证码错误')
               this.error.code = '验证码错误'

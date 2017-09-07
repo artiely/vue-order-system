@@ -9,7 +9,8 @@ const config = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'statics/mobile',
     assetsPublicPath: '/PT/',
-    baseServerUrl: 'http://172.16.3.48:8080/PT', // 测试
+    // baseServerUrl: 'http://172.16.3.48:8080/PT', // 测试
+    baseServerUrl: 'http://weixintestt.tunnel.echomod.cn/PT', // 测试
     // baseServerUrl: 'http://localhost:8087/PT', // 本地
     // baseServerUrl: 'c.fwone.com/PT', // 上线
     productionSourceMap: true,
@@ -31,7 +32,8 @@ const config = {
     autoOpenBrowser: true,
     assetsSubDirectory: 'statics/mobile',
     assetsPublicPath: '/',
-    baseServerUrl: 'http://localhost:8088/PT',// 本地
+    // baseServerUrl: 'http://localhost:8088/PT',// 本地
+    baseServerUrl: 'http://172.16.7.248:8088/PT',// 本地
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
@@ -57,7 +59,8 @@ var keysArr = [
   pathX + '/customercomplain/**/*',
   pathX + '/callreminder/**/*',
   pathX + '/fwonePay/**/*',
-  pathX + '/mobileMsg/**/*'
+  pathX + '/mobileMsg/**/*',
+  pathX + '/wechat/**/*'
 ]
 for (let i = 0; i < keysArr.length; i++) {
   config.dev.proxyTable[keysArr[i]] = {

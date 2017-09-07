@@ -60,8 +60,8 @@
                 let redirect = decodeURIComponent(this.$route.query.redirect || '/');
                 this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
                   if (res.code === 0) {
-                    if (res.state === '4') { // 不完善
-                      this.$router.push('/type')
+                    if (res.state == 4) { // 不完善
+                      this.$router.push('/type?state=4')
                     } else {
                       this.$router.push({ // 跳到对应页面
                         path: redirect

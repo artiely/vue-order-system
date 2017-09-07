@@ -444,7 +444,6 @@ const REGISTER = params => {
   })
 }
 
-
 /**
  * 验证token是否过期
  * @param params
@@ -555,6 +554,19 @@ const REGISTER_BY_MOBILE = params => {
   })
 }
 
+/**
+ * 判断是否手机注册（手机注册在填写资料时就不用再绑定手机，而邮箱需要绑定手机）
+ * @param params
+ * @constructor
+ */
+const CHECK_BIND_MOBILE = params => {
+  return fetch({
+    url: '/sys/user/checkBindMobile',
+    method: 'get',
+    params: params
+  })
+}
+
 const apiList = {
   login,
   get_user_id,
@@ -597,7 +609,8 @@ const apiList = {
   GET_MSG_CODE,
   CHECK_PHONE,
   CHECK_ACCOUNT,
-  REGISTER_BY_MOBILE
+  REGISTER_BY_MOBILE,
+  CHECK_BIND_MOBILE
 
 }
 
