@@ -7,16 +7,16 @@
     </transition>
     <mt-tabbar v-model="selected" fixed>
       <mt-tab-item id="1">
-        <i slot="icon" class="iconfont icon-homepage"></i> {{ $t('message.home')}}
+        <i slot="icon" class="iconfont" :class="selected==1?'icon-homepage_fill':'icon-homepage'"></i> {{ $t('message.home')}}
       </mt-tab-item>
       <mt-tab-item id="2">
-        <i slot="icon" class="iconfont icon-service"></i> {{ $t('message.service')}}
+        <i slot="icon" class="iconfont" :class="selected==2?'icon-service_fill':'icon-service'"></i> {{ $t('message.service')}}
       </mt-tab-item>
       <mt-tab-item id="3">
-        <i slot="icon" class="iconfont icon-createtask"></i> {{ $t('message.order')}}
+        <i slot="icon" class="iconfont " :class="selected==3?'icon-createtask_fill':'icon-createtask'"></i> {{ $t('message.order')}}
       </mt-tab-item>
       <mt-tab-item id="4">
-        <i slot="icon" class="iconfont icon-people"></i> {{ $t('message.user')}}
+        <i slot="icon" class="iconfont" :class="selected==4?'icon-people_fill':'icon-people'"></i> {{ $t('message.user')}}
       </mt-tab-item>
     </mt-tabbar>
   </div>
@@ -117,8 +117,18 @@
     width: 100%;
     transition: all .28s ease-out;
     top: 0px;
-    background: #fff;
+    background: #f3f9fd;
     height: 100vh
+  }
+  .mint-tabbar{
+    background: rgba(255,255,255,.97);
+  }
+  .mint-tabbar > .mint-tab-item.is-selected{
+    background: transparent;
+    color:#03b5ff;
+  }
+  .mint-tab-item{
+    color:#888;
   }
   .home {
     margin: 0;
@@ -142,6 +152,6 @@
     margin: 0 10px;
   }
   a {
-    color: #42b983;
+    color: lightgray;
   }
 </style>

@@ -1,51 +1,99 @@
 <template>
   <div class="login">
-    <scroller style="background:#fafafa;height:100vh!important">
+    <scroller style="height:100vh!important">
       <div class="userbox">
-        <div class="admin">
-          <div class="nikicon" @click="()=>settingVisible=true"><img src="../.././statics/mobile/img/logo.png" alt="">
-          </div>
-          <div class="useritem">{{userInfo.personName}}</div>
+        <div class="nikicon" @click="()=>settingVisible=true"><img src="../.././statics/mobile/img/logo.png" alt="">
         </div>
-        <div class="companyname">{{userInfo.shortName}}</div>
-        <div class="msgbox">
-          <div class="msgs" @click="showNotificationList">
-            <div class="msgitem">{{customerNotificationList.length}}</div>
-            <div class="msgitem">{{$t('message.Notifications')}}</div>
-
-          </div>
-          <div class="msgs" @click="showMessage">
-            <div class="msgitem">0</div>
-            <div class="msgitem">{{$t('message.Message')}}</div>
-          </div>
+        <div class="admin">
+          <div class="useritem admin-item"> <span class="top-icon"><i class="iconfont icon-mine"></i></span> {{userInfo.personName}}</div>
+          <div class="companyname admin-item"><span class="top-icon"><i class="iconfont icon-homepage"></i></span> {{userInfo.shortName}}</div>
         </div>
       </div>
-      <div class="flexbox">
-        <div class="item" @click="goAddress">
-          <i class="iconfont icon-coordinates"></i><br>
+      <div class="user-cell"   @click="showNotificationList">
+        <div class="left-icon">
+          <i class="iconfont icon-mail"></i>
+        </div>
+        <div class="right-des">
+          {{$t('message.Notifications')}}
+          <span class="num" v-if="customerNotificationList.length>0">{{customerNotificationList.length}}</span>
+        </div>
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
+      </div>
+      <div class="user-cell"  @click="goAddress">
+        <div class="left-icon">
+          <i class="iconfont icon-coordinates"></i>
+        </div>
+        <div class="right-des">
           {{$t('message.Address')}}
         </div>
-        <div class="item" @click="goBalance">
-          <i class="iconfont icon-coupons"></i><br>
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
+      </div>
+
+
+      <div class="user-cell"  @click="goBalance">
+        <div class="left-icon">
+          <i class="iconfont icon-coupons"></i>
+        </div>
+        <div class="right-des">
           {{$t('message.Payment')}}
         </div>
-        <div class="item" @click="goComplain">
-          <i class="iconfont icon-shielding"></i><br>
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
+      </div>
+
+      <div class="user-cell" @click="goComplain">
+        <div class="left-icon">
+          <i class="iconfont icon-shielding"></i>
+        </div>
+        <div class="right-des">
           {{$t('message.complaint')}}
         </div>
-        <div class="item" @click="goUrge">
-          <i class="iconfont icon-prompt"></i><br>
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
+      </div>
+
+      <div class="user-cell" @click="goUrge">
+        <div class="left-icon">
+          <i class="iconfont icon-prompt"></i>
+        </div>
+        <div class="right-des">
           {{$t('message.Reminder')}}
         </div>
-
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
       </div>
-    </scroller>
-    <mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">
-      <mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>
+
+      <div class="user-cell" @click="showUserInfo">
+        <div class="left-icon">
+          <i class="iconfont icon-addressbook"></i>
+        </div>
+        <div class="right-des">
+          {{$t('message.Personal_information')}}
+        </div>
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
+      </div>
+
       <mt-button type="danger" @click="loginOut" size="large"
-                 style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">{{$t('message.Logout')}}
+                 style="width: 95%;margin: 40px auto;border-radius: 22px" class="redbg">{{$t('message.Logout')}}
       </mt-button>
-    </mt-popup>
+      <div style="height: 80px;"></div>
+
+    </scroller>
+    <!--<mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">-->
+      <!--<mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>-->
+      <!--<mt-button type="danger" @click="loginOut" size="large"-->
+                 <!--style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">{{$t('message.Logout')}}-->
+      <!--</mt-button>-->
+    <!--</mt-popup>-->
     <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left" v-if="customerNotificationList.length>0">
       <scroller>
         <mt-cell v-for="(item,index) in customerNotificationList" :key="index" :title="item.content" is-link
@@ -152,7 +200,52 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="less">
+  .user-cell{
+    display: flex;
+    width: 95%;
+    margin: 0 auto;
+    padding: 0px 6px;
+    box-sizing: border-box;
+    height: 46px;
+    line-height:46px;
+    background: #fff;
+    margin-bottom: 1px;
+    .left-icon{
+      width: 30px;
+      text-align: left;
+      color: #ffbd7e;
+      .iconfont{
+        font-size: 20px;
+      }
+    }
+    .right-des{
+      color: #555;
+      flex: 1;
+      text-align: left;
+      .num{
+        position: relative;
+        top:12px;
+        float: right;
+        height: 18px;
+        min-width: 18px;
+        text-align: center;
+        line-height:1;
+        padding: 2px;
+        background: #fd3fb3;
+        background: -webkit-linear-gradient(315deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
+        background: -o-linear-gradient(315deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
+        background: linear-gradient(135deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
+        color: #fff;
+        border-radius: 50%;
+      }
+    }
+    .right-icon{
+      text-align: right;
+      width: 20px;
+      color: #eee;
+    }
+  }
   .item .iconfont {
     font-size: 20px;
   }
@@ -160,19 +253,6 @@
     font-size: 14px;
   }
 
-  .nikicon {
-    width: 60px;
-    height: 60px;
-    border-radius: 100%;
-    background: #eee;
-  }
-
-  .nikicon img {
-    width: 90%;
-    display: block;
-    vertical-align: middle;
-    margin: 20px auto;
-  }
 
   .user {
     background: #fafafa;
@@ -184,45 +264,43 @@
 
   .userbox {
     margin: 20px auto;
-    width: 90%;
+    width: 95%;
     background: #fff;
-    height: 150px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+    padding: 8px 6px;
+    box-shadow: 0 2px 10px rgba(3, 5, 200, .10);
     position: relative;
-  }
-
-  .companyname {
-    position: absolute;
-    top: 30px;
-    right: 0px;
-    height: 20px;
-    line-height: 20px;
-    padding: 2px 8px;
-    font-size: 13px;
-    border-bottom-left-radius: 12px;
-    border-top-left-radius: 12px;
-    background: #ef4f4f;
-    color: #fff;
-    max-width: 85%;
-    overflow: hidden;
-  }
-
-  .admin {
-    position: absolute;
-    top: 10px;
-    left: 0px;
-    height: 20px;
-    line-height: 20px;
-    padding: 2px 8px;
-    font-size: 13px;
     display: flex;
-  }
-
-  .useritem {
-    flex: 1;
-    line-height: 60px;
-    padding-left: 10px;
-    font-size: 14px;
+    .admin-item{
+      height:30px;
+      line-height:30px;
+    }
+    .top-icon{
+      color: #ffbd7e;
+      .iconfont{
+        font-size: 18px;
+        position: relative;
+        top:2px;
+      }
+    }
+    .nikicon {
+      width: 60px;
+      height: 60px;
+      border-radius: 100%;
+      background: #eee;
+      img {
+        width: 90%;
+        display: block;
+        vertical-align: middle;
+        margin: 20px auto;
+      }
+    }
+    .admin {
+      text-align: left;
+      flex: 1;
+      left: 0px;
+      padding: 2px 8px;
+      font-size: 13px;
+    }
   }
 
   .msgbox {

@@ -50,17 +50,28 @@
       login(){
         let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha + "&loginNum=1";
         this.$api.login(data).then((res) => {
-          if (res.code == ERR_OK) {
+          if (res.code == ERR_OK) { // 登录成功
             this.error = false;
-            this.$api.get_user_id().then((r) => {
+            this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
               if (r.code == ERR_OK) {
                 let userId = r.user.id;
                 let personId=r.user.personId;
                 this.$store.dispatch('login', {userId,personId});
                 let redirect = decodeURIComponent(this.$route.query.redirect || '/');
-                this.$router.push({
-                  path: redirect
-                });
+                this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+                  if (res.code === 0) {
+                    if (res.state === '4') { // 不完善
+                      this.$router.push('/type')
+                    } else {
+                      this.$router.push({ // 跳到对应页面
+                        path: redirect
+                      });
+                    }
+                  } else {
+                    alert(JSON.stringify(res))
+                  }
+                })
+
               } else {
                 this.error = true;
                 this.errorMsg = '连接失败'
@@ -71,6 +82,19 @@
             this.errorMsg = res.msg
           }
         }).catch(err => console.error(err))
+      },
+      checkAccount () {
+        this.$api.CHECK_ACCOUNT({email: this.form.email}).then(res => {
+          if (res.code === 0) {
+            if (res.state === '4') {
+
+            } else {
+
+            }
+          } else {
+            alert(JSON.stringify(res))
+          }
+        })
       },
       back(){
         this.$router.back()

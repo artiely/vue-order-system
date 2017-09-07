@@ -533,6 +533,9 @@
     padding-right: 0;
     overflow: hidden;
   }
+  .mint-tab-item-icon{
+    color: lightgray;
+  }
 
   .page-content {
     padding-top: 88px;

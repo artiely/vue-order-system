@@ -516,6 +516,45 @@ const GET_MSG_CODE = params => {
   })
 }
 
+/**
+ * 判断手机是否已注册
+ * @param params
+ * @constructor
+ */
+const CHECK_PHONE = params => {
+  return fetch({
+    url: '/sys/user/checkRegistTel',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 检查注册信息是否完整
+ * @param params
+ * @constructor
+ */
+const CHECK_ACCOUNT = params => {
+  return fetch({
+    url: '/sys/user/checkAccountAudit',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 手机注册
+ * @param params
+ * @constructor
+ */
+const REGISTER_BY_MOBILE = params => {
+  return fetch({
+    url: '/person/RegistByMobile',
+    method: 'post',
+    data: params
+  })
+}
+
 const apiList = {
   login,
   get_user_id,
@@ -555,7 +594,10 @@ const apiList = {
   GET_REGISTER_INFO,
   UPDATE_REGISTER_INFO,
   SAVE_USER_INFO,
-  GET_MSG_CODE
+  GET_MSG_CODE,
+  CHECK_PHONE,
+  CHECK_ACCOUNT,
+  REGISTER_BY_MOBILE
 
 }
 

@@ -355,6 +355,7 @@
     text-align: left;
     padding: 5px;
     width: 100%;
+    background: #fff;
     border-bottom: 1px dashed #eee;
   }
 
