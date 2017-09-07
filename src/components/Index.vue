@@ -3,19 +3,21 @@
     <mt-header fixed title="FWONE">
       <mt-button icon="more" slot="right" @click="showSheet"></mt-button>
     </mt-header>
-    <!--<div class="page-content">-->
-      <!--<swiper :options="swiperOption" class="swiper-box">-->
-        <!--<div class="swiper-slide" v-for="banner in banners">-->
-          <!--<img :src="banner">-->
-        <!--</div>-->
-      <!--</swiper>-->
-    <!--</div>-->
+    <scroller >
+    <div class="page-content">
+      <swiper :options="swiperOption" class="swiper-box">
+        <div class="swiper-slide" v-for="banner in banners">
+          <img :src="banner">
+        </div>
+      </swiper>
+    </div>
     <div>
       <p>{{$t('message.des')}}</p>
       <p>{{$t('message.title')}}</p>
     </div>
     <mt-actionsheet :actions="actions" :closeOnClickModal='true' cancelText="取消(cancel)" v-model="sheetVisible">
     </mt-actionsheet>
+  </scroller>
   </div>
 </template>
 
@@ -26,9 +28,9 @@
       return {
         sheetVisible: false,
         actions: [],
-        banners: ['statics/mobile/img/2.jpg', 'statics/mobile/img/1.jpg'],
+        banners: ['statics/mobile/img/a.jpg', 'statics/mobile/img/b.jpg','statics/mobile/img/c.jpg','statics/mobile/img/d.jpg'],
         swiperOption: {
-          autoplay: 5000,
+          autoplay: 2000,
           initialSlide: 1,
           loop: true,
           pagination: '.swiper-pagination',
@@ -90,13 +92,12 @@
   .swiper-box {
     margin-top: 40px;
     width: 100%;
-    height: 125px;
+    font-size: 0;
     background: yellow;
     margin: 0;
   }
 
   .swiper-slide img {
     width: 100%;
-    height: 125px;
   }
 </style>

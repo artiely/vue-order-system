@@ -1,13 +1,17 @@
 <template>
   <div class="login">
     <div class="page-content">
-      <div class="wrapper" style="text-align: left">
-        <mt-radio
-          title="账号类型"
-          v-model="form.typeId"
-          :options="[{label:'企业',value:'2'},{label:'个人',value:'1'}]">
-        </mt-radio>
-        <div class="help">一个邮箱只能注册一种类型账号</div>
+      <div class="wrapper" style="text-align: left;background:#fff;">
+        <!--<mt-radio-->
+          <!--title="账号类型"-->
+          <!--v-model="form.typeId"-->
+          <!--:options="[{label:'企业',value:'2'},{label:'个人',value:'1'}]">-->
+        <!--</mt-radio>-->
+        <mt-navbar v-model="form.typeId">
+          <mt-tab-item id="2">企业</mt-tab-item>
+          <mt-tab-item id="1">个人</mt-tab-item>
+        </mt-navbar>
+        <!--<div class="help">一个邮箱只能注册一种类型账号</div>-->
         <div v-if="form.typeId==2">
           <mu-text-field label="企业名称" v-model="form.company" :errorText="error.company" labelFloat/>
           <div class="help">需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致，信息审核成功后，企业名称不可修改</div>
@@ -59,15 +63,6 @@
           code: ''
         },
         token: true,
-//        error: {
-//          company: '',
-//          mark: '',
-//          companyIdNum: '',
-//          userName: '',
-//          idCard: '',
-//          phone: '',
-//          code:''
-//        },
         fail: true
       }
     },
@@ -96,7 +91,6 @@
       form: {
         handler(val){
           if (this.form.typeId == '2') {
-
             if (val.company == '') {
               this.error.company = '必填项'
             } else {
@@ -240,7 +234,7 @@
         this.$api.GET_MSG_CODE(data).then(res => {
           if (res.code === 0) {
             if (res.state === 1) {
-              this.$Message.info('短信已发出，请查收')
+              this.$toast('短信已发出，请查收')
             } else {
               alert(JSON.stringify(res))
             }
@@ -286,16 +280,7 @@
     }
   }
 </script>
-<style scoped lang="less" rel="stylesheet/less" type="text/less">
-  .mu-text-field {
-    width: 100%;
-    padding-left: 10px;
-  }
-
-  .mu-text-field.error .mu-text-field-help {
-    padding-left: 10px !important;
-  }
-
+<style scoped lang="less">
   .Button--primary.Button--blue {
     border: none;
     outline: none;

@@ -49,7 +49,7 @@
         this.$router.goBack()
       },
       showOrderDetail(parames){
-        this.$store.dispatch('get_order_number', {id: parames.id, oid: parames.oid})
+        this.$store.commit('GET_ORDER_NUMBER', {id: parames.id, oid: parames.oid})
         this.$router.push({path: '/orderdetail'})
       },
       onRefresh(done){

@@ -41,7 +41,7 @@ const messages = {
       'Address': 'Address',
       'Payment': 'Payment',
       'Reminder': 'Reminder',
-      'complaint': 'complaint',
+      'complaint': 'Complaint',
       'Notifications': 'Notifications',
       'Message': 'Message',
       'Personal_information': 'Personal information',

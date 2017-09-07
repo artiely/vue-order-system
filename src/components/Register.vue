@@ -1,20 +1,30 @@
 <template>
   <div class="login">
-    <scroller class="page-content">
+    <div class="page-content">
       <div class="wrapper">
-        <mt-field placeholder="邮箱" type="email" v-validate="'required|email'" @blur.native="blur"
-                  :class="{'is-danger': errors.has('email') }" name="email" v-model="email"></mt-field>
-        <div v-show="errors.has('email')" class="help is-danger">邮箱格式错误</div>
-        <div v-if="hasEmail" class="help is-danger">邮箱已存在</div>
+        <mt-navbar v-model="selected">
+          <mt-tab-item id="1">邮箱注册</mt-tab-item>
+          <mt-tab-item id="2">手机号注册</mt-tab-item>
+        </mt-navbar>
+        <div style="background:#fff;">
+          <div v-if="selected==1">
+            <mu-text-field label="邮箱" v-model="form.email" type="email" :errorText="error.email" name="email" labelFloat   fullWidth @blur="checkEmail"/>
+          </div>
+          <div v-if="selected==2">
+            <mu-text-field label="手机号" v-model="form.phone" type="number" :errorText="error.phone" name="phone"   labelFloat fullWidth @blur="checkPhone"/>
+            <div style="text-align: left">
+              <mu-text-field label="验证码" v-model="form.code" type="text" :errorText="error.code" name="code" labelFloat   style="width: 60%"/>
+              <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
+            </div>
+          </div>
+          <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat    fullWidth/>
 
-        <mt-field placeholder="密码" type="password" v-validate="'required|min:6'" name="pwd" v-model="pwd"></mt-field>
-        <div v-show="errors.has('pwd')" class="help is-danger">密码至少6位</div>
+          <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2" labelFloat  fullWidth/>
 
-        <mt-field placeholder="确认密码" type="password" name="pwd2" v-model="pwd2"></mt-field>
-        <div v-if="isDanger" class="help is-danger">密码不一致</div>
-        <button class="Button--primary Button--blue" @click="register">注册</button>
+          <button class="Button--primary Button--blue" @click="register">注册</button>
+        </div>
       </div>
-    </scroller>
+    </div>
   </div>
 </template>
 <script>
@@ -23,66 +33,152 @@
     name: 'login',
     data () {
       return {
-        pwd: '',
-        pwd2: '',
-        email: '',
+        selected: '1',
+        form: {
+          pwd: '',
+          pwd2: '',
+          email: '',
+          phone: '',
+          code: ''
+        },
+        fail: true,
         isDanger: false,
         hasEmail: false
       }
     },
-    watch: {
-      pwd: {
-        handler(val){
-          if (this.pwd2 !== '') {
-            if (val !== this.pwd2) {
-              this.isDanger = true
-            } else {
-              this.isDanger = false
-            }
+    computed: {
+      error(){
+        if (this.selected == '1') {
+          return {
+            pwd: '',
+            pwd2: '',
+            email: '',
           }
-        }
-      },
-      pwd2: {
-        handler (val){
-          if (this.pwd !== '') {
-            if (val !== this.pwd) {
-              this.isDanger = true
-            } else {
-              this.isDanger = false
-            }
+        } else {
+          return {
+            pwd: '',
+            pwd2: '',
+            phone: '',
+            code: ''
           }
         }
       }
     },
+    watch: {
+      form: {
+        handler(val){
+          if (this.selected == '1') {
+            let re = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+            if (val.email == '') {
+              this.error.email = '必填项'
+            } else if (!re.test(val.email)) {
+              this.error.email = '格式错误'
+            } else {
+              this.error.email = ''
+            }
+          } else {
+            if (val.phone == '') {
+              this.error.phone = '必填项'
+            } else if (val.phone.toString().length != 11) {
+              this.error.phone = '格式错误'
+            } else {
+              this.error.phone = ''
+            }
+            if (val.code == '') {
+              this.error.code = '必填项'
+            } else {
+              this.error.code = ''
+            }
+          }
+
+          if (val.pwd == '') {
+            this.error.pwd = '必填项'
+          } else if (val.pwd.length < 6) {
+            this.error.pwd = '至少6位'
+          } else {
+            this.error.pwd = ''
+          }
+          if (val.pwd2 == '') {
+            this.error.pwd2 = '必填项'
+          } else if (val.pwd2 != val.pwd) {
+            this.error.pwd2 = '密码不一致'
+          } else {
+            this.error.pwd2 = ''
+          }
+
+          Object.values(this.error).map(item => {
+            if (item == '') {
+              this.fail = false
+            } else {
+              this.fail = true
+            }
+          })
+          console.log(Object.values(this.error))
+        },
+        deep: true
+      },
+    },
+
     methods: {
       back(){
         this.$router.back()
       },
-      register () {
-        this.$validator.validateAll().then((result) => {
-          if (this.pwd !== this.pwd2) {
-            this.isDanger = true
+      checkEmail () {
+        this.$api.CHECK_EMAIL({email: this.form.email}).then(res => {
+          if (res.code === 0) {
+            if (res.state === '-1') {
+              this.error.email = '邮箱已经注册'
+            } else {
+              this.error.email = ''
+            }
+          } else {
+            alert(JSON.stringify(res))
           }
-          this.$api.CHECK_EMAIL({email: this.email}).then(res => {
-            if (res.code === 0) {
-              if (res.state === '-1') {
-                this.hasEmail = true // 邮箱已存在
-                return
-              } else {
-                this.hasEmail = false
-                if (result && !this.isDanger) {
-                  this.postInfo()
-                  return;
-                }
-              }
+        })
+      },
+      checkPhone () {
+        this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
+          console.log(res)
+          if (res.code === 0) {
+            if (res.state === '0') {
+              this.error.phone = '已经注册'
+            } else {
+              this.error.phone = ''
+            }
+          } else {
+            alert(JSON.stringify(res))
+          }
+        })
+      },
+      register () {
+        if (!this.fail) {
+          if (this.selected == '1') { // 邮箱
+            this._postInfo()
+          } else { // 手机号
+            this._postInfoByMobile()
+          }
+
+        }
+      },
+      getMsgCode () {
+        console.log('biu....')
+        let data = {
+          telephone: this.form.phone,
+          type: 0
+        }
+        this.$api.GET_MSG_CODE(data).then(res => {
+          if (res.code === 0) {
+            if (res.state === 1) {
+              this.$toast('短信已发出，请查收')
             } else {
               alert(JSON.stringify(res))
             }
-          })
-
+          } else {
+            alert(JSON.stringify(res))
+          }
         })
       },
-      postInfo () {
+      _postInfo () {
         let url = window.location.href
         if (window.location.search === '') {
           url = window.location.href
@@ -91,8 +187,8 @@
         }
         url = url.replace('register', 'type')
         let data = {
-          email: this.email,
-          password: this.pwd,
+          email: this.form.email,
+          password: this.form.pwd,
           url: url,
           table_name: GetQueryString('table_name') || '',
           table_id: GetQueryString('table_id') || '',
@@ -103,6 +199,26 @@
             alert(`激活信息已发送至${this.email},请注意查收并及时激活。`)
           }
         })
+      },
+      _postInfoByMobile () {
+        let data = {
+          telephone: this.form.phone,
+          code: this.form.code,
+          password: this.form.pwd
+        }
+        this.$api.REGISTER_BY_MOBILE(data).then(res => {
+          if (res.code === 0) {
+            if (res.state === '1') { // 成功
+              this.router.push('/type')
+            } else if (res.state == '2') { // 不正确
+              alert('验证码错误')
+              this.error.code = '验证码错误'
+            } else if (res.state == '3') { // 过期
+              alert('验证码过期')
+              this.error.code = '验证码过期'
+            }
+          }
+        })
       }
     },
     mounted(){
@@ -110,7 +226,7 @@
     }
   }
 </script>
-<style scoped lang="less" rel="stylesheet/less" type="text/less">
+<style scoped lang="less">
   .Button--primary.Button--blue {
     border: none;
     outline: none;

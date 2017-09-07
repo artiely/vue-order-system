@@ -432,7 +432,7 @@
           seatsScore: 0,
           serviceDeskScore: this.ratingToService
         };
-        if (this.state.type == 5) {//是驻场
+        if (this.state.type == 5) {// 是驻场
           data.onSiteScore = this.ratingToEngineer
         } else {
           data.seatsScore = this.ratingToEngineer

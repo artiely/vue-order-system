@@ -9,8 +9,8 @@ const config = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'statics/mobile',
     assetsPublicPath: '/PT/',
-    // baseServerUrl: 'http://172.16.3.48:8080/PT', // 测试
-    baseServerUrl: 'http://localhost:8087/PT', // 本地
+    baseServerUrl: 'http://172.16.3.48:8080/PT', // 测试
+    // baseServerUrl: 'http://localhost:8087/PT', // 本地
     // baseServerUrl: 'c.fwone.com/PT', // 上线
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as

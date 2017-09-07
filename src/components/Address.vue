@@ -6,14 +6,23 @@
     <scroller class="page-content" >
       <mt-cell-swipe v-for="(item,index) in serviceAddress" :key="index" :id="item.companyId" class="cell-swipe"  :right="[
         {
-          content: $t('message.Delete'),
+          content: deleteIcon,
           style: {background: 'red', color: '#fff'},
           handler: () => deleteAddress(item.companyId)
         }
-      ]" >
+      ]"
+      style="padding: 8px 6px">
       <div class="addressBox" slot="title">
-        <h4>{{item.companyName}}</h4>
-        <p>{{item.allAddress}}</p>
+        <table>
+          <tr>
+            <td><span class="top-icon"><i class="iconfont icon-homepage_fill"></i></span></td>
+            <td><span style="color: #3F536E;font-size: 16px;">{{item.companyName}}</span></td>
+          </tr>
+          <tr>
+            <td><span class="top-icon"><i class="iconfont icon-coordinates_fill"></i></span></td>
+            <td><p style="margin: 0;color: #B9B9B9;font-size: 12px;line-height: 1.5;">{{item.allAddress}}</p></td>
+          </tr>
+        </table>
       </div>
     </mt-cell-swipe >
 
@@ -39,10 +48,10 @@
       </div >
       <div @click="showStreet" class="cell-ad" v-if="noStreet" >{{ $t('message.Street')}}：{{addressStreet}}</div >
 
-      <textarea :placeholder="$t('message.Detailed_address')" id="" cols="4" rows="3" v-model="desMore" ></textarea >
-      <mt-button size="large" type="danger" style="width:95%;margin: 20px auto;" :disabled="desMore.length<3" @click="saveAddress" >{{$t('message.Save')}}</mt-button >
+      <mt-field type="textarea" :placeholder="$t('message.Detailed_address')" id="" cols="4" rows="3" v-model="desMore" ></mt-field >
+      <mt-button size="large" type="danger" class="redbg" style="width:95%;margin: 20px auto;" :disabled="desMore.length<3" @click="saveAddress" >{{$t('message.Save')}}</mt-button >
     </mt-popup >
-    <div class="addAddressBtn" @click="showAddM" >{{ $t('message.Add')}}</div >
+    <div class="addAddressBtn " @click="showAddM" >{{ $t('message.Add')}}</div >
   </div >
 </template >
 <script >
@@ -53,6 +62,7 @@
     data () {
       return {
         companyName:'',
+        deleteIcon:`<div style="display: block;height: 100%;padding:10px;display: flex; justify-content: center; flex-direction: column;"><i class="iconfont icon-close" style="font-size: 18px"></i></div>`,
         addressSlots: [
           {
             flex: 1,
@@ -237,23 +247,26 @@
   }
 </script >
 
-<style scoped >
-.page-content{
-
-}
+<style scoped lang="less">
+  .mint-cell-wrapper{
+    background: #ede020;
+    background: -webkit-linear-gradient(315deg,#ede020 0,#f6cd10 34%,#ffba00 100%);
+    background: -o-linear-gradient(315deg,#ede020 0,#f6cd10 34%,#ffba00 100%);
+    background: linear-gradient(135deg,#ede020 0,#f6cd10 34%,#ffba00 100%);
+  }
   .cell-swipe {
-    background: #fff;
+    /*background: #fff;*/
     margin-top: 10px;
 
 
   }
   .addressBox{
+    padding-top: 8px;
     width:100%;
     flex:1
   }
 
   .mint-cell-wrapper {
-    background: none !important;
     text-align: left;
   }
 
@@ -272,11 +285,13 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #fe000d;
     color: #fff;
     padding: 10px;
     text-align: center;
-
+    background: #fd3fb3;
+    background: -webkit-linear-gradient(45deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
+    background: -o-linear-gradient(45deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
+    background: linear-gradient(45deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
   }
 
   .page-content {
