@@ -5,20 +5,24 @@
     </mt-header>
     <div class="page-content">
       <div class="wrapper-box">
-      <mt-cell  class="title-box">
+        <mt-cell class="title-box">
         <span class="title" slot="title">
           {{$t('message.Service_location')}}
         </span>
-      </mt-cell>
-      <div class="companyName" @click.native="toggleOpen">
-        <mt-field label="" :state="stateTip" v-model="addressObj.label" readonly @click.native="toggleOpen"
-                  :placeholder="$t('message.Choose_location')"></mt-field>
-      </div>
+        </mt-cell>
+        <div class="companyName" @click.native="toggleOpen">
+          <mt-field label="" :state="stateTip" v-model="addressObj.label" readonly @click.native="toggleOpen"
+                    :placeholder="$t('message.Choose_location')"></mt-field>
+        </div>
       </div>
       <!--服务点模态s-->
       <mt-popup v-model="popupVisibleCompany" position="right"
-                style="width: 280px;height: 100%;font-size: 14px;text-align: left">
+                style="width: 80%;height: 100%;font-size: 14px;text-align: left">
         <scroller>
+          <div class="bluebg"
+               style="padding: 8px;width: 80%;margin: 0 auto;border-radius: 20px;text-align: center;margin-top: 8px"
+               @click="goAddress">新增服务点
+          </div>
           <mt-radio :title="$t('message.Location_list')" v-model="checkValue" :options='serviceAddress'></mt-radio>
         </scroller>
       </mt-popup>
@@ -41,7 +45,7 @@
       <!--其他e-->
       <!--日期s-->
       <div class="wrapper-box">
-        <mt-cell  class="title-box">
+        <mt-cell class="title-box">
           <span class="title" slot="title">
             {{$t('message.Range_date')}}
           </span>
@@ -156,7 +160,7 @@
 
 <script>
   import moment from 'moment'
-  import {Toast} from 'mint-ui';
+  import { Toast } from 'mint-ui';
   import vueSlider from 'vue-slider-component'
   export default {
     name: 'ma',
@@ -282,7 +286,8 @@
 
       },
       toggleOpen(){
-        this.popupVisibleCompany = !this.popupVisibleCompany
+        this.popupVisibleCompany = true
+        this.getServiceAddress()
       },
       disableWeekends(date){
         if (this.query.sfgzr) {
@@ -325,7 +330,7 @@
       anOrder(){
         var data = this.trPriceList;
         //cb 数据映射
-        function ObjStory(orgId, amount, CallDetailEntity, reservationTimeEntity) //声明对象
+        function ObjStory (orgId, amount, CallDetailEntity, reservationTimeEntity) //声明对象
         {
           this.orgId = orgId;
           this.amount = amount;
@@ -348,11 +353,15 @@
         this.$api.save_price_Ma(newData).then(res => {
           if (res.code == ERR_OK) {
             Toast(this.$t('message.Checkout_success'));
-            this.trPriceList=[]
+            this.trPriceList = []
           } else {
             alert(res.msg)
           }
         }).catch(err => console.error(err))
+      },
+      goAddress(){
+        this.$router.push('/address')
+        this.popupVisibleCompany = false
       }
     }
   }
@@ -360,20 +369,24 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .ma{
+  .ma {
     background: #eee;
   }
-  .wrapper-box{
+
+  .wrapper-box {
     margin-bottom: 10px;
     background: #fff;
   }
-  .title-box.mint-cell{
+
+  .title-box.mint-cell {
     min-height: 24px;
   }
-  .title{
+
+  .title {
     font-size: 10px;
     color: #999;
   }
+
   .select {
     height: 32px;
     width: 52px;

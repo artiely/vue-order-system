@@ -567,6 +567,31 @@ const CHECK_BIND_MOBILE = params => {
   })
 }
 
+/**
+ * 账号切换的账号列表
+ * @param params
+ * @constructor
+ */
+const SHOW_SWITCH_ACCOUNT = params => {
+  return fetch({
+    url: '/person/showSwitchAccount',
+    method: 'post',
+    data: params
+  })
+}
+/**
+ * 账号切换
+ * @param params
+ * @constructor
+ */
+const SWITCH_ACCOUNT = params => {
+  return fetch({
+    url: '/person/switchAccount',
+    method: 'post',
+    data: params
+  })
+}
+
 const apiList = {
   login,
   get_user_id,
@@ -610,7 +635,9 @@ const apiList = {
   CHECK_PHONE,
   CHECK_ACCOUNT,
   REGISTER_BY_MOBILE,
-  CHECK_BIND_MOBILE
+  CHECK_BIND_MOBILE,
+  SHOW_SWITCH_ACCOUNT,
+  SWITCH_ACCOUNT
 
 }
 

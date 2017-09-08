@@ -5,11 +5,15 @@
         <div class="nikicon" @click="()=>settingVisible=true"><img src="../.././statics/mobile/img/logo.png" alt="">
         </div>
         <div class="admin">
-          <div class="useritem admin-item"> <span class="top-icon"><i class="iconfont icon-mine"></i></span> {{userInfo.personName}}</div>
-          <div class="companyname admin-item"><span class="top-icon"><i class="iconfont icon-homepage"></i></span> {{userInfo.shortName}}</div>
+          <div class="useritem admin-item"><span class="top-icon"><i class="iconfont icon-mine"></i></span>
+            {{userInfo.personName}}
+          </div>
+          <div class="companyname admin-item"><span class="top-icon"><i class="iconfont icon-homepage"></i></span>
+            {{userInfo.shortName}}
+          </div>
         </div>
       </div>
-      <div class="user-cell"   @click="showNotificationList">
+      <div class="user-cell" @click="showNotificationList">
         <div class="left-icon">
           <i class="iconfont icon-mail"></i>
         </div>
@@ -21,7 +25,7 @@
           <i class="iconfont icon-enter"></i>
         </div>
       </div>
-      <div class="user-cell"  @click="goAddress">
+      <div class="user-cell" @click="goAddress">
         <div class="left-icon">
           <i class="iconfont icon-coordinates"></i>
         </div>
@@ -34,7 +38,7 @@
       </div>
 
 
-      <div class="user-cell"  @click="goBalance">
+      <div class="user-cell" @click="goBalance">
         <div class="left-icon">
           <i class="iconfont icon-coupons"></i>
         </div>
@@ -82,39 +86,71 @@
         </div>
       </div>
 
-      <mt-button type="danger" @click="loginOut" size="large"
-                 style="width: 95%;margin: 40px auto;border-radius: 22px" class="redbg">{{$t('message.Logout')}}
-      </mt-button>
+      <div class="user-cell" @click="switchAccount">
+        <div class="left-icon">
+          <i class="iconfont icon-group"></i>
+        </div>
+        <div class="right-des">
+          账号管理
+        </div>
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
+      </div>
+
+
       <div style="height: 80px;"></div>
 
     </scroller>
     <!--<mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">-->
-      <!--<mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>-->
-      <!--<mt-button type="danger" @click="loginOut" size="large"-->
-                 <!--style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">{{$t('message.Logout')}}-->
-      <!--</mt-button>-->
+    <!--<mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>-->
+    <!--<mt-button type="danger" @click="loginOut" size="large"-->
+    <!--style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">{{$t('message.Logout')}}-->
+    <!--</mt-button>-->
     <!--</mt-popup>-->
-    <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left" v-if="customerNotificationList.length>0">
+    <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left"
+              v-if="customerNotificationList.length>0">
       <scroller>
         <mt-cell v-for="(item,index) in customerNotificationList" :key="index" :title="item.content" is-link
                  @click.native="jumpToInfo(item)"></mt-cell>
       </scroller>
     </mt-popup>
+    <!--账号切换-->
+    <mt-popup
+      v-model="switchVisible"
+      position="left"
+      style="width: 70%;height: 100%">
+      <div v-if="accountList.length>0">
+        <div class="bluebg" style="color: #fff;padding: 6px">可切换账号</div>
+        <div class="greenbg account-btn" :class="{yellowbg:item.id==userId}" v-for="item in accountList"
+             @click="changeAccount(item)">
+          {{item.userName}}
+        </div>
+      </div>
+      <div v-else class="bluebg" style="color: #fff;padding: 6px">无可切换账号</div>
+      <div type="danger" @click="loginOut" size="large"
+           style="width: 95%;margin: 40px auto;border-radius: 22px;padding: 8px" class="redbg">{{$t('message.Logout')}}
+      </div>
+    </mt-popup>
+    <!--账号切换/-->
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import {Toast} from 'mint-ui';
-  import {mapState} from 'vuex';
+  import { Toast } from 'mint-ui';
+  import { mapState } from 'vuex';
   export default {
     name: 'login',
     data () {
       return {
         person: {},
+        userId: 0,
         settingVisible: false,
         customerNotificationList: [],
         notificationListVisible: false,
-        userInfo: {}
+        userInfo: {},
+        switchVisible: false,
+        accountList: []
       }
     },
     computed: mapState({
@@ -135,13 +171,11 @@
       },
       loginOut(){
         this.$store.commit('LOGOUT')
-        this.$router.push({path: '/index',name:'index'});
-        this.settingVisible=false
+        this.$router.push({path: '/index', name: 'index'});
+        this.settingVisible = false
       },
       showUserInfo(){
-//        Toast('敬请期待');
         this.$router.push('/type?edit=-1')
-//        this.settingVisible = !this.settingVisible
       },
       getCustomerNotification () {
         this.$api.get_notification_list().then(res => {
@@ -181,6 +215,45 @@
       showMessage(){
         Toast('敬请期待')
       },
+      switchAccount () {
+        this.switchVisible = true
+      },
+      changeAccount (item){
+        if (item.id == this.userId)return
+        this.$api.SWITCH_ACCOUNT({id: item.id}).then(res => {
+          if (res.code == ERR_OK) {
+            console.log('账号切换成功')
+            this.switchVisible = false
+            this.$store.dispatch('login', {userId: item.id});
+            let url = window.location.href
+            url = url.replace('user', 'index')
+//            window.location.href = url
+            window.location.reload()
+          }
+        })
+      },
+      getIds(){
+        this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
+          if (r.code == ERR_OK) {
+            let userId = r.user.id;
+            this.userId = userId
+            let personId = r.user.personId;
+            this.$store.dispatch('login', {userId, personId});
+            this.getPersonInfo()
+          } else {
+            alert(JSON.stringify(res))
+          }
+        })
+      },
+      getAccountList () {
+        this.$api.SHOW_SWITCH_ACCOUNT().then(res => {
+          if (res.code === 0) {
+            this.accountList = res.switchAccount
+          } else {
+            alert(JSON.stringify(res))
+          }
+        })
+      },
       getPersonInfo(){
         this.$api.get_person_info({personId: this.state.personId}).then(res => {
           if (res.code == ERR_OK) {
@@ -190,9 +263,12 @@
       }
     },
     created(){
-      this.getCustomerNotification();
-      this.getPersonInfo()
 
+    },
+    activated(){
+      this.getCustomerNotification()
+      this.getIds()
+      this.getAccountList()
     },
     mounted(){
 
@@ -202,58 +278,67 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-  .user-cell{
+  .account-btn {
+    width: 80%;
+    margin: 8px auto;
+    border-radius: 22px;
+    padding: 6px;
+    box-sizing: border-box;
+  }
+
+  .user-cell {
     display: flex;
     width: 95%;
     margin: 0 auto;
     padding: 0px 6px;
     box-sizing: border-box;
     height: 46px;
-    line-height:46px;
+    line-height: 46px;
     background: #fff;
     margin-bottom: 1px;
-    .left-icon{
+    .left-icon {
       width: 30px;
       text-align: left;
       color: #ffbd7e;
-      .iconfont{
+      .iconfont {
         font-size: 20px;
       }
     }
-    .right-des{
+    .right-des {
       color: #555;
       flex: 1;
       text-align: left;
-      .num{
+      .num {
         position: relative;
-        top:12px;
+        top: 12px;
         float: right;
         height: 18px;
         min-width: 18px;
         text-align: center;
-        line-height:1;
+        line-height: 1;
         padding: 2px;
         background: #fd3fb3;
-        background: -webkit-linear-gradient(315deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
-        background: -o-linear-gradient(315deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
-        background: linear-gradient(135deg,#fd3fb3 0,#fd3f81 30%,#fd3e4f 79%);
+        background: -webkit-linear-gradient(315deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
+        background: -o-linear-gradient(315deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
+        background: linear-gradient(135deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
         color: #fff;
         border-radius: 50%;
       }
     }
-    .right-icon{
+    .right-icon {
       text-align: right;
       width: 20px;
       color: #eee;
     }
   }
+
   .item .iconfont {
     font-size: 20px;
   }
-  .item{
+
+  .item {
     font-size: 14px;
   }
-
 
   .user {
     background: #fafafa;
@@ -271,16 +356,16 @@
     box-shadow: 0 2px 10px rgba(3, 5, 200, .10);
     position: relative;
     display: flex;
-    .admin-item{
-      height:30px;
-      line-height:30px;
+    .admin-item {
+      height: 30px;
+      line-height: 30px;
     }
-    .top-icon{
+    .top-icon {
       color: #ffbd7e;
-      .iconfont{
+      .iconfont {
         font-size: 18px;
         position: relative;
-        top:2px;
+        top: 2px;
       }
     }
     .nikicon {

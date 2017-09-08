@@ -538,6 +538,18 @@
         this.checkToken()
       } else if (GetQueryString('source') && GetQueryString('source') == 'wechat') { // wechat
         this.isWechat = true
+        // 微信固定跳转的这个页面需要判断信息是否完整，完整就跳转首页 不完整留在此页
+        this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+          if (res.code === 0) {
+            if (res.state == 4) { // 不完善
+
+            } else {
+              this.$router.push('/index');
+            }
+          } else {
+            alert(JSON.stringify(res))
+          }
+        })
       } else {
         this.isWechat = false
         this.checkMobile() // 验证是否手机号登录

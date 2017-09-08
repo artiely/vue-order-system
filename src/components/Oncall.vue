@@ -14,8 +14,12 @@
       </div>
       </div>
       <!--服务点模态s-->
-      <mt-popup v-model="popupVisibleCompany" position="right" style="width: 280px;height: 100%;font-size: 14px">
+      <mt-popup v-model="popupVisibleCompany" position="right" style="width: 80%;height: 100%;font-size: 14px">
         <scroller>
+          <div class="bluebg"
+               style="padding: 8px;width: 80%;margin: 0 auto;border-radius: 20px;text-align: center;margin-top: 8px"
+               @click="goAddress">新增服务点
+          </div>
           <mt-radio :title="$t('message.Location_list')" v-model="popupValue" :options='companyOptions'></mt-radio>
         </scroller>
       </mt-popup>
@@ -335,11 +339,16 @@
           }
         });
       },
+      goAddress(){
+        this.$router.push('/address')
+        this.popupVisibleCompany = false
+      },
       onValuesChange(pickeker, values) {
         this.popupValue = values;
       },
       toggleopen(){
         this.popupVisibleCompany = !this.popupVisibleCompany
+        this.getCompanyList()
       },
       openPicker() {
         this.$refs.picker.open();

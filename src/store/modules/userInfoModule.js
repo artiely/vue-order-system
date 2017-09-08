@@ -12,8 +12,10 @@ const state = {//状态
 const mutations = {//状态只能通过此改变
   ['LOGIN'](state, payload){
     state.token = payload.userId;
-    state.personId = payload.personId;
-    sessionStorage.personId = payload.personId;
+    if(payload.personId){
+      state.personId = payload.personId;
+      sessionStorage.personId = payload.personId;
+    }
     sessionStorage.token = payload.userId;
   },
   ['LOGOUT'](state){
