@@ -76,7 +76,7 @@
                 this.error = true;
                 this.errorMsg = '连接失败'
               }
-            }).catch(err => console.error(err))
+            })
           } else {
             this.error = true;
             this.errorMsg = res.msg
