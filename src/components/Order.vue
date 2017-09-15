@@ -61,7 +61,7 @@
         </div>
         <div class="">
           <mt-button class="bt-margin" :class="{'active':rangeDateActive==item.id}" v-for="(item,index) in rangeDate"
-                     size="small" type="primary" @click.native="choiceRangeDate(item)">{{item.text}}
+                     size="small" type="primary" @click.native="choiceRangeDate(item)" :key="index">{{item.text}}
           </mt-button>
         </div>
         <div class="my-title">
@@ -283,7 +283,7 @@
             Toast(res.msg)
           }
         }).catch(err => {
-          console.log(err)
+          console.error(err)
         })
 
       },

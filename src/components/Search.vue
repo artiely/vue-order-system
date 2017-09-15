@@ -118,7 +118,7 @@
           // swiper callbacks
           // swiper的各种回调函数也可以出现在这个对象中，和swiper官方一样
           onTransitionStart(swiper){
-            console.log(swiper)
+//            console.log(swiper)
           },
           // more Swiper configs and callbacks...
           // ...
@@ -155,9 +155,9 @@
             var list = _this.orderinfo.concat(r.data.page.list);
             _this.totalPage = r.data.page.totalPage;
             _this.orderinfo = list;
-            console.log("list", list)
-            console.log("totalPage", _this.totalPage)
-            console.log("page", _this.query.page)
+//            console.log("list", list)
+//            console.log("totalPage", _this.totalPage)
+//            console.log("page", _this.query.page)
             sessionStorage.setItem("orderinfo", JSON.stringify(list))
             sessionStorage.setItem("page", _this.query.page)
             sessionStorage.setItem("totalPage", _this.totalPage)
@@ -171,7 +171,7 @@
             cb()
           }
         }).catch(function (error) {
-          console.log(error);
+          console.error(error);
 //        Indicator.open('系统繁忙...请稍后重试...');
 //        setTimeout(Indicator.close(),3000)
         })
@@ -188,7 +188,7 @@
         if(this.totalPage<this.query.page){
           this.$refs.myScroller.finishInfinite()
         }else{
-          console.log(111)
+//          console.log(111)
           this.query.page++;
           this.getdata(function () {
             done()
@@ -198,7 +198,7 @@
       dosearch($event){
         var _this = this;
         var index = $($event.currentTarget).attr('index');
-        console.log(index)
+//        console.log(index)
         switch (index) {
           case '0':
             _this.query.orderStateId = 1;

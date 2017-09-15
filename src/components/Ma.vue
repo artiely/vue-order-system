@@ -328,6 +328,7 @@
         })
       },
       anOrder(){
+        this.faultDesc='' // 清空描述让button disabled
         var data = this.trPriceList;
         //cb 数据映射
         function ObjStory (orgId, amount, CallDetailEntity, reservationTimeEntity) //声明对象

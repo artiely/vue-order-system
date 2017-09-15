@@ -16,3 +16,20 @@ export function GetQueryString (name) {
   if (r != null) return unescape(r[2])
   return null
 }
+/**
+ * 判断是否微信浏览器内访问
+ * @param name
+ * @returns {Boolean}
+ */
+export function isWeixnBrowser(){
+  var ua = navigator.userAgent.toLowerCase();
+  if(ua.match(/MicroMessenger/i)=="micromessenger") {
+    return true;
+  } else {
+    return false;
+  }
+}
+export function getCookie(name){
+  var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+  if (arr != null) return unescape(arr[2]); return null;
+}

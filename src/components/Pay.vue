@@ -172,7 +172,7 @@
 </template>
 <script>
   import { mapState } from 'vuex'
-//  import $ from 'n-zepto'
+  import { isWeixnBrowser } from '@/utils'
   export default {
     name: 'pay',
     data () {
@@ -283,14 +283,49 @@
           orderNo: this.oid,
           productName: this.productName
         }
-        let postData = Object.assign({}, data, this.invoice)
+        let openId = window.localStorage.getItem("openId");
+        let postData = Object.assign({}, data, this.invoice, openId ? {openId:openId}:{})
         if (this.disabled || !this.orderPrice) {return} // 有价格并且发票信息完整
+
+        let isInnerWeixin = isWeixnBrowser();
         this.$api.post_pay_ment(postData).then(res => {
-//          $('body').append(res)
-          document.body.innerHTML += res
-          setTimeout(() => {
-            document.forms['rppaysubmit'].submit();
-          }, 20)
+        if(data.payWayCode == 'WEIXIN'){
+            alert(isInnerWeixin);
+            if(isInnerWeixin){
+                if (typeof WeixinJSBridge == "undefined") {
+                  if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady',
+                      onBridgeReady(res), false);
+                  } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady',
+                      onBridgeReady(res));
+                    document.attachEvent('onWeixinJSBridgeReady',
+                      onBridgeReady(res));
+                  }
+                } else {
+                  onBridgeReady(res);
+                }
+            }else {
+                alert(res.data);
+                window.location.href = res.data;
+            }
+        }else {
+            document.body.innerHTML += res
+            setTimeout(() => {
+              if(data.payWayCode == 'ALIPAY' && isInnerWeixin){
+                var queryParam = '';
+                var curForm = document.forms[document.forms.length-1];
+                Array.prototype.slice.call(curForm.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+                  queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
+                });
+                var gotoUrl = curForm.getAttribute('action') + '?' + queryParam;
+//                _AP.pay(gotoUrl);
+              } else {
+                document.forms[document.forms.length-1].submit();
+              }
+
+            }, 20)
+          }
         })
       }
     },
@@ -298,9 +333,30 @@
     activated(){
       this.getList()
     },
-    mounted(){
+    mounted(){}
+  }
+  function onBridgeReady(json) {
+    alert(JSON.stringify(json))
+    WeixinJSBridge.invoke('getBrandWCPayRequest', json, function(res) {
+      // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+      alert(JSON.stringify(res));
+//      layer.msg('res.err_msg=>'+res.err_msg, {
+//        shift : 30
+//      });
+      if (res.err_msg == "get_brand_wcpay_request:ok") {
+//        layer.msg("支付成功", {
+//          shift : 6
+//        });
+        alert("支付成功");
 
-    }
+//        self.location = "#(ctxPath)/success";
+
+      } else {
+        /*layer.msg("支付失败", {
+         shift : 6
+         });*/
+      }
+    });
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less" type="text/less">

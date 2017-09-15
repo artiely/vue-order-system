@@ -62,8 +62,8 @@
           </div>
           <div class="shadow-box">
             <div class="titlebox">{{$t('message.Service_detail')}}</div>
-            <div v-for="item in detailData.callDetails">
-              <table v-for="subitem in item " class="callDetails" style="width: 100%">
+            <div v-for="(item,index) in detailData.callDetails" :key="index">
+              <table v-for="(subitem,i) in item " :key="i" class="callDetails" style="width: 100%">
                 <tr>
                   <td colspan="2">{{subitem.serviceName}}  <span class="label"
                                                                  v-if="subitem.price">{{subitem.price}} <span
@@ -107,7 +107,7 @@
           </div>
           <div class="shadow-box">
             <div class="titlebox">{{$t('message.Engineer_information')}}</div>
-            <table v-for="item in detailData.engineers">
+            <table v-for="(item,key) in detailData.engineers" :key="key">
               <tr>
                 <td rowspan="3">
                   <div class="en-icon" style="line-height: 100px;">
@@ -238,7 +238,7 @@
 
           <div v-if="ratingHistoryList.length>0">
             <h3 style="padding: 20px 0 0 0;margin: 0">历史评论：</h3>
-            <mt-cell v-for="item in ratingHistoryList" >
+            <mt-cell v-for="(item,index) in ratingHistoryList" :key="index">
               <div slot="title" style="text-align: left;font-size: 12px">
                 <p >满意度：
                   <span v-if="item.score==0" class="text ">{{$t('message.Unvalued')}}</span>

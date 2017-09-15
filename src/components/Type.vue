@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <div class="page-content">
-      <div class="wrapper" style="text-align: left;background:#fff;">
-        <mt-navbar v-model="form.typeId" v-if="!typeDisable">
+      <div class="wrapper" style="text-align: left;background:#fff;" v-if="token">
+        <mt-navbar v-model="form.typeId" v-if="!isEdit">
           <mt-tab-item id="2">企业</mt-tab-item>
           <mt-tab-item id="1">个人</mt-tab-item>
         </mt-navbar>
@@ -27,20 +27,27 @@
             <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
             <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field label="管理员手机号" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
+            <mu-text-field label="管理员手机号" @input="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
             <div class="help">手机号为登录账号</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
               <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
+              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+                    @click="getMsgCode" v-if="count==60">点击获取</span>
+              <span v-if="count!=60"
+                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+              {{count}}s 重新获取
+            </span>
             </div>
-            <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
-                           fullWidth/>
-            <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
-                           labelFloat
-                           fullWidth/>
+            <div v-if="!isEdit">
+              <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+                             fullWidth/>
+              <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
+                             labelFloat
+                             fullWidth/>
+            </div>
           </div>
-          <div v-else>
+          <div v-if="isEmail">
             <mu-text-field label="企业名称" v-model="form.company" :errorText="error.company" labelFloat/>
             <div class="help">需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致，信息审核成功后，企业名称不可修改</div>
             <mu-text-field label="标示" v-model="form.mark" :errorText="error.mark" labelFloat/>
@@ -49,16 +56,41 @@
             <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
             <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field label="管理员手机号" v-model="form.phone" :errorText="error.phone" labelFloat/>
+            <mu-text-field label="管理员手机号" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
             <div>
               <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
+              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+                    @click="getMsgCode" v-if="count==60">点击获取</span>
+              <span v-if="count!=60"
+                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+              {{count}}s 重新获取
+            </span>
+            </div>
+          </div>
+          <div v-if="isEdit">
+            <mu-text-field label="企业名称" v-model="form.company" :errorText="error.company" labelFloat/>
+            <div class="help">需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致，信息审核成功后，企业名称不可修改</div>
+            <mu-text-field label="标示" v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <div class="help">标示即为公司英文简称</div>
+            <mu-text-field label="营业执照注册号" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
+            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
+            <mu-text-field label="管理员手机号" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
+            <div>
+              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+                    @click="getMsgCode" v-if="count==60">点击获取</span>
+              <span v-if="count!=60"
+                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+              {{count}}s 重新获取
+            </span>
             </div>
           </div>
         </div>
         <div v-if="form.typeId==1">
           <div v-if="isMobile">
-            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mt-radio
               title="性别"
               v-model="form.sex"
@@ -66,44 +98,77 @@
             </mt-radio>
           </div>
           <div v-if="isWechat">
-            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mt-radio
               title="性别"
               v-model="form.sex"
               :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
             </mt-radio>
 
-            <mu-text-field label="管理员手机号" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
+            <!--<mu-text-field label="手机号" @input="checkPhone" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>-->
             <div class="help">手机号为登录账号</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
               <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
+              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+                    @click="getMsgCode" v-if="count==60">点击获取</span>
+              <span v-if="count!=60"
+                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+              {{count}}s 重新获取
+            </span>
             </div>
-            <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
-                           fullWidth/>
-            <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
-                           labelFloat
-                           fullWidth/>
+            <div v-if="!isEdit">
+              <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+                             fullWidth/>
+              <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
+                             labelFloat
+                             fullWidth/>
+            </div>
           </div>
-          <div v-else>
-            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+          <div v-if="isEmail">
+            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mt-radio
               title="性别"
               v-model="form.sex"
               :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
             </mt-radio>
 
-            <mu-text-field label="管理员手机号" v-model="form.phone" :errorText="error.phone" labelFloat/>
+            <mu-text-field label="手机号" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
             <div class="help">手机号可作为登录账号</div>
             <div>
               <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
+              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+                    @click="getMsgCode" v-if="count==60">点击获取</span>
+              <span v-if="count!=60"
+                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+              {{count}}s 重新获取
+            </span>
+            </div>
+          </div>
+          <div v-if="isEdit">
+            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mt-radio
+              title="性别"
+              v-model="form.sex"
+              :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
+            </mt-radio>
+
+            <mu-text-field label="手机号" v-model="form.phone" :errorText="error.phone" @input="checkPhone" labelFloat/>
+            <div class="help">手机号可作为登录账号</div>
+            <div>
+              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+                    @click="getMsgCode" v-if="count==60">点击获取</span>
+              <span v-if="count!=60"
+                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+              {{count}}s 重新获取
+            </span>
             </div>
           </div>
         </div>
         <button class="Button--primary Button--blue" @click="handleSubmit">提交</button>
       </div>
+      <div style="padding: 20px"><h2>链接过期或无效 <router-link to="register" v-if="!token">重新发送邮件</router-link></h2></div>
     </div>
   </div>
 </template>
@@ -128,11 +193,13 @@
           hasPhone: false, //判断手机是否被注册
           x: 0
         },
+        count: 60,
         token: true,
         fail: true,
+        isEmail: false,
         isMobile: false, // 是否手机号登录
         isWechat: false, // 是否微信进入
-        typeDisable: false
+        isEdit: false  // 是否是修改
       }
     },
     computed: {
@@ -240,7 +307,7 @@
             } else {
               this.error.userName = ''
             }
-            let re2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{4}$/
+            let re2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}\w{1}$/
             if (val.idCard == '') {
               this.error.idCard = '必填项'
               return
@@ -259,7 +326,7 @@
               } else if (!re3.test(val.phone)) {
                 this.error.phone = '格式错误'
                 return
-              } else if (this.isWechat && val.hasPhone) {
+              } else if (val.hasPhone) {
                 this.error.phone = '手机号已被注册'
                 return
               } else {
@@ -309,15 +376,19 @@
               let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
               if (val.phone == '') {
                 this.error.phone = ''
+                return
               } else if (!re3.test(val.phone)) {
                 this.error.phone = '格式错误'
+                return
               } else if (val.hasPhone) {
                 this.error.phone = '手机号已被注册'
+                return
               } else {
                 this.error.phone = ''
               }
               if (val.phone.length == 11 && val.code == '') {  // 以下填写了手机号才是必填项
                 this.error.code = '必填项'
+                return
               } else {
                 this.error.code = ''
               }
@@ -344,19 +415,26 @@
             } else { // 邮箱验证规则
               if (val.userName == '') {
                 this.error.userName = '必填项'
+                return
               } else {
                 this.error.userName = ''
               }
               let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
               if (val.phone == '') {
                 this.error.phone = '必填项'
+                return
               } else if (!re3.test(val.phone)) {
                 this.error.phone = '格式错误'
-              } else {
+                return
+              }else if (val.hasPhone) {
+                this.error.phone = '手机号已被注册'
+                return
+              }  else {
                 this.error.phone = ''
               }
               if (val.code == '') {
                 this.error.code = '必填项'
+                return
               } else {
                 this.error.code = ''
               }
@@ -385,20 +463,35 @@
           alert('请完善信息')
           return
         } else {
-          let data = {
-            account_type: this.form.typeId,
-            company_name: this.form.company,
-            comp_eng_short_name: this.form.mark,
-            business_license_number: this.form.companyIdNum,
-            personName: this.form.userName,
-            personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
-            idCard: this.form.idCard,
-            telephone: this.form.phone,
-            promotionTableName: GetQueryString('promotionTableName') || '',
-            promotionTableId: GetQueryString('promotionTableId') || '',
-            email: GetQueryString('e') || '',
-            code: this.form.code,
-            source: GetQueryString('source') || ''
+          let data
+          if (this.form.typeId == 2) {
+            data = {
+              account_type: this.form.typeId,
+              company_name: this.form.company,
+              comp_eng_short_name: this.form.mark,
+              business_license_number: this.form.companyIdNum,
+              personName: this.form.userName,
+              personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
+              idCard: this.form.idCard,
+              telephone: this.form.phone,
+              promotionTableName: GetQueryString('promotionTableName') || '',
+              promotionTableId: GetQueryString('promotionTableId') || '',
+              email: GetQueryString('e') || '',
+              code: this.form.code,
+              source: GetQueryString('source') || ''
+            }
+          } else {
+            data = {
+              account_type: this.form.typeId,
+              personName: this.form.userName,
+              personSex: this.form.sex,
+              telephone: this.form.phone,
+              promotionTableName: GetQueryString('promotionTableName') || '',
+              promotionTableId: GetQueryString('promotionTableId') || '',
+              email: GetQueryString('e') || '',
+              code: this.form.code,
+              source: GetQueryString('source') || ''
+            }
           }
           if (this.isMobile) { // 手机注册改变来源
             data.source = 'telephone'
@@ -422,8 +515,13 @@
               } else {
                 url = url.split(window.location.search)[0]
               }
-              url = url.replace('type', 'login')
-              window.location.href = url
+              if (this.isWechat) {
+                url = url.replace('type', 'index')
+                window.location.href = url
+              } else {
+                url = url.replace('type', 'login')
+                window.location.href = url
+              }
             } else {
               alert(JSON.stringify(res))
             }
@@ -434,11 +532,20 @@
         }
       },
       getMsgCode () {
-        console.log('biu....')
+//        console.log('biu....')
+        if (this.form.phone.length != 11)return
         let data = {
           telephone: this.form.phone,
           type: 0
         }
+        let s = setInterval(() => {
+          this.count--
+          if (this.count == 0) {
+            this.count = 60
+            clearInterval(s)
+          }
+        }, 1000)
+
         this.$api.GET_MSG_CODE(data).then(res => {
           if (res.code === 0) {
             if (res.state === 1) {
@@ -459,13 +566,8 @@
         }
         // 如果有source=email 就是从邮件来的 就必须验证token
 
-        if ((GetQueryString('source') || '') !== 'email') {
-          this.source = false
-//          this._getRegisterInfo()
-          console.log('修改')
-          return
-        } else {
-          this.source = true
+        if (GetQueryString('source') && GetQueryString('source') == 'email') {
+          this.isEmail = true
           this.$api.CHECK_TOKEN(data).then(res => {
             if (res.code === 0) {
               if (res.state === '1') {
@@ -477,6 +579,33 @@
               }
             }
           })
+        } else if (GetQueryString('source') && GetQueryString('source') == 'wechat') {
+          this.isEmail = false
+          this.isWechat = true
+          this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+            if (res.code === 0) {
+              if (res.state == 4) { // 不完善
+
+              } else {
+                this.$router.push('/index');
+              }
+            } else {
+              alert(JSON.stringify(res))
+            }
+          })
+        } else {
+          this.isEmail = false
+          if (GetQueryString('edit') && GetQueryString('edit') == '1') {
+            this.isEdit = true
+            this.isWechat = false
+            this.isEmail = false
+            this.isMobile = false
+            this._getRegisterInfo()
+          } else {
+            this.isEdit = false
+            this.checkMobile()
+          }
+
         }
       },
       checkMobile () {
@@ -492,16 +621,18 @@
           }
         })
       },
-      checkPhone () { // 判断手机是否被注册
+      checkPhone (val) { // 判断手机是否被注册
+        console.log("电话", val)
+        if (val.length < 10)return
         this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
-          console.log(res)
+//          console.log(res)
           if (res.code === 0) {
             if (res.state == '0') {
               this.form.hasPhone = true
               this.$set(this.form, this.form.x, this.form.x++)
             } else {
               this.form.hasPhone = false
-              this.$set(this.form, this.form.x, this.form.x--)
+//              this.$set(this.form, this.form.x, this.form.x--)
             }
           } else {
             alert(JSON.stringify(res))
@@ -524,7 +655,7 @@
               phone: data.telephone
             }
             this.form = {typeId, company, mark, companyIdNum, userName, idCard, sex, phone}
-            console.log(data, this.form)
+//            console.log(data, this.form)
           }
         })
       },
@@ -533,38 +664,40 @@
 
     },
     activated(){
-
-      if (GetQueryString('source') && GetQueryString('source') == 'email') { // 带source=email的验证token
-        this.checkToken()
-      } else if (GetQueryString('source') && GetQueryString('source') == 'wechat') { // wechat
-        this.isWechat = true
-        // 微信固定跳转的这个页面需要判断信息是否完整，完整就跳转首页 不完整留在此页
-        this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
-          if (res.code === 0) {
-            if (res.state == 4) { // 不完善
-
-            } else {
-              this.$router.push('/index');
-            }
-          } else {
-            alert(JSON.stringify(res))
-          }
-        })
-      } else {
-        this.isWechat = false
-        this.checkMobile() // 验证是否手机号登录
-      }
-
-      if (GetQueryString('edit') && GetQueryString('edit') == -1) { // 修改跳转到这
-// 修改的时候隐藏类型选择
-        this.typeDisable = true
-        this._getRegisterInfo()
-      } else { //  信息不全的跳转
-
-      }
+      this.checkToken()
+//      if (GetQueryString('edit') && GetQueryString('edit') == -1) { // 修改跳转到这
+//// 修改的时候隐藏类型选择
+//        this.isWechat = false
+//        this.isMobile = false
+//        this.isEdit = true
+//        this._getRegisterInfo()
+//      } else { //  信息不全的跳转 不是修改
+//        this.isEdit = false
+//        if (GetQueryString('source') && GetQueryString('source') == 'email') { // 带source=email的验证token
+//          this.checkToken()
+//        } else if (GetQueryString('source') && GetQueryString('source') == 'wechat') { // wechat
+//          this.isWechat = true
+//          // 微信固定跳转的这个页面需要判断信息是否完整，完整就跳转首页 不完整留在此页
+//          this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+//            if (res.code === 0) {
+//              if (res.state == 4) { // 不完善
+//
+//              } else {
+//                this.$router.push('/index');
+//              }
+//            } else {
+//              alert(JSON.stringify(res))
+//            }
+//          })
+//        } else {
+//          this.isWechat = false
+//          this.checkMobile() // 验证是否手机号登录
+//        }
+//
+//      }
     },
     mounted(){
-      this.checkToken()
+//      this.checkToken()
     }
   }
 </script>

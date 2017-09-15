@@ -2,7 +2,7 @@
  * Created by Administrator on 2017/7/20.
  */
 import fetch from './fetch'
-
+import { isWeixnBrowser } from '@/utils'
 /**
  *
  * @params{loginNum:登录次数,userName:用户名,password:密码}
@@ -14,6 +14,20 @@ const login = params => {
     method: 'post',
     data: params
   })
+}
+
+/**
+ *  初始化微信openId
+ * @params
+ */
+const initWeiXinOpenId = (params, redirect) => {
+  if(isWeixnBrowser()){
+    //window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+window.location.href.split('#')[0]+''+redirect;
+    alert(window.location.href);
+    window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+window.location.href.split('#')[0]+''+redirect;
+    return true;
+  }
+  return false;
 }
 /**
  * 获取用户的id 此处暂时作为token使用
@@ -592,8 +606,36 @@ const SWITCH_ACCOUNT = params => {
   })
 }
 
+/**
+ * 加入公司
+ * @param params
+ * @constructor
+ */
+const JOIN_COMPANY = params => {
+  return fetch({
+    url: '/person/saveJoinCompanyInfo',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 退出
+ * @param params
+ * @constructor
+ */
+const LOGOUT = params => {
+  return fetch({
+    url: '/logout',
+    method: 'get',
+    params: params
+  })
+}
+
+
 const apiList = {
   login,
+  initWeiXinOpenId,
   get_user_id,
   get_service_address,
   save_service_address,
@@ -637,7 +679,9 @@ const apiList = {
   REGISTER_BY_MOBILE,
   CHECK_BIND_MOBILE,
   SHOW_SWITCH_ACCOUNT,
-  SWITCH_ACCOUNT
+  SWITCH_ACCOUNT,
+  JOIN_COMPANY,
+  LOGOUT
 
 }
 

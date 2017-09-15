@@ -190,7 +190,11 @@ const messages = {
       'credit_card_numbers': 'credit card numbers',
       'company_tel': 'company tel',
       'company_address': 'company address',
-      'Bill-to_address': 'Bill-to address'
+      'Bill-to_address': 'Bill-to address',
+      'Account_Management':'Account Management',
+      'Switchable_account':'Switchable account',
+      'No_switch_account':'No switch account',
+      '账号管理':'Account Management'
     }
   },
   'CN': {
@@ -376,7 +380,11 @@ const messages = {
       'credit_card_numbers': '银行卡号',
       'company_tel': '公司电话',
       'company_address': '公司地址',
-      'Bill-to_address': '收票地址'
+      'Bill-to_address': '收票地址',
+      'Account_Management':'账号管理',
+      'Switchable_account':'可切换账号',
+      'No_switch_account':'无可切换账号',
+      '账号管理':'账号管理'
     }
   }
 }
