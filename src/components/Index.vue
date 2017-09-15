@@ -4,6 +4,7 @@
       <mt-button icon="more" slot="right" @click="showSheet"></mt-button>
     </mt-header>
     <scroller >
+      <div style="padding-bottom: 80px">
     <div class="page-content">
       <swiper :options="swiperOption" class="swiper-box">
         <div class="swiper-slide" v-for="banner in banners">
@@ -12,12 +13,17 @@
       </swiper>
     </div>
     <div>
-      <p>{{$t('message.des')}}</p>
-      <p>{{$t('message.title')}}</p>
+      <div style="color: #9e9e9e;margin: 10px auto ;width: 90%;border-radius: 10px;padding:4px 6px;background:#fff;" >
+        <p>{{$t('message.des')}}</p>
+      </div>
+      <div style="color: #9e9e9e;margin: 10px auto ;width: 90%;border-radius: 10px;padding:4px 6px;background:#fff" >
+        <p>{{$t('message.title')}}</p>
+      </div>
     </div>
+      </div>
+  </scroller>
     <mt-actionsheet :actions="actions" :closeOnClickModal='true' cancelText="取消(cancel)" v-model="sheetVisible">
     </mt-actionsheet>
-  </scroller>
   </div>
 </template>
 
@@ -35,7 +41,7 @@
           loop: true,
           pagination: '.swiper-pagination',
           onSlideChangeEnd: swiper => {
-            console.log('onSlideChangeEnd', swiper.realIndex)
+//            console.log('onSlideChangeEnd', swiper.realIndex)
           }
         },
         locale: 'CN'
@@ -66,6 +72,36 @@
       }
     },
     created(){
+      this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
+        if (r.code == ERR_OK) {
+          let userId = r.user.id;
+          let personId=r.user.personId;
+          this.$store.dispatch('login', {userId,personId});
+        } else {
+          this.error = true;
+          this.errorMsg = '连接失败'
+        }
+      })
+      this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+        if (res.code === 0) {
+          if (res.state == 4) { // 不完善
+            this.$router.push('/type?state=4')
+          } else if (res.state == 7) {
+            this.$router.push('/reject?state=7')
+            return
+          } else if (res.state == 8) {
+            this.$router.push('/reject?state=8')
+            return
+          } else {
+
+          }
+        } else {
+          alert(JSON.stringify(res))
+        }
+      })
+    },
+    activated(){
+
     },
     mounted() {
       this.actions = [{

@@ -8,24 +8,19 @@
         </mt-navbar>
         <div style="background:#fff;">
           <div v-if="selected==1">
-            <mu-text-field label="邮箱" v-model="form.email" type="email" :errorText="error.email" name="email" labelFloat
-                           fullWidth @input="checkEmail"/>
+            <mu-text-field label="邮箱" v-model="form.email" type="email" :errorText="$v.form.email.$invalid?error.email:''" name="email" labelFloat
+                           fullWidth @blur="checkEmail"/>
           </div>
 
           <div v-if="selected==2">
             <mu-text-field label="手机号" v-model="form.phone" type="number" :errorText="error.phone" name="phone"
-                           labelFloat fullWidth @blur="checkPhone" @input="checkPhone"/>
+                           labelFloat fullWidth @blur="checkPhone"/>
 
           </div>
           <div style="text-align: left" v-if="selected==2">
             <mu-text-field label="短信验证码" v-model="form.code" type="text" :errorText="error.code" name="code" labelFloat
                            style="width: 60%"/>
-            <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                  @click="getMsgCode" v-if="count==60">点击获取</span>
-            <span v-if="count!=60"
-                  style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
-            </span>
+            <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
           </div>
           <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
                          fullWidth/>
@@ -33,6 +28,9 @@
           <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2" labelFloat
                          fullWidth/>
           <button class="Button--primary Button--blue" @click="register">注册</button>
+          <pre>
+             <pre>form: {{ $v.form }}</pre>
+          </pre>
         </div>
       </div>
     </div>
@@ -40,12 +38,12 @@
 </template>
 <script>
   import { GetQueryString } from '@/utils'
+  import { required, sameAs, minLength ,email} from 'vuelidate/lib/validators'
   export default {
     name: 'login',
     data () {
       return {
         selected: '1',
-        count: 60,
         form: {
           pwd: '',
           pwd2: '',
@@ -59,6 +57,22 @@
         fail: true,
         isDanger: false,
       }
+    },
+    validations: {
+      form:{
+        email: {
+          required,
+          email
+        },
+        pwd: {
+          required,
+          minLength: minLength(6)
+        },
+        pwd2: {
+          sameAsPassword: sameAs('password')
+        }
+      }
+
     },
     computed: {
       error(){
@@ -86,7 +100,17 @@
           this.form.x = 0
         }
       },
-      form: {
+      '$v.form':{
+        handler(val){
+          if(!val.email.required){
+            this.error.email='必填'
+          }else if(!val.email.email){
+            this.error.email='格式错误'
+          }
+
+        },deep:true
+      }
+    /*  form: {
         handler(val){
           if (this.selected == '1') {
             let re = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
@@ -148,21 +172,17 @@
               this.fail = true
             }
           })
-//          console.log(Object.values(this.error))
+          console.log(Object.values(this.error))
         },
         deep: true
-      },
+      },*/
     },
 
     methods: {
       back(){
         this.$router.back()
       },
-      checkEmail (val) {
-        console.log('邮箱', val)
-        if (val.indexOf('@') <= 0) {
-          return
-        }
+      checkEmail () {
         this.$api.CHECK_EMAIL({email: this.form.email}).then(res => {
           if (res.code === 0) {
             if (res.state === '-1') {
@@ -170,16 +190,14 @@
               this.$set(this.form, this.form.x, this.form.x++)
             } else {
               this.form.hasEmail = false
-//              this.$set(this.form, this.form.x, this.form.x--)
+              this.$set(this.form, this.form.x, this.form.x--)
             }
           } else {
             alert(JSON.stringify(res))
           }
         })
       },
-      checkPhone (val) {
-        console.log("电话", val)
-        if (val.length < 10)return
+      checkPhone () {
         this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
 //          console.log(res)
           if (res.code === 0) {
@@ -188,7 +206,7 @@
               this.$set(this.form, this.form.x, this.form.x++)
             } else {
               this.form.hasPhone = false
-//              this.$set(this.form, this.form.x, this.form.x--)
+              this.$set(this.form, this.form.x, this.form.x--)
             }
           } else {
             alert(JSON.stringify(res))
@@ -208,19 +226,10 @@
       },
       getMsgCode () {
 //        console.log('biu....')
-        if (this.form.phone.length != 11)return
         let data = {
           telephone: this.form.phone,
           type: 0
         }
-        let s = setInterval(() => {
-          this.count--
-          if (this.count == 0) {
-            this.count = 60
-            clearInterval(s)
-          }
-        }, 1000)
-
         this.$api.GET_MSG_CODE(data).then(res => {
           if (res.code === 0) {
             if (res.state === 1) {

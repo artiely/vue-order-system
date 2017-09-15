@@ -214,7 +214,7 @@
         this.$router.push({path: '/orderdetail'})
       },
       showComplainDetail(index){
-        console.log(this.dataList1)
+//        console.log(this.dataList1)
         this.complainDetail = !this.complainDetail;
         if (this.complainDetail == true) {
           if (this.selected == 1) {

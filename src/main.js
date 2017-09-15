@@ -10,11 +10,9 @@ import 'mint-ui/lib/style.css'
 import './assets/font/iconfont.css'
 import './assets/style/main.less'
 import i18n from './i18n/index'
-
-import VeeValidate from 'vee-validate';
-Vue.use(VeeValidate);
-
-
+import vConsole from 'vconsole'
+// import Vuelidate from 'vuelidate'
+// Vue.use(Vuelidate)
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 Vue.use(VueAwesomeSwiper)
@@ -46,7 +44,7 @@ import store from './store/index'
 import api from './api'
 Vue.use(api)
 import './api/config'
-console.log("ERROR", ERR_OK)
+// console.log("ERROR", ERR_OK)
 
 import {Indicator} from 'mint-ui';
 /* eslint-disable no-new */

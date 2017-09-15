@@ -20,7 +20,7 @@ const state = {//状态
 
 const mutations = {
   ['GET_DATA_1'](state, payload){//获取数据
-    console.log("参数", payload);
+    // console.log("参数", payload);
     if(payload.refresh==true){
       state.page1=1;
       state.dataList1=[]
@@ -30,14 +30,14 @@ const mutations = {
     let _this = state;
     let url = localPath+'/customercomplain/list';
     axios({url: url, type: 'get', params: {page: _this.page1, limit: 10, status: 0}}).then(function (r) {
-      console.log(r.data.list);
+      // console.log(r.data.list);
       _this.dataList1 = _this.dataList1.concat(r.data.list);
       payload.cb()
     })
   },
   ['GET_DATA_2'](state, payload){//获取数据
 
-    console.log("参数", payload)
+    // console.log("参数", payload)
     if(payload.refresh==true){
       state.page2=1;
       state.dataList2=[]
@@ -47,14 +47,14 @@ const mutations = {
     let _this = state;
     let url = localPath+'/customercomplain/list';
     axios({url: url, type: 'get', params: {page: _this.page2, limit: 10, status: 2}}).then(function (r) {
-      console.log(r.data.list);
+      // console.log(r.data.list);
       _this.dataList2 = _this.dataList2.concat(r.data.list)
       payload.cb()
     })
 
   },
   ['GET_DATA_3'](state, payload){//获取数据
-    console.log("参数", payload)
+    // console.log("参数", payload)
     if(payload.refresh==true){
       state.page3=1;
       state.dataList3=[]
@@ -64,7 +64,7 @@ const mutations = {
     let _this = state;
     let url = localPath+'/customercomplain/list';
     axios({url: url, type: 'get', params: {page: _this.page3, limit: 10, status: 3}}).then(function (r) {
-      console.log(r.data.list);
+      // console.log(r.data.list);
       _this.dataList3 = _this.dataList3.concat(r.data.list)
       payload.cb()
     })
@@ -74,7 +74,7 @@ const mutations = {
       axios({
         url:localPath+'/customercomplain/count',
       }).then(function(r){
-        console.log(r.data)
+        // console.log(r.data)
         _this.count=r.data
       }).catch(function(r){
         console.error(r)

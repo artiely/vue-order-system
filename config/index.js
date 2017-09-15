@@ -10,7 +10,8 @@ const config = {
     assetsSubDirectory: 'statics/mobile',
     assetsPublicPath: '/PT/',
     // baseServerUrl: 'http://172.16.3.48:8080/PT', // 测试
-    baseServerUrl: 'http://weixintestt.tunnel.echomod.cn/PT', // 测试
+    baseServerUrl: '/PT', // 测试
+    // baseServerUrl: 'http://weixintestt.tunnel.echomod.cn/PT', // 测试
     // baseServerUrl: 'http://localhost:8087/PT', // 本地
     // baseServerUrl: 'c.fwone.com/PT', // 上线
     productionSourceMap: true,
@@ -33,7 +34,7 @@ const config = {
     assetsSubDirectory: 'statics/mobile',
     assetsPublicPath: '/',
     // baseServerUrl: 'http://localhost:8088/PT',// 本地
-    baseServerUrl: 'http://172.16.7.248:8088/PT',// 本地
+    baseServerUrl: '/PT',// 本地
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
@@ -43,7 +44,7 @@ const config = {
     cssSourceMap: false
   }
 }
-const targetPath = 'http://localhost:8087' //服务器的地址 可以使www.fwone.com
+const targetPath = 'http://172.16.6.244:8080' //服务器的地址 可以使www.fwone.com
 const pathX = '/*' //如果打包后接口地址为fwone-central/orderinfo/* 则pathX='/*' 如果是/orderinfo/* 则pathX=''
 var keysArr = [
   pathX + '/orderinfo/**/*',
@@ -60,7 +61,9 @@ var keysArr = [
   pathX + '/callreminder/**/*',
   pathX + '/fwonePay/**/*',
   pathX + '/mobileMsg/**/*',
-  pathX + '/wechat/**/*'
+  pathX + '/wechat/**/*',
+  pathX + '/logout/**/*',
+  pathX + '/oauth2/**/*'
 ]
 for (let i = 0; i < keysArr.length; i++) {
   config.dev.proxyTable[keysArr[i]] = {
@@ -69,5 +72,4 @@ for (let i = 0; i < keysArr.length; i++) {
     changeOrigin: true,
   }
 }
-console.info(Object.keys(config.dev.proxyTable))
 module.exports = config

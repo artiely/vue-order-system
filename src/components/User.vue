@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <scroller style="height:100vh!important">
+    <div style="height:100vh!important;padding-bottom: 80px">
       <div class="userbox">
         <div class="nikicon" @click="()=>settingVisible=true"><img src="../.././statics/mobile/img/logo.png" alt="">
         </div>
@@ -91,17 +91,15 @@
           <i class="iconfont icon-group"></i>
         </div>
         <div class="right-des">
-          账号管理
+          <!--{{$t('message.Account_Management')}}-->
+          {{$t('message["账号管理"]')}}
         </div>
         <div class="right-icon">
           <i class="iconfont icon-enter"></i>
         </div>
       </div>
 
-
-      <div style="height: 80px;"></div>
-
-    </scroller>
+    </div>
     <!--<mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">-->
     <!--<mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>-->
     <!--<mt-button type="danger" @click="loginOut" size="large"-->
@@ -121,13 +119,13 @@
       position="left"
       style="width: 70%;height: 100%">
       <div v-if="accountList.length>0">
-        <div class="bluebg" style="color: #fff;padding: 6px">可切换账号</div>
+        <div class="bluebg" style="color: #fff;padding: 6px">{{$t('message.Switchable_account')}}</div>
         <div class="greenbg account-btn" :class="{yellowbg:item.id==userId}" v-for="item in accountList"
              @click="changeAccount(item)">
           {{item.userName}}
         </div>
       </div>
-      <div v-else class="bluebg" style="color: #fff;padding: 6px">无可切换账号</div>
+      <div v-else class="bluebg" style="color: #fff;padding: 6px">{{$t('message.No_switch_account')}}</div>
       <div type="danger" @click="loginOut" size="large"
            style="width: 95%;margin: 40px auto;border-radius: 22px;padding: 8px" class="redbg">{{$t('message.Logout')}}
       </div>
@@ -137,7 +135,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { Toast } from 'mint-ui';
   import { mapState } from 'vuex';
   export default {
     name: 'login',
@@ -171,11 +168,12 @@
       },
       loginOut(){
         this.$store.commit('LOGOUT')
-        this.$router.push({path: '/index', name: 'index'});
+//        this.$api.LOGOUT()
+        this.$router.push({path: '/shop', name: 'shop'});
         this.settingVisible = false
       },
       showUserInfo(){
-        this.$router.push('/type?edit=-1')
+        this.$router.push('/type?edit=1')
       },
       getCustomerNotification () {
         this.$api.get_notification_list().then(res => {
@@ -205,7 +203,7 @@
         }
         this.$api.read_notification({tableName: item.tableName, tableId: item.tableId}).then(res => {
           if (res.code == ERR_OK) {
-            Toast('消息已读');
+            this.$toast('消息已读');
             this.getCustomerNotification()
           } else {
             alert(res.msg)
@@ -213,7 +211,7 @@
         }).catch(err => console.error(err))
       },
       showMessage(){
-        Toast('敬请期待')
+//        Toast('敬请期待')
       },
       switchAccount () {
         this.switchVisible = true

@@ -11,7 +11,9 @@
             <button id="login-button" @click="login">{{$t('message.Login')}}</button>
           </div>
           <div style="height: 10px;width: 100%"></div>
-          <div  class="footer-btn clearfix"> <span  @click="back" class="pull-left" style="padding-right: 50px"> {{$t('message.Back')}}</span> <span class="pull-right" style="padding-left: 50px" @click="toRegister">注册</span></div>
+          <div class="footer-btn clearfix"><span @click="back" class="pull-left"
+                                                 style="padding-right: 50px"> {{$t('message.Back')}}</span> <span
+            class="pull-right" style="padding-left: 50px" @click="toRegister">注册</span></div>
         </div>
         <ul class="bg-bubbles">
           <li></li>
@@ -30,7 +32,7 @@
   </div>
 </template>
 <script>
-  import {mapState} from 'vuex';
+  import { mapState } from 'vuex';
   export default {
     name: 'login',
     data () {
@@ -47,6 +49,7 @@
       state: state => state.userInfo,
     }),
     methods: {
+
       login(){
         let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha + "&loginNum=1";
         this.$api.login(data).then((res) => {
@@ -55,17 +58,26 @@
             this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
               if (r.code == ERR_OK) {
                 let userId = r.user.id;
-                let personId=r.user.personId;
-                this.$store.dispatch('login', {userId,personId});
+                let personId = r.user.personId;
+                this.$store.dispatch('login', {userId, personId});
+//                this.$store.dispatch('checkAccount')
                 let redirect = decodeURIComponent(this.$route.query.redirect || '/');
                 this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
                   if (res.code === 0) {
                     if (res.state == 4) { // 不完善
                       this.$router.push('/type?state=4')
+                    } else if (res.state == 7) {
+                      this.$router.push('/reject?state=7')
+                      return
+                    } else if (res.state == 8) {
+                      this.$router.push('/reject?state=8')
+                      return
                     } else {
-                      this.$router.push({ // 跳到对应页面
-                        path: redirect
-                      });
+                      if(!this.$api.initWeiXinOpenId(data, redirect)){
+                        this.$router.push({ // 跳到对应页面
+                          path: redirect
+                        });
+                      }
                     }
                   } else {
                     alert(JSON.stringify(res))
@@ -105,20 +117,24 @@
     },
     mounted(){
 
+    },
+    activated(){
+      console.log('SERVER_BASE_URL', SERVER_BASE_URL)
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less" type="text/less">
-.footer-btn{
-  width: 250px;
-  margin: 0 auto;
-  color: #fff;
-  font-weight:600;
-  span{
-    padding: 2px;
-    border-bottom: 2px solid rgba(255,255,255,.5);
+  .footer-btn {
+    width: 250px;
+    margin: 0 auto;
+    color: #fff;
+    font-weight: 600;
+    span {
+      padding: 2px;
+      border-bottom: 2px solid rgba(255, 255, 255, .5);
+    }
   }
-}
+
   .errorMeg {
     background: rgba(254, 0, 13, 0.87);
     color: #fff;

@@ -6,6 +6,7 @@ import Index from '@/components/Index'
 import Shop from '@/components/Shop'
 import store from '.././store/index'
 import i18n from '@/i18n'
+// import Cookies from 'js-cookie'
 Vue.use(Router)
 
 Router.prototype.goBack = function () {
@@ -31,88 +32,102 @@ const Order = resolve => {
   Indicator.open()
   require.ensure(['@/components/Order'], () => {
     resolve(require('@/components/Order'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 const User = resolve => {
   Indicator.open()
   require.ensure(['@/components/User'], () => {
     resolve(require('@/components/User'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 const Ma = resolve => {
-  Indicator.open()
+  Indicator.open({
+    text: '加载...',
+    spinnerType: 'fading-circle'
+  });
   require.ensure(['@/components/Ma'], () => {
     resolve(require('@/components/Ma'))
-    Indicator.close()
   })
+    .then(()=>{
+    // console.log(123)
+    Indicator.close()})
 }
 const Oncall = resolve => {
   Indicator.open()
   require.ensure(['@/components/Oncall'], () => {
     resolve(require('@/components/Oncall'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 const Balance = resolve => {
   Indicator.open()
   require.ensure(['@/components/Balance'], () => {
     resolve(require('@/components/Balance'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 const Complain = resolve => {
   Indicator.open()
   require.ensure(['@/components/Complain'], () => {
     resolve(require('@/components/Complain'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 const Address = resolve => {
   Indicator.open()
   require.ensure(['@/components/Address'], () => {
     resolve(require('@/components/Address'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 const Urge = resolve => {
   Indicator.open()
   require.ensure(['@/components/Urge'], () => {
     resolve(require('@/components/Urge'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 const Orderdetail = resolve => {
   Indicator.open()
   require.ensure(['@/components/items/Orderdetail'], () => {
     resolve(require('@/components/items/Orderdetail'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 
 const Pay = resolve => {
   Indicator.open()
   require.ensure(['@/components/Pay'], () => {
     resolve(require('@/components/Pay'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
 
 const Register = resolve => {
   Indicator.open()
   require.ensure(['@/components/Register'], () => {
     resolve(require('@/components/Register'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
 }
+// const Register2 = resolve => {
+//   Indicator.open()
+//   require.ensure(['@/components/Register2'], () => {
+//     resolve(require('@/components/Register2'))
+//   }).then(()=>{Indicator.close()})
+// }
 
 const Type = resolve => {
   Indicator.open()
   require.ensure(['@/components/Type'], () => {
     resolve(require('@/components/Type'))
-    Indicator.close()
-  })
+  }).then(()=>{Indicator.close()})
+}
+
+const Join = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Join'], () => {
+    resolve(require('@/components/Join'))
+  }).then(()=>{Indicator.close()})
+}
+
+const Reject = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Reject'], () => {
+    resolve(require('@/components/Reject'))
+  }).then(()=>{Indicator.close()})
 }
 
 const routes = [{
@@ -200,11 +215,29 @@ const routes = [{
     meta: {requiresAuth: false},
     component: Register
   },
+  // {
+  //   path: '/register2',
+  //   name: 'register2',
+  //   meta: {requiresAuth: false},
+  //   component: Register2
+  // },
   {
     path: '/type',
     name: 'type',
     meta: {requiresAuth: false},
     component: Type
+  },
+  {
+    path: '/join',
+    name: 'join',
+    meta: {requiresAuth: false},
+    component: Join
+  },
+  {
+    path: '/reject',
+    name: 'reject',
+    meta: {requiresAuth: false},
+    component: Reject
   }
 ]
 
@@ -220,10 +253,17 @@ router.beforeEach((to, from, next) => {
   i18n.locale = lang
   console.log('当前语言*', lang)
   store.commit('SET_LANG', lang)
+  /**
+   * 路由切换前先给state赋值
+   */
+
+  // let token = Cookies.get('token')
+  let token = sessionStorage.getItem('token')
+  console.log('session-token',token)
 
   if (to.meta.requiresAuth) {
-    if (store.state.userInfo.token != null && store.state.userInfo.token != undefined) {
-      next()
+    if (token != null && token != undefined) {
+      next({query: {redirect: to.fullPath}})
     } else {
       next({
         path: '/login',

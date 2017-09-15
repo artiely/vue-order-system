@@ -247,7 +247,7 @@
       },
       'rangeTimeOption.rangeTimeValue': {
         handler: function (val, oldVal) {
-          console.log("changed", val);
+//          console.log("changed", val);
           function formatTime(value) {
             let HS = parseInt(value / 60).toString().length < 2 ? '0' + parseInt(value / 60) : parseInt(value / 60);
             let MS = (value % 60).toString().length < 2 ? '0' + (value % 60) : (value % 60);
@@ -478,7 +478,7 @@
 
       },
       onReady(instance) {
-        console.log("ready", instance);
+//        console.log("ready", instance);
       },
       selectTime(index){
         this.popupVisibleSelectTime = true;
@@ -536,6 +536,7 @@
         chart.render();
       },
       anOrder(){
+        this.faultDesc='' // 清空描述让button disabled
         let newData = [];
         for (var i = 0; i < this.timeMap.length; i++) {
           newData.push({
