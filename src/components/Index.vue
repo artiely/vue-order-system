@@ -88,26 +88,26 @@
           let userId = r.user.id;
           let personId = r.user.personId;
           this.$store.dispatch('login', {userId, personId});
+          this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+            if (res.code === 0) {
+              if (res.state == 4) { // 不完善
+                this.$router.push('/type?state=4')
+              } else if (res.state == 7) {
+                this.$router.push('/reject?state=7')
+                return
+              } else if (res.state == 8) {
+                this.$router.push('/reject?state=8')
+                return
+              } else {
+
+              }
+            } else {
+              alert(JSON.stringify(res))
+            }
+          })
         } else {
           this.error = true;
           this.errorMsg = '连接失败'
-        }
-      })
-      this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
-        if (res.code === 0) {
-          if (res.state == 4) { // 不完善
-            this.$router.push('/type?state=4')
-          } else if (res.state == 7) {
-            this.$router.push('/reject?state=7')
-            return
-          } else if (res.state == 8) {
-            this.$router.push('/reject?state=8')
-            return
-          } else {
-
-          }
-        } else {
-          alert(JSON.stringify(res))
         }
       })
     },

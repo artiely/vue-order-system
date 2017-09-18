@@ -8,17 +8,20 @@
         </mt-navbar>
         <div style="background:#fff;">
           <div v-if="selected==1">
-            <mu-text-field :label="$t('message.Email')" v-model="form.email" type="email" :errorText="error.email" name="email" labelFloat
+            <mu-text-field :label="$t('message.Email')" v-model="form.email" type="email" :errorText="error.email"
+                           name="email" labelFloat
                            fullWidth @input="checkEmail"/>
           </div>
 
           <div v-if="selected==2">
-            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" type="number" :errorText="error.phone" name="phone"
+            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" type="number"
+                           :errorText="error.phone" name="phone"
                            labelFloat fullWidth @blur="checkPhone" @input="checkPhone"/>
 
           </div>
           <div style="text-align: left" v-if="selected==2">
-            <mu-text-field :label="$t('message.Mes_code')" v-model="form.code" type="text" :errorText="error.code" name="code" labelFloat
+            <mu-text-field :label="$t('message.Mes_code')" v-model="form.code" type="text" :errorText="error.code"
+                           name="code" labelFloat
                            style="width: 60%"/>
             <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
                   @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
@@ -27,10 +30,12 @@
               {{count}}s {{$t('message.resend')}}
             </span>
           </div>
-          <mu-text-field :label="$t('message.password')" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+          <mu-text-field :label="$t('message.password')" v-model="form.pwd" type="password" :errorText="error.pwd"
+                         name="pwd" labelFloat
                          fullWidth/>
 
-          <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2" labelFloat
+          <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password"
+                         :errorText="error.pwd2" name="pwd2" labelFloat
                          fullWidth/>
           <button class="Button--primary Button--blue" @click="register">{{$t('message.signup')}}</button>
         </div>
@@ -158,7 +163,7 @@
       back(){
         this.$router.back()
       },
-      checkEmail (val) {
+      checkEmail (val, cb) {
         console.log('邮箱', val)
         if (val.indexOf('@') <= 0) {
           return
@@ -172,6 +177,7 @@
               this.form.hasEmail = false
 //              this.$set(this.form, this.form.x, this.form.x--)
             }
+            cb && cb()
           } else {
             alert(JSON.stringify(res))
           }
@@ -198,7 +204,8 @@
       register () {
         if (!this.fail) {
           if (this.selected == '1') { // 邮箱
-            this._postInfo()
+            /* 后端在此需要先验证邮箱再提交保证没有重复的账号*/
+            this.checkEmail(this.form.email,()=>{this._postInfo()})
           } else { // 手机号
             this._postInfoByMobile()
           }
@@ -251,7 +258,7 @@
         }
         this.$api.REGISTER(data).then(res => {
           if (res.code === 0) {
-            alert(`激活信息已发送至${this.email},请注意查收并及时激活。`)
+            alert(`激活信息已发送至${this.form.email},请注意查收并及时激活。`)
           }
         })
       },
