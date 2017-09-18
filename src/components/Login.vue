@@ -13,8 +13,17 @@
           <div style="height: 10px;width: 100%"></div>
           <div class="footer-btn clearfix"><span @click="back" class="pull-left"
                                                  style="padding-right: 50px"> {{$t('message.Back')}}</span> <span
-            class="pull-right" style="padding-left: 50px" @click="toRegister">注册</span></div>
+            class="pull-right" style="padding-left: 50px" @click="toRegister">{{$t('message.signup')}}</span></div>
+          <div style="text-align: left;width: 250px;margin:0 auto ;padding: 20px 0">
+            <select style="padding: 4px;outline: none;background:rgba(255,255,255,.9);" v-model="lang">
+              <option value="EN">English</option>
+              <option value="CN">中文简体</option>
+              <option value="TN">中文繁体</option>
+            </select>
+          </div>
         </div>
+
+
         <ul class="bg-bubbles">
           <li></li>
           <li></li>
@@ -42,14 +51,32 @@
         captcha: '',
         error: false,
         errorMsg: "",
-        token: null
+        token: null,
+        lang: 'CN'
       }
     },
     computed: mapState({
       state: state => state.userInfo,
     }),
+    watch: {
+      lang: function (val) {
+        if (val == 'CN') {
+          this.$i18n.locale = 'CN'
+          window.localStorage.setItem('lang', 'CN')
+        } else if (val == 'EN') {
+          this.$i18n.locale = 'EN'
+          window.localStorage.setItem('lang', 'EN')
+        } else if (val == 'TN') {
+          this.$i18n.locale = 'TN'
+          window.localStorage.setItem('lang', 'TN')
+        } else {
+          this.$i18n.locale = 'CN'
+          window.localStorage.setItem('lang', 'CN')
+        }
+        this.commit('SET_LANG',val)
+      }
+    },
     methods: {
-
       login(){
         let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha + "&loginNum=1";
         this.$api.login(data).then((res) => {
@@ -73,7 +100,7 @@
                       this.$router.push('/reject?state=8')
                       return
                     } else {
-                      if(!this.$api.initWeiXinOpenId(data, redirect)){
+                      if (!this.$api.initWeiXinOpenId(data, redirect)) {
                         this.$router.push({ // 跳到对应页面
                           path: redirect
                         });
@@ -120,6 +147,10 @@
     },
     activated(){
       console.log('SERVER_BASE_URL', SERVER_BASE_URL)
+      let lang = window.localStorage.getItem('lang')
+      if (lang && (lang !== 'null' || lang !== 'undefined')) {
+        this.lang = lang
+      }
     }
   }
 </script>
@@ -194,7 +225,7 @@
   .form input {
     appearance: none;
     outline: 0;
-    border:none;
+    border: none;
     border-bottom: 2px solid rgba(255, 255, 255, 0.4);
     background-color: rgba(255, 255, 255, 0.2);
     width: 250px;
@@ -207,8 +238,8 @@
     color: white;
     transition-duration: 0.25s;
     font-weight: 300;
-    &::-webkit-input-placeholder{
-      color: #fafafa!important;
+    &::-webkit-input-placeholder {
+      color: #fafafa !important;
     }
   }
 
@@ -234,10 +265,10 @@
     cursor: pointer;
     font-size: 18px;
     transition-duration: 0.25s;
-    background: -webkit-gradient(linear,left top,right top,from(#fff),to(#fafafa));
-    background: linear-gradient(90deg,#fff,#fafafa);
-    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.16);
-    box-shadow: 0 3px 6px rgba(0,0,0,.16);
+    background: -webkit-gradient(linear, left top, right top, from(#fff), to(#fafafa));
+    background: linear-gradient(90deg, #fff, #fafafa);
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, .16);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .16);
   }
 
   .form button :hover {

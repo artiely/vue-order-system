@@ -10,7 +10,7 @@ import 'mint-ui/lib/style.css'
 import './assets/font/iconfont.css'
 import './assets/style/main.less'
 import i18n from './i18n/index'
-import vConsole from 'vconsole'
+//import vConsole from 'vconsole'
 // import Vuelidate from 'vuelidate'
 // Vue.use(Vuelidate)
 

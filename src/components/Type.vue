@@ -3,173 +3,174 @@
     <div class="page-content">
       <div class="wrapper" style="text-align: left;background:#fff;" v-if="token">
         <mt-navbar v-model="form.typeId" v-if="!isEdit">
-          <mt-tab-item id="2">企业</mt-tab-item>
-          <mt-tab-item id="1">个人</mt-tab-item>
+          <mt-tab-item id="2">{{$t('message.Company')}}</mt-tab-item>
+          <mt-tab-item id="1">{{$t('message.Personage')}}</mt-tab-item>
         </mt-navbar>
         <!--<div class="help">一个邮箱只能注册一种类型账号</div>-->
         <div v-if="form.typeId==2">
           <div v-if="isMobile">
-            <mu-text-field label="企业名称" v-model="form.company" :errorText="error.company" labelFloat/>
-            <div class="help">需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致，信息审核成功后，企业名称不可修改</div>
-            <mu-text-field label="标示" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <div class="help">标示即为公司英文简称</div>
-            <mu-text-field label="营业执照注册号" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
-            <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
-            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <div class="help">{{$t('message.Company_name_help')}}</div>
+            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <div class="help">{{$t('message.Mark_help')}}</div>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <div class="help">{{$t('message.Company_id_num_help')}}</div>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
           </div>
           <div v-if="isWechat">
-            <mu-text-field label="企业名称" v-model="form.company" :errorText="error.company" labelFloat/>
-            <div class="help">需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致，信息审核成功后，企业名称不可修改</div>
-            <mu-text-field label="标示" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <div class="help">标示即为公司英文简称</div>
-            <mu-text-field label="营业执照注册号" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
-            <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
-            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field label="管理员手机号" @input="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
-            <div class="help">手机号为登录账号</div>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <div class="help">{{$t('message.Company_name_help')}}</div>
+            <mu-text-field :label="$t('message.Mark')"  v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <div class="help">{{$t('message.Mark_help')}}</div>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <div class="help">{{$t('message.Company_id_num_help')}}</div>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
+            <mu-text-field :label="$t('message.Admin_phone_num')" @input="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
+            <div class="help">{{$t('message.cell-phone_help')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
-              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">点击获取</span>
+                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
                     style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
+              {{count}}s {{$t('message.resend')}}
             </span>
             </div>
             <div v-if="!isEdit">
-              <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
                              fullWidth/>
-              <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
+              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
                              labelFloat
                              fullWidth/>
             </div>
           </div>
           <div v-if="isEmail">
-            <mu-text-field label="企业名称" v-model="form.company" :errorText="error.company" labelFloat/>
-            <div class="help">需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致，信息审核成功后，企业名称不可修改</div>
-            <mu-text-field label="标示" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <div class="help">标示即为公司英文简称</div>
-            <mu-text-field label="营业执照注册号" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
-            <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
-            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field label="管理员手机号" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <div class="help">{{$t('message.Company_name_help')}}</div>
+            <mu-text-field :label="$t('message.Mark')"  v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <div class="help">{{$t('message.Mark_help')}}</div>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <div class="help">{{$t('message.Company_id_num_help')}}</div>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
+            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
             <div>
-              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">点击获取</span>
+                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
                     style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
+              {{count}}s {{$t('message.resend')}}
             </span>
             </div>
           </div>
           <div v-if="isEdit">
-            <mu-text-field label="企业名称" v-model="form.company" :errorText="error.company" labelFloat/>
-            <div class="help">需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致，信息审核成功后，企业名称不可修改</div>
-            <mu-text-field label="标示" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <div class="help">标示即为公司英文简称</div>
-            <mu-text-field label="营业执照注册号" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
-            <div class="help">请输入15位营业执照号或18位的统一社会信用代码</div>
-            <mu-text-field label="管理员姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field label="管理员身份证号" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field label="管理员手机号" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <div class="help">{{$t('message.Company_name_help')}}</div>
+            <mu-text-field :label="$t('message.Mark')"  v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <div class="help">{{$t('message.Mark_help')}}</div>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <div class="help">{{$t('message.Company_id_num_help')}}</div>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
+            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
             <div>
-              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">点击获取</span>
+                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
                     style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
+              {{count}}s {{$t('message.resend')}}
             </span>
             </div>
           </div>
         </div>
         <div v-if="form.typeId==1">
           <div v-if="isMobile">
-            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mt-radio
-              title="性别"
+              :title="$t('message.Gender')"
               v-model="form.sex"
-              :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
+              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
           </div>
           <div v-if="isWechat">
-            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mt-radio
-              title="性别"
+              :title="$t('message.Gender')"
               v-model="form.sex"
-              :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
+              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
             <!--<mu-text-field label="手机号" @input="checkPhone" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>-->
-            <div class="help">手机号为登录账号</div>
+            <div class="help">{{$t('message.cell-phone_help')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
-              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">点击获取</span>
+                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
                     style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
+              {{count}}s {{$t('message.resend')}}
             </span>
             </div>
             <div v-if="!isEdit">
-              <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
                              fullWidth/>
-              <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
+              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
                              labelFloat
                              fullWidth/>
             </div>
           </div>
           <div v-if="isEmail">
-            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mt-radio
-              title="性别"
+              :title="$t('message.Gender')"
               v-model="form.sex"
-              :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
+              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
-            <mu-text-field label="手机号" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
-            <div class="help">手机号可作为登录账号</div>
+            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
+            <div class="help">{{$t('message.cell-phone_help')}}</div>
             <div>
-              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">点击获取</span>
+                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
                     style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
+              {{count}}s {{$t('message.resend')}}
             </span>
             </div>
           </div>
           <div v-if="isEdit">
-            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
+            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
             <mt-radio
-              title="性别"
+              :title="$t('message.Gender')"
               v-model="form.sex"
-              :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
+              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
-            <mu-text-field label="手机号" v-model="form.phone" :errorText="error.phone" @input="checkPhone" labelFloat/>
-            <div class="help">手机号可作为登录账号</div>
+            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" :errorText="error.phone" @input="checkPhone" labelFloat/>
+            <div class="help">{{$t('message.cell-phone_help')}}</div>
             <div>
-              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">点击获取</span>
+                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
                     style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
+              {{count}}s {{$t('message.resend')}}
             </span>
             </div>
           </div>
         </div>
-        <button class="Button--primary Button--blue" @click="handleSubmit">提交</button>
+        <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
       </div>
-      <div style="padding: 20px"><h2>链接过期或无效 <router-link to="register" v-if="!token">重新发送邮件</router-link></h2></div>
+      <div style="padding: 20px" v-if="isEmail&&!token"><h2>链接过期或无效 <router-link to="register" >重新发送邮件</router-link></h2></div>
     </div>
+
   </div>
 </template>
 <script>
@@ -276,43 +277,43 @@
         handler(val){
           if (this.form.typeId == '2') {
             if (val.company == '') {
-              this.error.company = '必填项'
+              this.error.company = this.$t('message.Required_fields')
               return
             } else {
               this.error.company = ''
             }
             let re = /^[a-z]+$/i
             if (val.mark == '') {
-              this.error.mark = '必填项'
+              this.error.mark = this.$t('message.Required_fields')
               return
             } else if (!re.test(val.mark)) {
-              this.error.mark = '标示只能为字母'
+              this.error.mark = this.$t('message.Letter_only')
               return
             } else {
               this.error.mark = ''
             }
 
             if (val.companyIdNum == '') {
-              this.error.companyIdNum = '必填项'
+              this.error.companyIdNum = this.$t('message.Required_fields')
               return
             } else if (val.companyIdNum.toString().length !== 15 && val.companyIdNum.toString().length !== 18) {
-              this.error.companyIdNum = '请输入正确的营业执照注册号'
+              this.error.companyIdNum = this.$t('message.Incorrect_format')
               return
             } else {
               this.error.companyIdNum = ''
             }
             if (val.userName == '') {
-              this.error.userName = '必填项'
+              this.error.userName = this.$t('message.Required_fields')
               return
             } else {
               this.error.userName = ''
             }
             let re2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}\w{1}$/
             if (val.idCard == '') {
-              this.error.idCard = '必填项'
+              this.error.idCard = this.$t('message.Required_fields')
               return
             } else if (!re2.test(val.idCard)) {
-              this.error.idCard = '格式错误'
+              this.error.idCard = this.$t('message.Incorrect_format')
               return
             } else {
               this.error.idCard = ''
@@ -321,19 +322,19 @@
             if (!this.isMobile) { // 是手机注册或登录就不用再验证手机
               let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
               if (val.phone == '') {
-                this.error.phone = '必填项'
+                this.error.phone = this.$t('message.Required_fields')
                 return
               } else if (!re3.test(val.phone)) {
-                this.error.phone = '格式错误'
+                this.error.phone = this.$t('message.Incorrect_format')
                 return
               } else if (val.hasPhone) {
-                this.error.phone = '手机号已被注册'
+                this.error.phone = this.$t('message.Already_exists')
                 return
               } else {
                 this.error.phone = ''
               }
               if (val.code == '') {
-                this.error.code = '必填项'
+                this.error.code = this.$t('message.Required_fields')
                 return
               } else {
                 this.error.code = ''
@@ -341,19 +342,19 @@
             }
             if (this.isWechat) { // 是微信注册 得填写密码
               if (val.pwd == '') {
-                this.error.pwd = '必填项'
+                this.error.pwd = this.$t('message.Required_fields')
                 return
               } else if (val.pwd.length < 6) {
-                this.error.pwd = '至少6位'
+                this.error.pwd = this.$t('message.Minimum_6')
                 return
               } else {
                 this.error.pwd = ''
               }
               if (val.pwd2 == '') {
-                this.error.pwd2 = '必填项'
+                this.error.pwd2 = this.$t('message.Required_fields')
                 return
               } else if (val.pwd2 != val.pwd) {
-                this.error.pwd2 = '密码不一致'
+                this.error.pwd2 = this.$t('message.Entered_differ')
                 return
               } else {
                 this.error.pwd2 = ''
@@ -362,7 +363,7 @@
           } else {
             if (this.isMobile) {
               if (val.userName == '') { // 手机
-                this.error.userName = '必填项'
+                this.error.userName = this.$t('message.Required_fields')
               } else {
                 this.error.userName = ''
               }
@@ -378,35 +379,35 @@
                 this.error.phone = ''
                 return
               } else if (!re3.test(val.phone)) {
-                this.error.phone = '格式错误'
+                this.error.phone = this.$t('message.Incorrect_format')
                 return
               } else if (val.hasPhone) {
-                this.error.phone = '手机号已被注册'
+                this.error.phone = this.$t('message.Already_exists')
                 return
               } else {
                 this.error.phone = ''
               }
               if (val.phone.length == 11 && val.code == '') {  // 以下填写了手机号才是必填项
-                this.error.code = '必填项'
+                this.error.code = this.$t('message.Required_fields')
                 return
               } else {
                 this.error.code = ''
               }
 
               if (val.phone.length == 11 && val.pwd == '') {
-                this.error.pwd = '必填项'
+                this.error.pwd = this.$t('message.Required_fields')
                 return
               } else if (val.phone.length == 11 && val.pwd.length < 6) {
-                this.error.pwd = '至少6位'
+                this.error.pwd = this.$t('message.Minimum_6')
                 return
               } else {
                 this.error.pwd = ''
               }
               if (val.phone.length == 11 && val.pwd2 == '') {
-                this.error.pwd2 = '必填项'
+                this.error.pwd2 = this.$t('message.Required_fields')
                 return
               } else if (val.pwd2 != val.pwd) {
-                this.error.pwd2 = '密码不一致'
+                this.error.pwd2 = this.$t('message.Entered_differ')
                 return
               } else {
                 this.error.pwd2 = ''
@@ -414,26 +415,26 @@
 
             } else { // 邮箱验证规则
               if (val.userName == '') {
-                this.error.userName = '必填项'
+                this.error.userName = this.$t('message.Required_fields')
                 return
               } else {
                 this.error.userName = ''
               }
               let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
               if (val.phone == '') {
-                this.error.phone = '必填项'
+                this.error.phone = this.$t('message.Required_fields')
                 return
               } else if (!re3.test(val.phone)) {
-                this.error.phone = '格式错误'
+                this.error.phone = this.$t('message.Incorrect_format')
                 return
               }else if (val.hasPhone) {
-                this.error.phone = '手机号已被注册'
+                this.error.phone = this.$t('message.Already_exists')
                 return
               }  else {
                 this.error.phone = ''
               }
               if (val.code == '') {
-                this.error.code = '必填项'
+                this.error.code = this.$t('message.Required_fields')
                 return
               } else {
                 this.error.code = ''
@@ -598,7 +599,6 @@
           if (GetQueryString('edit') && GetQueryString('edit') == '1') {
             this.isEdit = true
             this.isWechat = false
-            this.isEmail = false
             this.isMobile = false
             this._getRegisterInfo()
           } else {

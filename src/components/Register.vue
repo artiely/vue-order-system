@@ -3,36 +3,36 @@
     <div class="page-content">
       <div class="wrapper">
         <mt-navbar v-model="selected">
-          <mt-tab-item id="1">邮箱注册</mt-tab-item>
-          <mt-tab-item id="2">手机号注册</mt-tab-item>
+          <mt-tab-item id="1">{{$t('message.signup_email')}}</mt-tab-item>
+          <mt-tab-item id="2">{{$t('message.signup_phone')}}</mt-tab-item>
         </mt-navbar>
         <div style="background:#fff;">
           <div v-if="selected==1">
-            <mu-text-field label="邮箱" v-model="form.email" type="email" :errorText="error.email" name="email" labelFloat
+            <mu-text-field :label="$t('message.Email')" v-model="form.email" type="email" :errorText="error.email" name="email" labelFloat
                            fullWidth @input="checkEmail"/>
           </div>
 
           <div v-if="selected==2">
-            <mu-text-field label="手机号" v-model="form.phone" type="number" :errorText="error.phone" name="phone"
+            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" type="number" :errorText="error.phone" name="phone"
                            labelFloat fullWidth @blur="checkPhone" @input="checkPhone"/>
 
           </div>
           <div style="text-align: left" v-if="selected==2">
-            <mu-text-field label="短信验证码" v-model="form.code" type="text" :errorText="error.code" name="code" labelFloat
+            <mu-text-field :label="$t('message.Mes_code')" v-model="form.code" type="text" :errorText="error.code" name="code" labelFloat
                            style="width: 60%"/>
             <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                  @click="getMsgCode" v-if="count==60">点击获取</span>
+                  @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
             <span v-if="count!=60"
                   style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s 重新获取
+              {{count}}s {{$t('message.resend')}}
             </span>
           </div>
-          <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+          <mu-text-field :label="$t('message.password')" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
                          fullWidth/>
 
-          <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2" labelFloat
+          <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2" labelFloat
                          fullWidth/>
-          <button class="Button--primary Button--blue" @click="register">注册</button>
+          <button class="Button--primary Button--blue" @click="register">{{$t('message.signup')}}</button>
         </div>
       </div>
     </div>

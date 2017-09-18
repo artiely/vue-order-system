@@ -223,7 +223,6 @@
         return this.$refs.mySwiper.swiper
       },
       lang(){
-
         if(this.$store.state.userInfo.lang){
           return this.$store.state.userInfo.lang
         }else{
@@ -429,7 +428,7 @@
       this.getdata()
     },
     activated(){
-      console.log("当前语言",this.$store.state.userInfo.lang)
+      console.log("当前语言order",this.$store.state.userInfo.lang)
     },
 
     mounted() {
