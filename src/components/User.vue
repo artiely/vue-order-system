@@ -92,7 +92,7 @@
         </div>
         <div class="right-des">
           <!--{{$t('message.Account_Management')}}-->
-          {{$t('message["账号管理"]')}}
+          {{$t('message.Account_Management')}}
         </div>
         <div class="right-icon">
           <i class="iconfont icon-enter"></i>

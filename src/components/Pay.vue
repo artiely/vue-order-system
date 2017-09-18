@@ -290,7 +290,6 @@
         let isInnerWeixin = isWeixnBrowser();
         this.$api.post_pay_ment(postData).then(res => {
         if(data.payWayCode == 'WEIXIN'){
-            alert(isInnerWeixin);
             if(isInnerWeixin){
                 if (typeof WeixinJSBridge == "undefined") {
                   if (document.addEventListener) {
@@ -306,11 +305,10 @@
                   onBridgeReady(res);
                 }
             }else {
-                alert(res.data);
                 window.location.href = res.data;
             }
         }else {
-            document.body.innerHTML += res
+            document.body.innerHTML += res.data;
             setTimeout(() => {
               if(data.payWayCode == 'ALIPAY' && isInnerWeixin){
                 var queryParam = '';
@@ -336,7 +334,7 @@
     mounted(){}
   }
   function onBridgeReady(json) {
-    alert(JSON.stringify(json))
+//    alert(JSON.stringify(json))
     WeixinJSBridge.invoke('getBrandWCPayRequest', json, function(res) {
       // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
       alert(JSON.stringify(res));
@@ -352,6 +350,7 @@
 //        self.location = "#(ctxPath)/success";
 
       } else {
+        alert("")
         /*layer.msg("支付失败", {
          shift : 6
          });*/

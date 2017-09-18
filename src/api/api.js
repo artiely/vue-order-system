@@ -23,8 +23,8 @@ const login = params => {
 const initWeiXinOpenId = (params, redirect) => {
   if(isWeixnBrowser()){
     //window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+window.location.href.split('#')[0]+''+redirect;
-    alert(window.location.href);
-    window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+window.location.href.split('#')[0]+''+redirect;
+    var fromUrl = window.location.href.replace(/(\/?#.*)/g, "//"+redirect);
+    window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+fromUrl;
     return true;
   }
   return false;
