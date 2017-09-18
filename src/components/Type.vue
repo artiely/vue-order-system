@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="page-content">
-      <div class="wrapper" style="text-align: left;background:#fff;" v-if="token">
+      <div class="wrapper" style="text-align: left;background:#fff;" v-if="token||state==4">
         <mt-navbar v-model="form.typeId" v-if="!isEdit">
           <mt-tab-item id="2">{{$t('message.Company')}}</mt-tab-item>
           <mt-tab-item id="1">{{$t('message.Personage')}}</mt-tab-item>
@@ -9,29 +9,39 @@
         <!--<div class="help">一个邮箱只能注册一种类型账号</div>-->
         <div v-if="form.typeId==2">
           <div v-if="isMobile">
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
+                           labelFloat/>
             <div class="help">{{$t('message.Company_name_help')}}</div>
             <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
             <div class="help">{{$t('message.Mark_help')}}</div>
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
+                           :errorText="error.companyIdNum" labelFloat/>
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
+                           labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
+                           labelFloat/>
           </div>
           <div v-if="isWechat">
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
+                           labelFloat/>
             <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :label="$t('message.Mark')"  v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
             <div class="help">{{$t('message.Mark_help')}}</div>
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
+                           :errorText="error.companyIdNum" labelFloat/>
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" @input="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
+                           labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
+                           labelFloat/>
+            <mu-text-field :label="$t('message.Admin_phone_num')" @input="checkPhone" v-model="form.phone"
+                           :errorText="error.phone" labelFloat/>
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+                             style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
@@ -40,25 +50,33 @@
             </span>
             </div>
             <div v-if="!isEdit">
-              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd"
+                             name="pwd" labelFloat
                              fullWidth/>
-              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
+              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password"
+                             :errorText="error.pwd2" name="pwd2"
                              labelFloat
                              fullWidth/>
             </div>
           </div>
           <div v-if="isEmail">
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
+                           labelFloat/>
             <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :label="$t('message.Mark')"  v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
             <div class="help">{{$t('message.Mark_help')}}</div>
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
+                           :errorText="error.companyIdNum" labelFloat/>
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
+                           labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
+                           labelFloat/>
+            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone" @input="checkPhone"
+                           :errorText="error.phone" labelFloat/>
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+                             style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
@@ -68,17 +86,23 @@
             </div>
           </div>
           <div v-if="isEdit">
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company" labelFloat/>
+            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
+                           labelFloat/>
             <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :label="$t('message.Mark')"  v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
             <div class="help">{{$t('message.Mark_help')}}</div>
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum" :errorText="error.companyIdNum" labelFloat/>
+            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
+                           :errorText="error.companyIdNum" labelFloat/>
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard" labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
+            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
+                           labelFloat/>
+            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
+                           labelFloat/>
+            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone" @input="checkPhone"
+                           :errorText="error.phone" labelFloat/>
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+                             style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
@@ -109,7 +133,8 @@
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+                             style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
@@ -118,9 +143,11 @@
             </span>
             </div>
             <div v-if="!isEdit">
-              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd"
+                             name="pwd" labelFloat
                              fullWidth/>
-              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
+              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password"
+                             :errorText="error.pwd2" name="pwd2"
                              labelFloat
                              fullWidth/>
             </div>
@@ -133,10 +160,12 @@
               :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
-            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" @input="checkPhone" :errorText="error.phone" labelFloat/>
+            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" @input="checkPhone"
+                           :errorText="error.phone" labelFloat/>
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+                             style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
@@ -153,10 +182,12 @@
               :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
-            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" :errorText="error.phone" @input="checkPhone" labelFloat/>
+            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" :errorText="error.phone"
+                           @input="checkPhone" labelFloat/>
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+                             style="width: 60%"/>
               <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
@@ -168,7 +199,11 @@
         </div>
         <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
       </div>
-      <div style="padding: 20px" v-if="isEmail&&!token"><h2>链接过期或无效 <router-link to="register" >重新发送邮件</router-link></h2></div>
+      <div style="padding: 20px" v-if="isEmail&&!token">
+        <h2>链接过期或无效
+          <router-link to="register">重新发送邮件</router-link>
+        </h2>
+      </div>
     </div>
 
   </div>
@@ -194,6 +229,8 @@
           hasPhone: false, //判断手机是否被注册
           x: 0
         },
+        state:'', // state=4 位信息不完善
+        editData:{},
         count: 60,
         token: true,
         fail: true,
@@ -427,10 +464,10 @@
               } else if (!re3.test(val.phone)) {
                 this.error.phone = this.$t('message.Incorrect_format')
                 return
-              }else if (val.hasPhone) {
+              } else if (val.hasPhone) {
                 this.error.phone = this.$t('message.Already_exists')
                 return
-              }  else {
+              } else {
                 this.error.phone = ''
               }
               if (val.code == '') {
@@ -464,72 +501,122 @@
           alert('请完善信息')
           return
         } else {
-          let data
-          if (this.form.typeId == 2) {
-            data = {
-              account_type: this.form.typeId,
-              company_name: this.form.company,
-              comp_eng_short_name: this.form.mark,
-              business_license_number: this.form.companyIdNum,
-              personName: this.form.userName,
-              personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
-              idCard: this.form.idCard,
-              telephone: this.form.phone,
-              promotionTableName: GetQueryString('promotionTableName') || '',
-              promotionTableId: GetQueryString('promotionTableId') || '',
-              email: GetQueryString('e') || '',
-              code: this.form.code,
-              source: GetQueryString('source') || ''
-            }
-          } else {
-            data = {
-              account_type: this.form.typeId,
-              personName: this.form.userName,
-              personSex: this.form.sex,
-              telephone: this.form.phone,
-              promotionTableName: GetQueryString('promotionTableName') || '',
-              promotionTableId: GetQueryString('promotionTableId') || '',
-              email: GetQueryString('e') || '',
-              code: this.form.code,
-              source: GetQueryString('source') || ''
-            }
-          }
-          if (this.isMobile) { // 手机注册改变来源
-            data.source = 'telephone'
-          }
-          if (this.isWechat) { // 微信注册添加密码
-            data.password = this.form.pwd
-          }
-          if (this.form.typeId == '1') { // 个人的话性别按照用户选择赋值
-            data.personSex = this.form.sex
-          }
-          this.$api.POST_USER_INFO(data).then(res => {
-            this.loading = false
-            if (res.code === 0) {
-              if (res.state !== '1') { // 验证码不通过
-                alert(res.info)
-                return
-              }
-              let url = window.location.href
-              if (window.location.search === '') {
-                url = window.location.href
-              } else {
-                url = url.split(window.location.search)[0]
-              }
-              if (this.isWechat) {
-                url = url.replace('type', 'index')
-                window.location.href = url
-              } else {
-                url = url.replace('type', 'login')
-                window.location.href = url
+          if (!this.isEdit) {
+            let data
+            if (this.form.typeId == 2) {
+              data = {
+                account_type: this.form.typeId,
+                company_name: this.form.company,
+                comp_eng_short_name: this.form.mark,
+                business_license_number: this.form.companyIdNum,
+                personName: this.form.userName,
+                personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
+                idCard: this.form.idCard,
+                telephone: this.form.phone,
+                promotionTableName: GetQueryString('promotionTableName') || '',
+                promotionTableId: GetQueryString('promotionTableId') || '',
+                email: GetQueryString('e') || '',
+                code: this.form.code,
+                source: GetQueryString('source') || ''
               }
             } else {
-              alert(JSON.stringify(res))
+              data = {
+                account_type: this.form.typeId,
+                personName: this.form.userName,
+                personSex: this.form.sex,
+                telephone: this.form.phone,
+                promotionTableName: GetQueryString('promotionTableName') || '',
+                promotionTableId: GetQueryString('promotionTableId') || '',
+                email: GetQueryString('e') || '',
+                code: this.form.code,
+                source: GetQueryString('source') || ''
+              }
             }
-          }).catch(err => {
-            this.loading = false
-            console.error('哎哟~！', err)
-          })
+            if (this.isMobile) { // 手机注册改变来源
+              data.source = 'telephone'
+            }
+            if (this.isWechat) { // 微信注册添加密码
+              data.password = this.form.pwd
+            }
+            if (this.form.typeId == '1') { // 个人的话性别按照用户选择赋值
+              data.personSex = this.form.sex
+            }
+            this.$api.POST_USER_INFO(data).then(res => {
+              this.loading = false
+              if (res.code === 0) {
+                if (res.state !== '1') { // 验证码不通过
+                  alert(res.info)
+                  return
+                }
+                let url = window.location.href
+                if (window.location.search === '') {
+                  url = window.location.href
+                } else {
+                  url = url.split(window.location.search)[0]
+                }
+                if (this.isWechat) {
+                  url = url.replace('type', 'index')
+                  window.location.href = url
+                } else {
+                  url = url.replace('type', 'login')
+                  window.location.href = url
+                }
+              } else {
+                alert(JSON.stringify(res))
+              }
+            }).catch(err => {
+              this.loading = false
+              console.error('哎哟~！', err)
+            })
+          }else{ // 修改
+            // 如果是修改 提交参数略有不同
+            var eData
+            if (this.form.typeId === '2') { // 企业
+              eData = {
+                account_type: this.form.typeId,
+                company_name: this.form.company,
+                comp_eng_short_name: this.form.mark,
+                business_license_number: this.form.companyIdNum,
+                personName: this.form.userName,
+                personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
+                idCard: this.form.idCard,
+                telephone: this.form.phone,
+                code: this.form.code,
+                email: this.editData.email,
+                personId: this.editData.personId,
+                rowChangeLogId: this.editData.rowChangeLogId,
+                sysUserId: this.editData.sysUserId,
+                companyID: this.editData.companyID
+              }
+            } else {
+              eData = {
+                account_type: this.form.typeId,
+                personName: this.form.userName,
+                personSex: this.form.sex,
+                telephone: this.form.phone,
+                code: this.form.code,
+                email: this.editData.email,
+                personId: this.editData.personId,
+                rowChangeLogId: this.editData.rowChangeLogId,
+                sysUserId: this.editData.sysUserId,
+                companyID: this.editData.companyID
+              }
+            }
+            this.$api.UPDATE_REGISTER_INFO(Object.assign({}, eData)).then(res => {
+              if (res.code === 0) {
+                let url = window.location.href
+                if (window.location.search === '') {
+                  url = window.location.href
+                } else {
+                  url = url.split(window.location.search)[0]
+                }
+                url = url.replace('type', 'login')
+                window.location.href = url
+              } else {
+                alert(JSON.stringify(res))
+              }
+            })
+          }
         }
       },
       getMsgCode () {
@@ -586,7 +673,8 @@
           this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
             if (res.code === 0) {
               if (res.state == 4) { // 不完善
-
+                  this.state=4
+                   this.checkMobile()
               } else {
                 this.$router.push('/index');
               }
@@ -613,8 +701,18 @@
           if (res.code === 0) {
             if (res.exist === 1) { // 是手机号登录(注册)
               this.isMobile = true
-            } else {
+            } else  {
               this.isMobile = false
+              if(res.exist === 2){ //2 微信 3 邮箱
+                this.isWechat=true
+              }else{
+                this.isWechat=false
+              }
+              if(res.exist === 3){
+                this.isEmail=true
+              }else{
+                this.isEmail=true
+              }
             }
           } else {
             alert(JSON.stringify(res))

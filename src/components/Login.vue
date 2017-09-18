@@ -73,7 +73,7 @@
           this.$i18n.locale = 'CN'
           window.localStorage.setItem('lang', 'CN')
         }
-        this.commit('SET_LANG',val)
+        this.$store.commit('SET_LANG',val)
       }
     },
     methods: {
