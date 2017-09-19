@@ -2,17 +2,23 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import router from './router'
-import MuseUI from 'muse-ui'
-import 'muse-ui/dist/muse-ui.css'
-Vue.use(MuseUI)
+// import MuseUI from 'muse-ui'
+// import 'muse-ui/dist/muse-ui.css'
+// Vue.use(MuseUI)
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import './assets/font/iconfont.css'
 import './assets/style/main.less'
 import i18n from './i18n/index'
-//import vConsole from 'vconsole'
+// import vConsole from 'vconsole'
 // import Vuelidate from 'vuelidate'
 // Vue.use(Vuelidate)
+
+import datePicker from 'muse-components/datePicker'
+import textField from 'muse-components/textField'
+// ..
+Vue.component('mu-date-picker', datePicker)
+Vue.component('mu-text-field', textField)
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 Vue.use(VueAwesomeSwiper)

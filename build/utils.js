@@ -2,6 +2,14 @@ var path = require('path')
 var config = require('../config')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+const museUiThemePath = path.join(
+  __dirname,
+  '../node_modules',
+  'muse-ui',
+  'src/styles/themes/variables/default.less'
+)
+
+
 exports.assetsPath = function (_path) {
   var assetsSubDirectory = process.env.NODE_ENV === 'production'
     ? config.build.assetsSubDirectory
@@ -48,8 +56,11 @@ exports.cssLoaders = function (options) {
   return {
     css: generateLoaders(),
     postcss: generateLoaders(),
-    less: generateLoaders('less'),//也就是说vue已经帮我们配置了我们只需要下载loader就ok
-    sass: generateLoaders('sass', { indentedSyntax: true }),
+    less: generateLoaders('less', {
+      globalVars: {
+        museUiTheme: `'${museUiThemePath}'`
+      }}), // 也就是说vue已经帮我们配置了我们只需要下载loader就ok
+    sass: generateLoaders('sass', {indentedSyntax: true}),
     scss: generateLoaders('sass'),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')

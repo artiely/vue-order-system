@@ -20,7 +20,7 @@
 
           </div>
           <div style="text-align: left" v-if="selected==2">
-            <mu-text-field :label="$t('message.Mes_code')" v-model="form.code" type="text" :errorText="error.code"
+            <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" type="text" :errorText="error.code"
                            name="code" labelFloat
                            style="width: 60%"/>
             <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
