@@ -87,7 +87,6 @@
                 let userId = r.user.id;
                 let personId = r.user.personId;
                 this.$store.dispatch('login', {userId, personId});
-//                this.$store.dispatch('checkAccount')
                 let redirect = decodeURIComponent(this.$route.query.redirect || '/');
                 this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
                   if (res.code === 0) {
@@ -121,19 +120,6 @@
             this.errorMsg = res.msg
           }
         }).catch(err => console.error(err))
-      },
-      checkAccount () {
-        this.$api.CHECK_ACCOUNT({email: this.form.email}).then(res => {
-          if (res.code === 0) {
-            if (res.state === '4') {
-
-            } else {
-
-            }
-          } else {
-            alert(JSON.stringify(res))
-          }
-        })
       },
       back(){
         this.$router.back()

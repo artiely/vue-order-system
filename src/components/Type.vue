@@ -129,7 +129,7 @@
               :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
-            <!--<mu-text-field label="手机号" @input="checkPhone" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>-->
+            <mu-text-field :label="$t('message.Phone_number')" @input="checkPhone" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
@@ -357,18 +357,21 @@
             }
 
             if (!this.isMobile) { // 是手机注册或登录就不用再验证手机
-              let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-              if (val.phone == '') {
-                this.error.phone = this.$t('message.Required_fields')
-                return
-              } else if (!re3.test(val.phone)) {
-                this.error.phone = this.$t('message.Incorrect_format')
-                return
-              } else if (val.hasPhone) {
-                this.error.phone = this.$t('message.Already_exists')
-                return
-              } else {
-                this.error.phone = ''
+              // 同样是编辑切没有修改值任然不需要验证
+              if(!(this.isEdit&&this.editData.phone!=''&&this.editData.phone==val.phone)){
+                let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
+                if (val.phone == '') {
+                  this.error.phone = this.$t('message.Required_fields')
+                  return
+                } else if (!re3.test(val.phone)) {
+                  this.error.phone = this.$t('message.Incorrect_format')
+                  return
+                } else if (val.hasPhone) {
+                  this.error.phone = this.$t('message.Already_exists')
+                  return
+                } else {
+                  this.error.phone = ''
+                }
               }
               if (val.code == '') {
                 this.error.code = this.$t('message.Required_fields')
@@ -418,10 +421,7 @@
               } else if (!re3.test(val.phone)) {
                 this.error.phone = this.$t('message.Incorrect_format')
                 return
-              } else if (val.hasPhone) {
-                this.error.phone = this.$t('message.Already_exists')
-                return
-              } else {
+              }  else {
                 this.error.phone = ''
               }
               if (val.phone.length == 11 && val.code == '') {  // 以下填写了手机号才是必填项
@@ -457,18 +457,21 @@
               } else {
                 this.error.userName = ''
               }
-              let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-              if (val.phone == '') {
-                this.error.phone = this.$t('message.Required_fields')
-                return
-              } else if (!re3.test(val.phone)) {
-                this.error.phone = this.$t('message.Incorrect_format')
-                return
-              } else if (val.hasPhone) {
-                this.error.phone = this.$t('message.Already_exists')
-                return
-              } else {
-                this.error.phone = ''
+              // 同样是编辑且没有修改值任然不需要验证
+              if(!(this.isEdit&&this.editData.phone!=''&&this.editData.phone==val.phone)){
+                let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
+                if (val.phone == '') {
+                  this.error.phone = this.$t('message.Required_fields')
+                  return
+                } else if (!re3.test(val.phone)) {
+                  this.error.phone = this.$t('message.Incorrect_format')
+                  return
+                } else if (val.hasPhone) {
+                  this.error.phone = this.$t('message.Already_exists')
+                  return
+                } else {
+                  this.error.phone = ''
+                }
               }
               if (val.code == '') {
                 this.error.code = this.$t('message.Required_fields')
@@ -656,6 +659,7 @@
 
         if (GetQueryString('source') && GetQueryString('source') == 'email') {
           this.isEmail = true
+          this.isWechat = false
           this.$api.CHECK_TOKEN(data).then(res => {
             if (res.code === 0) {
               if (res.state === '1') {
@@ -674,7 +678,7 @@
             if (res.code === 0) {
               if (res.state == 4) { // 不完善
                   this.state=4
-                   this.checkMobile()
+//                   this.checkMobile() 是微信注册都得填写手机号不用判断
               } else {
                 this.$router.push('/index');
               }
@@ -684,9 +688,9 @@
           })
         } else {
           this.isEmail = false
+          this.isWechat = false
           if (GetQueryString('edit') && GetQueryString('edit') == '1') {
             this.isEdit = true
-            this.isWechat = false
             this.isMobile = false
             this._getRegisterInfo()
           } else {
@@ -763,39 +767,9 @@
     },
     activated(){
       this.checkToken()
-//      if (GetQueryString('edit') && GetQueryString('edit') == -1) { // 修改跳转到这
-//// 修改的时候隐藏类型选择
-//        this.isWechat = false
-//        this.isMobile = false
-//        this.isEdit = true
-//        this._getRegisterInfo()
-//      } else { //  信息不全的跳转 不是修改
-//        this.isEdit = false
-//        if (GetQueryString('source') && GetQueryString('source') == 'email') { // 带source=email的验证token
-//          this.checkToken()
-//        } else if (GetQueryString('source') && GetQueryString('source') == 'wechat') { // wechat
-//          this.isWechat = true
-//          // 微信固定跳转的这个页面需要判断信息是否完整，完整就跳转首页 不完整留在此页
-//          this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
-//            if (res.code === 0) {
-//              if (res.state == 4) { // 不完善
-//
-//              } else {
-//                this.$router.push('/index');
-//              }
-//            } else {
-//              alert(JSON.stringify(res))
-//            }
-//          })
-//        } else {
-//          this.isWechat = false
-//          this.checkMobile() // 验证是否手机号登录
-//        }
-//
-//      }
+
     },
     mounted(){
-//      this.checkToken()
     }
   }
 </script>

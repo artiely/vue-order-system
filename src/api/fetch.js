@@ -21,8 +21,8 @@ export default function fetch (options) {
       transformResponse: [function (data) {
         // 对 data 进行任意转换处理
         data = JSON.parse(data)
-        // console.log(data)
-        // console.log(typeof data)
+        console.log(data)
+        console.log(typeof data)
         if (typeof data != 'object') {
           return {
             code: 1000,
