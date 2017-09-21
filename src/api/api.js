@@ -631,7 +631,18 @@ const LOGOUT = params => {
     params: params
   })
 }
-
+/**
+ * 判断当前账号是企业还是个人
+ * @param stste=2企业1个人
+ * @constructor
+ */
+const CHECK_ACCOUNT_TYPE = params => {
+  return fetch({
+    url: '/person/getAccountType',
+    method: 'get',
+    params: params
+  })
+}
 
 const apiList = {
   login,
@@ -681,7 +692,8 @@ const apiList = {
   SHOW_SWITCH_ACCOUNT,
   SWITCH_ACCOUNT,
   JOIN_COMPANY,
-  LOGOUT
+  LOGOUT,
+  CHECK_ACCOUNT_TYPE
 
 }
 

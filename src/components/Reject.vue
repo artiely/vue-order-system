@@ -18,6 +18,27 @@
       /**
        * 进入页面再判断一下信息是否完整 是否在审核中...
        */
+      this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+        if (res.code === 0) {
+          if (res.state == 4) { // 不完善
+            this.$router.push('/type?state=4')
+          } else if (res.state == 7) {
+            this.$router.push('/reject?state=7')
+            return
+          } else if (res.state == 8) {
+            this.$router.push('/reject?state=8')
+            return
+          } else {
+            if (!this.$api.initWeiXinOpenId(data)) {
+              this.$router.push({ // 跳到对应页面
+                path: '/index'
+              });
+            }
+          }
+        } else {
+          alert(JSON.stringify(res))
+        }
+      })
     }
   }
 </script>

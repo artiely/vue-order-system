@@ -94,7 +94,7 @@
       form: {
         handler(val){
           if (this.selected == '1') {
-            let re = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+            let re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
             if (val.email == '') {
               this.error.email = '必填项'
               return
@@ -153,7 +153,7 @@
               this.fail = true
             }
           })
-//          console.log(Object.values(this.error))
+          console.log(Object.values(this.error))
         },
         deep: true
       },

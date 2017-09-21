@@ -312,7 +312,7 @@
       getPriceMa(){
         let data = {
           amonut: this.query.rysl,
-          companyIds: ["12317"],
+          companyIds: [this.addressObj.id],
           faultDesc: this.faultDesc,
           isReset: this.query.sfwx ? 1 : 0,
           isWorkDay: this.query.sfgzr ? 1 : 0,

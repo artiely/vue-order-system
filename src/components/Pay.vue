@@ -172,7 +172,8 @@
 </template>
 <script>
   import { mapState } from 'vuex'
-  import { isWeixnBrowser } from '@/utils'
+  import { isWeixnBrowser, gatAlipayInWeixin} from '@/utils'
+  import {Indicator} from 'mint-ui';
   export default {
     name: 'pay',
     data () {
@@ -288,24 +289,31 @@
         if (this.disabled || !this.orderPrice) {return} // 有价格并且发票信息完整
 
         let isInnerWeixin = isWeixnBrowser();
+
+        Indicator.open({
+          text: '正在打开支付端,请稍后...',
+          spinnerType: 'fading-circle'
+        });
         this.$api.post_pay_ment(postData).then(res => {
+        let curThis = this;
         if(data.payWayCode == 'WEIXIN'){
             if(isInnerWeixin){
                 if (typeof WeixinJSBridge == "undefined") {
                   if (document.addEventListener) {
                     document.addEventListener('WeixinJSBridgeReady',
-                      onBridgeReady(res), false);
+                      onBridgeReady(res, curThis), false);
                   } else if (document.attachEvent) {
                     document.attachEvent('WeixinJSBridgeReady',
-                      onBridgeReady(res));
+                      onBridgeReady(res, curThis));
                     document.attachEvent('onWeixinJSBridgeReady',
-                      onBridgeReady(res));
+                      onBridgeReady(res, curThis));
                   }
                 } else {
-                  onBridgeReady(res);
+                  onBridgeReady(res, curThis);
                 }
             }else {
                 window.location.href = res.data;
+                Indicator.close();
             }
         }else {
             document.body.innerHTML += res.data;
@@ -317,9 +325,14 @@
                   queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
                 });
                 var gotoUrl = curForm.getAttribute('action') + '?' + queryParam;
-//                _AP.pay(gotoUrl);
+                if(typeof _AP != 'function'){
+                  gatAlipayInWeixin();
+                }
+                _AP.pay(gotoUrl);
+                 Indicator.close();
               } else {
                 document.forms[document.forms.length-1].submit();
+                Indicator.close();
               }
 
             }, 20)
@@ -333,24 +346,28 @@
     },
     mounted(){}
   }
-  function onBridgeReady(json) {
-//    alert(JSON.stringify(json))
-    WeixinJSBridge.invoke('getBrandWCPayRequest', json, function(res) {
+  function onBridgeReady(json, curThis) {
+    let paramJson = JSON.parse(json.data);
+//    alert(json.data);
+    WeixinJSBridge.invoke('getBrandWCPayRequest', paramJson, (res) => {
       // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-      alert(JSON.stringify(res));
 //      layer.msg('res.err_msg=>'+res.err_msg, {
 //        shift : 30
 //      });
+//      alert(JSON.stringify(res));
+      Indicator.close();
       if (res.err_msg == "get_brand_wcpay_request:ok") {
 //        layer.msg("支付成功", {
 //          shift : 6
 //        });
-        alert("支付成功");
+        curThis.$toast(this.$t('message.Pay_success'))
+
+//        alert("支付成功");
 
 //        self.location = "#(ctxPath)/success";
 
       } else {
-        alert("")
+         curThis.$toast(res.err_msg);
         /*layer.msg("支付失败", {
          shift : 6
          });*/
