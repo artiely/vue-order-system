@@ -130,6 +130,13 @@ const Reject = resolve => {
   }).then(()=>{Indicator.close()})
 }
 
+const Info = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Info'], () => {
+    resolve(require('@/components/Info'))
+  }).then(()=>{Indicator.close()})
+}
+
 const routes = [{
   path: '/login',
   name: 'login',
@@ -238,6 +245,12 @@ const routes = [{
     name: 'reject',
     meta: {requiresAuth: false},
     component: Reject
+  },
+  {
+    path: '/info',
+    name: 'info',
+    meta: {requiresAuth: false},
+    component: Info
   }
 ]
 

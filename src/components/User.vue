@@ -8,8 +8,8 @@
           <div class="useritem admin-item"><span class="top-icon"><i class="iconfont icon-mine"></i></span>
             {{userInfo.personName}}
           </div>
-          <div class="companyname admin-item"><span class="top-icon"><i class="iconfont icon-homepage"></i></span>
-            {{userInfo.shortName}}
+          <div class="companyname admin-item" v-if="isCompany"><span class="top-icon"><i class="iconfont icon-homepage"></i></span>
+            {{userInfo.companyName}}
           </div>
         </div>
       </div>
@@ -147,7 +147,8 @@
         notificationListVisible: false,
         userInfo: {},
         switchVisible: false,
-        accountList: []
+        accountList: [],
+        isCompany:true
       }
     },
     computed: mapState({
@@ -168,21 +169,21 @@
       },
       loginOut(){
         this.$store.commit('LOGOUT')
-//        this.$api.LOGOUT()
+        this.$api.LOGOUT()
         this.$router.push({path: '/shop', name: 'shop'});
         this.settingVisible = false
       },
       showUserInfo(){
-        this.$router.push('/type?edit=1')
+        this.$router.push('/info?edit=1')
       },
       getCustomerNotification () {
         this.$api.get_notification_list().then(res => {
           if (res.code == ERR_OK) {
             this.customerNotificationList = res.customerNotificationList
           } else {
-            alert(res.msg)
+            alert(`获取消息`+res.msg)
           }
-        }).catch(err => console.error(err))
+        })
       },
       showNotificationList(){
         this.notificationListVisible = !this.notificationListVisible
@@ -206,7 +207,7 @@
             this.$toast('消息已读');
             this.getCustomerNotification()
           } else {
-            alert(res.msg)
+            alert(`消息`+res.msg)
           }
         }).catch(err => console.error(err))
       },
@@ -227,6 +228,8 @@
             url = url.replace('user', 'index')
 //            window.location.href = url
             window.location.reload()
+          }else{
+            alert(`账号切换`+JSON.stringify(res))
           }
         })
       },
@@ -239,7 +242,7 @@
             this.$store.dispatch('login', {userId, personId});
             this.getPersonInfo()
           } else {
-            alert(JSON.stringify(res))
+            alert(`登录`+JSON.stringify(res))
           }
         })
       },
@@ -248,7 +251,7 @@
           if (res.code === 0) {
             this.accountList = res.switchAccount
           } else {
-            alert(JSON.stringify(res))
+            alert(`账号列表`+JSON.stringify(res))
           }
         })
       },
@@ -258,6 +261,20 @@
             this.userInfo = res.person
           }
         }).catch(err => console.error(err))
+      },
+      checkAccountType(){
+        // 检查账号类型，是个人还是企业
+        this.$api.CHECK_ACCOUNT_TYPE().then(res => {
+          if (res.code == 0) {
+            if (res.state == 2) {
+              this.isCompany = true
+            } else {
+              this.isCompany = false
+            }
+          }else{
+            alert(`获取账号类型出错`+JSON.stringify(res))
+          }
+        })
       }
     },
     created(){
@@ -267,6 +284,7 @@
       this.getCustomerNotification()
       this.getIds()
       this.getAccountList()
+      this.checkAccountType()
     },
     mounted(){
 

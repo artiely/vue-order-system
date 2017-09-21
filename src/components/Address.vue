@@ -61,7 +61,7 @@
         </mt-button>
       </div>
     </mt-popup>
-    <div class="addAddressBtn " @click="showAddM" >{{ $t('message.Add')}}</div>
+    <div class="addAddressBtn " @click="showAddM">{{ $t('message.Add')}}</div>
   </div>
 </template>
 <script>
@@ -255,6 +255,9 @@
       }
     },
     created(){
+//      this.getServiceAddress()
+    },
+    activated(){
       this.getServiceAddress()
     },
     mounted(){
@@ -263,10 +266,11 @@
 </script>
 
 <style scoped lang="less">
-  .top-icon i{
+  .top-icon i {
     color: #bfbfbf;
     font-size: 18px;
   }
+
   .mint-cell-wrapper {
     background: #ede020;
     background: -webkit-linear-gradient(315deg, #ede020 0, #f6cd10 34%, #ffba00 100%);
