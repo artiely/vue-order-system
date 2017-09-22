@@ -65,7 +65,7 @@ var keysArr = [
   pathX + '/wechat/**/*',
   pathX + '/logout/**/*',
   pathX + '/oauth2/**/*',
-  pathX + '/login.html'
+  pathX + '/invoice/**/*'
 ]
 for (let i = 0; i < keysArr.length; i++) {
   config.dev.proxyTable[keysArr[i]] = {

@@ -137,6 +137,20 @@ const Info = resolve => {
   }).then(()=>{Indicator.close()})
 }
 
+const Payok = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Payok'], () => {
+    resolve(require('@/components/Payok'))
+  }).then(()=>{Indicator.close()})
+}
+
+const Record = resolve => {
+  Indicator.open()
+  require.ensure(['@/components/Record'], () => {
+    resolve(require('@/components/Record'))
+  }).then(()=>{Indicator.close()})
+}
+
 const routes = [{
   path: '/login',
   name: 'login',
@@ -249,8 +263,20 @@ const routes = [{
   {
     path: '/info',
     name: 'info',
-    meta: {requiresAuth: false},
+    meta: {requiresAuth: true},
     component: Info
+  },
+  {
+    path: '/payok',
+    name: 'payok',
+    meta: {requiresAuth: false},
+    component: Payok
+  },
+  {
+    path: '/record',
+    name: 'Record',
+    meta: {requiresAuth: false},
+    component: Record
   }
 ]
 

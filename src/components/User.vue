@@ -1,6 +1,6 @@
 <template>
-  <div class="login">
-    <div style="height:100vh!important;padding-bottom: 80px">
+  <div class="user">
+    <scroller style="padding-bottom: 80px">
       <div class="userbox">
         <div class="nikicon" @click="()=>settingVisible=true"><img src="../.././statics/mobile/img/logo.png" alt="">
         </div>
@@ -99,7 +99,9 @@
         </div>
       </div>
 
-    </div>
+      <div style="height: 100px;"></div>
+
+    </scroller>
     <!--<mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">-->
     <!--<mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>-->
     <!--<mt-button type="danger" @click="loginOut" size="large"-->
@@ -137,7 +139,7 @@
 <script type="text/ecmascript-6">
   import { mapState } from 'vuex';
   export default {
-    name: 'login',
+    name: 'user',
     data () {
       return {
         person: {},
@@ -294,6 +296,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+  .user{
+    height:100vh;
+  }
   .account-btn {
     width: 80%;
     margin: 8px auto;

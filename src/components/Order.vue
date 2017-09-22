@@ -35,6 +35,7 @@
 
         <i class="iconfont icon-guanjiaowangtubiao35" @click="toggleopen"></i>
       </header>
+
     </div>
     <scroller
       class="page-content"
@@ -71,10 +72,10 @@
           <option :value="item.companyId" v-for="(item,index) in serviceAddress" :key="index">{{item.companyName}}
           </option>
         </select>
-        <div class="my-title">
+        <div class="my-title" v-if="isCompany">
           {{$t('message.User')}}
         </div>
-        <select v-model="query.yh" style="width: 100%;height: 30px" placeholder="点击选择">
+        <select v-model="query.yh" style="width: 100%;height: 30px" placeholder="点击选择" v-if="isCompany">
           <option :value="item.id" v-for="(item,index) in yhArr" :key="index">{{item.personName}}</option>
         </select>
         <div class="my-title">
@@ -110,6 +111,7 @@
     data() {
       return {
         orderinfo: [],
+        isCompany:true,
         totalPage: 1,
         popupVisible: false, //筛选的
         activeIndex: [0, 1, 2, 3, 4, 5, 7, 6], //选中的 //    :class="{'active':index==query.orderStateId-1}"
@@ -413,6 +415,20 @@
             break;
         }
       },
+      checkAccountType(){
+        // 检查账号类型，是个人还是企业
+        this.$api.CHECK_ACCOUNT_TYPE().then(res => {
+          if (res.code == 0) {
+            if (res.state == 2) {
+              this.isCompany = true
+            } else {
+              this.isCompany = false
+            }
+          }else{
+            alert(`获取账号类型出错`+JSON.stringify(res))
+          }
+        })
+      },
 
       setScrollerPosition() { //设置滚动条位置
         let y = sessionStorage.getItem('scrollTop');
@@ -429,6 +445,7 @@
     },
     activated(){
       console.log("当前语言order",this.$store.state.userInfo.lang)
+      this.checkAccountType()
     },
 
     mounted() {
@@ -454,6 +471,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+  select{
+    border:none;
+    outline: none;
+    background: #e0e0e0;
+  }
 
   .mint-button.active {
     color: #000

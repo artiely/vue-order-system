@@ -196,15 +196,15 @@ const messages = {
       'Switchable_account': 'Switchable account',
       'No_switch_account': 'No switch account',
       'signup': 'signup',
-      'signup_email':'Register Email',
-      'signup_phone':'Register mobile phone',
-      'Email':'email',
-      'Phone_number':'cell-phone number',
-      'Msg_code':'message code',
-      'click':'send',
-      'resend':'resend',
-      'password':'password',
-      'repeat_password':'repeat password',
+      'signup_email': 'Register Email',
+      'signup_phone': 'Register mobile phone',
+      'Email': 'email',
+      'Phone_number': 'cell-phone number',
+      'Msg_code': 'message code',
+      'click': 'send',
+      'resend': 'resend',
+      'password': 'password',
+      'repeat_password': 'repeat password',
 
       Already_exists: 'already exists',
       Incorrect_format: 'incorrect format',
@@ -235,9 +235,9 @@ const messages = {
       Female: 'Female',
       Letter_only: 'Support letter only',
       Resend: 'resend',
-      'Minimum_6':'Minimum 6 Characters No Spaces',
-      'cell-phone_help':'The mobile phone number can be used as a login account'
-
+      'Minimum_6': 'Minimum 6 Characters No Spaces',
+      'cell-phone_help': 'The mobile phone number can be used as a login account',
+      'FwonePay': 'FwonePay'
     }
   },
   'CN': {
@@ -429,16 +429,15 @@ const messages = {
       'Switchable_account': '可切换账号',
       'No_switch_account': '无可切换账号',
       'signup': '注册',
-      'signup_email':'邮箱注册',
-      'signup_phone':'手机注册',
-      'Email':'邮箱',
-      'Phone_number':'手机号',
-      'Msg_code':'短信验证码',
-      'click':'点击获取',
-      'resend':'重新发送',
-      'password':'密码',
-      'repeat_password':'重复密码',
-
+      'signup_email': '邮箱注册',
+      'signup_phone': '手机注册',
+      'Email': '邮箱',
+      'Phone_number': '手机号',
+      'Msg_code': '短信验证码',
+      'click': '点击获取',
+      'resend': '重新发送',
+      'password': '密码',
+      'repeat_password': '重复密码',
 
       Already_exists: '已存在',
       Incorrect_format: '格式不正确',
@@ -469,9 +468,9 @@ const messages = {
       Female: '女',
       Letter_only: '只支持字母',
       Resend: '重新发送',
-      'Minimum_6':'至少6位',
-      'cell-phone_help':'绑定手机号可作为登录账号'
-
+      'Minimum_6': '至少6位',
+      'cell-phone_help': '绑定手机号可作为登录账号',
+      'FwonePay': '预付款支付'
     }
   }
 }
