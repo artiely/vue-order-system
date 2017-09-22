@@ -8,7 +8,8 @@ const state = {//状态
   token: null, //就是userid
   personId: '',
   lang: '',
-  accountState: ''
+  accountState: '',
+  isCompany: true
 }
 
 const mutations = {//状态只能通过此改变
@@ -36,6 +37,9 @@ const mutations = {//状态只能通过此改变
   },
   ['SET_ACCOUNT_STATE'](state, payload){
     state.accountState = payload
+  },
+  ['IS_COMPANY'](state, payload){
+    state.isCompany = payload
   }
 }
 const actions = {

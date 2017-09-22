@@ -166,7 +166,7 @@
           <div style="height: 80px"></div>
         </scroller>
         <div class="footerBar">
-          <button size="small" class="footerBtn" v-if="status>=0 && status<2" @click="reminder">{{$t('message.Reminder')}}</button>
+          <button size="small" class="footerBtn" v-if="status>=0 && status<2 && show_reminder" @click="reminder">{{$t('message.Reminder')}}</button>
           <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">
             {{$t('message.complaint')}}
           </button>
@@ -181,77 +181,77 @@
             </mt-button>
           </mt-header>
           <scroller style="padding-top:40px">
-          <table style="text-align: left">
-            <tr>
-              <td width="50">{{$t('message.Service_center')}}：</td>
-              <td>
-                <div class="rating">
-                  <star-rating :star-size="30" v-model="ratingToService" :show-rating="false"
-                               :inline="true"></star-rating>
-                  <span v-if="ratingToService==0" class="text ">{{$t('message.Unvalued')}}</span>
-                  <span v-if="ratingToService==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
-                  <span v-if="ratingToService==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
-                  <span v-if="ratingToService==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
-                  <span v-if="ratingToService==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
-                  <span v-if="ratingToService==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
+            <table style="text-align: left">
+              <tr>
+                <td width="50">{{$t('message.Service_center')}}：</td>
+                <td>
+                  <div class="rating">
+                    <star-rating :star-size="30" v-model="ratingToService" :show-rating="false"
+                                 :inline="true"></star-rating>
+                    <span v-if="ratingToService==0" class="text ">{{$t('message.Unvalued')}}</span>
+                    <span v-if="ratingToService==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                    <span v-if="ratingToService==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                    <span v-if="ratingToService==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                    <span v-if="ratingToService==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                    <span v-if="ratingToService==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td width="50"> {{$t('message.Engineer')}}：</td>
+                <td>
+                  <div class="rating">
+                    <star-rating :star-size="30" v-model="ratingToEngineer" :show-rating="false"
+                                 :inline="true"></star-rating>
+                    <span v-if="ratingToEngineer==0" class="text ">{{$t('message.Unvalued')}}</span>
+                    <span v-if="ratingToEngineer==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                    <span v-if="ratingToEngineer==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                    <span v-if="ratingToEngineer==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                    <span v-if="ratingToEngineer==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                    <span v-if="ratingToEngineer==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td width="50"> {{$t('message.Overall')}}：</td>
+                <td>
+                  <div class="rating">
+                    <star-rating :star-size="30" v-model="ratingToAll" :show-rating="false"
+                                 :inline="true"></star-rating>
+                    <span v-if="ratingToAll==0" class="text ">{{$t('message.Unvalued')}}</span>
+                    <span v-if="ratingToAll==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                    <span v-if="ratingToAll==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                    <span v-if="ratingToAll==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                    <span v-if="ratingToAll==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                    <span v-if="ratingToAll==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <mt-field :placeholder="$t('message.Rate_placeholder')" type="textarea" rows="3"
+                      v-model="evaluate"></mt-field>
+            <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">
+              {{$t('message.Publish_tip', {Num: evaluate_num})}}
+            </small>
+            <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">
+              {{$t('message.Publish')}}
+            </mt-button>
+            <div v-if="ratingHistoryList.length>0">
+              <h3 style="padding: 20px 0 0 0;margin: 0">历史评论：</h3>
+              <mt-cell v-for="(item,index) in ratingHistoryList" :key="index">
+                <div slot="title" style="text-align: left;font-size: 12px">
+                  <p>满意度：
+                    <span v-if="item.score==0" class="text ">{{$t('message.Unvalued')}}</span>
+                    <span v-if="item.score==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
+                    <span v-if="item.score==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
+                    <span v-if="item.score==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
+                    <span v-if="item.score==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
+                    <span v-if="item.score==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
+                  </p>
+                  <p style="font-size: 10px;text-align: left;color: #999;line-height: 1.2;">{{item.comments}}</p>
                 </div>
-              </td>
-            </tr>
-            <tr>
-              <td width="50"> {{$t('message.Engineer')}}：</td>
-              <td>
-                <div class="rating">
-                  <star-rating :star-size="30" v-model="ratingToEngineer" :show-rating="false"
-                               :inline="true"></star-rating>
-                  <span v-if="ratingToEngineer==0" class="text ">{{$t('message.Unvalued')}}</span>
-                  <span v-if="ratingToEngineer==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
-                  <span v-if="ratingToEngineer==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
-                  <span v-if="ratingToEngineer==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
-                  <span v-if="ratingToEngineer==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
-                  <span v-if="ratingToEngineer==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td width="50"> {{$t('message.Overall')}}：</td>
-              <td>
-                <div class="rating">
-                  <star-rating :star-size="30" v-model="ratingToAll" :show-rating="false" :inline="true"></star-rating>
-                  <span v-if="ratingToAll==0" class="text ">{{$t('message.Unvalued')}}</span>
-                  <span v-if="ratingToAll==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
-                  <span v-if="ratingToAll==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
-                  <span v-if="ratingToAll==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
-                  <span v-if="ratingToAll==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
-                  <span v-if="ratingToAll==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
-                </div>
-              </td>
-            </tr>
-          </table>
-          <mt-field :placeholder="$t('message.Rate_placeholder')" type="textarea" rows="3"
-                    v-model="evaluate"></mt-field>
-          <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">
-            {{$t('message.Publish_tip', {Num: evaluate_num})}}
-          </small>
-          <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">
-            {{$t('message.Publish')}}
-          </mt-button>
-
-          <div v-if="ratingHistoryList.length>0">
-            <h3 style="padding: 20px 0 0 0;margin: 0">历史评论：</h3>
-            <mt-cell v-for="(item,index) in ratingHistoryList" :key="index">
-              <div slot="title" style="text-align: left;font-size: 12px">
-                <p >满意度：
-                  <span v-if="item.score==0" class="text ">{{$t('message.Unvalued')}}</span>
-                  <span v-if="item.score==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
-                  <span v-if="item.score==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
-                  <span v-if="item.score==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
-                  <span v-if="item.score==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
-                  <span v-if="item.score==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
-                </p>
-                <p style="font-size: 10px;text-align: left;color: #999;line-height: 1.2;">{{item.comments}}</p>
-              </div>
-            </mt-cell>
-          </div>
+              </mt-cell>
+            </div>
             <div style="height: 100px;"></div>
           </scroller>
         </mt-popup>
@@ -319,11 +319,12 @@
         toushuVisible: false,
         ratingToService: 0,
         ratingToEngineer: 0,
-        ratingHistoryList:[],
+        ratingHistoryList: [],
         ratingToAll: 0,
         subList: [],
         evaluate: '',
         complainTxt: '',
+        show_reminder:true,
         reason: [
           {
             label: this.$t('message.Response_not_timely'),
@@ -450,18 +451,22 @@
        * 子单评价历史
        */
       _ratingHistory(){
-        this.$api.get_rating_history({callDetailId:this.callDetailId}).then(res => {
-            if(res.code==ERR_OK){
-              this.ratingHistoryList=res.evaluateByCallDetailId.reverse() //结果倒叙
-            }else{
-              alert(res.msg)
-            }
+        this.$api.get_rating_history({callDetailId: this.callDetailId}).then(res => {
+          if (res.code == ERR_OK) {
+            this.ratingHistoryList = res.evaluateByCallDetailId.reverse() //结果倒叙
+          } else {
+            alert(res.msg)
+          }
         })
       },
       reminder(){
         this.$api.reminder_order({callid: this.state.callId}).then(res => {
           if (res.code == ERR_OK) {
             alert(res.msg)
+            this.show_reminder = false
+            setTimeout(()=>{
+              this.show_reminder = true
+            },10*60*1000)
           } else {
             alert(res.msg)
           }
@@ -510,9 +515,10 @@
   .rating {
     float: left
   }
-  .text{
+
+  .text {
     border-radius: 10px;
-    padding:2px 4px;
+    padding: 2px 4px;
   }
 
   .fade-enter-active, .fade-leave-active {

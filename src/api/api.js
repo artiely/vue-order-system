@@ -21,13 +21,13 @@ const login = params => {
  * @params
  */
 const initWeiXinOpenId = (params, redirect) => {
-  if(isWeixnBrowser()){
+  if (isWeixnBrowser()) {
     //window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+window.location.href.split('#')[0]+''+redirect;
-    var fromUrl = window.location.href.replace(/(\/?#.*)/g, "//"+redirect);
-    window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+fromUrl;
-    return true;
+    var fromUrl = window.location.href.replace(/(\/?#.*)/g, '//' + redirect)
+    window.location.href = SERVER_BASE_URL + '/oauth2/toOauth?' + params + '&fromUrl=' + fromUrl
+    return true
   }
-  return false;
+  return false
 }
 /**
  * 获取用户的id 此处暂时作为token使用
@@ -644,6 +644,45 @@ const CHECK_ACCOUNT_TYPE = params => {
   })
 }
 
+/**
+ * 查询充值记录的
+ * invoice/queryBalance?consumeType=
+ * page limit
+ * 0 全部 1 消费 2充值
+ * */
+const QUERY_BALANCE = params => {
+  return fetch({
+    url: `/invoice/queryBalance`,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * /invoice/queryBalanceTotal
+ * 全部余额
+ * */
+const QUERY_BALANCE_TOTAL = params => {
+  return fetch({
+    url: 'invoice/queryBalanceTotal',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 获取用户的信息
+ * @param params
+ * @constructor
+ */
+const GET_PERSON_ACCOUNT_USER = params => {
+  return fetch({
+    url: '/person/getPersonAccountUser',
+    method: 'get',
+    params: params
+  })
+}
+
 const apiList = {
   login,
   initWeiXinOpenId,
@@ -693,8 +732,10 @@ const apiList = {
   SWITCH_ACCOUNT,
   JOIN_COMPANY,
   LOGOUT,
-  CHECK_ACCOUNT_TYPE
-
+  CHECK_ACCOUNT_TYPE,
+  QUERY_BALANCE,
+  QUERY_BALANCE_TOTAL,
+  GET_PERSON_ACCOUNT_USER,
 }
 
 export default apiList

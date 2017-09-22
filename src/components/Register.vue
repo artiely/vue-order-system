@@ -38,6 +38,7 @@
                          :errorText="error.pwd2" name="pwd2" labelFloat
                          fullWidth/>
           <button class="Button--primary Button--blue" @click="register">{{$t('message.signup')}}</button>
+          <p style="padding: 20px"><router-link to="login">{{$t('message.Back')}}</router-link></p>
         </div>
       </div>
     </div>

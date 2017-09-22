@@ -5,85 +5,92 @@
 
     </mt-header>
     <scroller class="page-content">
-      <div class="card" style="margin-bottom: 10px">
-        {{productName}}
-      </div>
-      <div v-for="(list,index) in callDetails" v-if="callDetails.length>0">
-        <div v-for="item in list">
-          <div class="card">
-            <div class="admin-type">
-              <small class="type">{{item.detailName}}</small>
-              <span class="admin">{{item.yh}}</span></div>
-          </div>
-          <div class="splitLine">
-            <div class="dot dot1"></div>
-            <div class="line"></div>
-            <div class="dot dot2"></div>
-          </div>
-          <div class="card">
-            <table class="card_t">
-              <tr>
-                <td rowspan="2" width="20"><i class="iconfont icon-shielding_fill"></i></td>
-                <td>
-                  <!-- 故障描述-->
-                  <div class="tit-t">{{$t('message.Fault_description')}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td><p class="des-t">{{item.faultDesc}}</p></td>
-              </tr>
-            </table>
-          </div>
-          <div class="splitLine">
-            <div class="dot dot1"></div>
-            <div class="line"></div>
-            <div class="dot dot2"></div>
-          </div>
-          <div class="card">
-            <table class="card_t">
-              <tr>
-                <td rowspan="2" width="20"><i class="iconfont icon-decoration_fill"></i></td>
-                <td>
-                  <!--处理过程-->
-                  <div class="tit-t">{{$t('message.Solving_steps')}}</div>
-                </td>
-              </tr>
-              <tr>
-                <td><p class="des-t">{{item.faultSolve}}</p></td>
-              </tr>
-            </table>
-          </div>
-          <div class="splitLine">
-            <div class="dot dot1"></div>
-            <div class="line"></div>
-            <div class="dot dot2"></div>
-          </div>
-          <div class="card">
-            <table class="card_t">
-              <tr>
-                <td>{{$t('message.Engineer')}}</td>
-                <td class="right">{{item.engineername}}</td>
-              </tr>
-              <tr>
-                <td>{{$t('message.Start_time')}}</td>
-                <td class="right">{{item.startTime}}</td>
-              </tr>
-              <tr>
-                <td>{{$t('message.End_time')}}</td>
-                <td class="right">{{item.finishTime}}</td>
-              </tr>
-            </table>
-          </div>
-          <div class="splitLine">
-            <div class="dot dot1"></div>
-            <div class="line"></div>
-            <div class="dot dot2"></div>
-          </div>
-          <div class="card">
-            <div style="text-align: right;font-size: 14px">{{$t('message.Subtotal')}} <span
-              class="countStyle">￥{{item.price}}</span></div>
+      <div v-if="isCharge!=1">
+        <div class="card" style="margin-bottom: 10px">
+          {{productName}}
+        </div>
+        <div v-for="(list,index) in callDetails" v-if="callDetails.length>0">
+          <div v-for="item in list">
+            <div class="card">
+              <div class="admin-type">
+                <small class="type">{{item.detailName}}</small>
+                <span class="admin">{{item.yh}}</span></div>
+            </div>
+            <div class="splitLine">
+              <div class="dot dot1"></div>
+              <div class="line"></div>
+              <div class="dot dot2"></div>
+            </div>
+            <div class="card">
+              <table class="card_t">
+                <tr>
+                  <td rowspan="2" width="20"><i class="iconfont icon-shielding_fill"></i></td>
+                  <td>
+                    <!-- 故障描述-->
+                    <div class="tit-t">{{$t('message.Fault_description')}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><p class="des-t">{{item.faultDesc}}</p></td>
+                </tr>
+              </table>
+            </div>
+            <div class="splitLine">
+              <div class="dot dot1"></div>
+              <div class="line"></div>
+              <div class="dot dot2"></div>
+            </div>
+            <div class="card">
+              <table class="card_t">
+                <tr>
+                  <td rowspan="2" width="20"><i class="iconfont icon-decoration_fill"></i></td>
+                  <td>
+                    <!--处理过程-->
+                    <div class="tit-t">{{$t('message.Solving_steps')}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><p class="des-t">{{item.faultSolve}}</p></td>
+                </tr>
+              </table>
+            </div>
+            <div class="splitLine">
+              <div class="dot dot1"></div>
+              <div class="line"></div>
+              <div class="dot dot2"></div>
+            </div>
+            <div class="card">
+              <table class="card_t">
+                <tr>
+                  <td>{{$t('message.Engineer')}}</td>
+                  <td class="right">{{item.engineername}}</td>
+                </tr>
+                <tr>
+                  <td>{{$t('message.Start_time')}}</td>
+                  <td class="right">{{item.startTime}}</td>
+                </tr>
+                <tr>
+                  <td>{{$t('message.End_time')}}</td>
+                  <td class="right">{{item.finishTime}}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="splitLine">
+              <div class="dot dot1"></div>
+              <div class="line"></div>
+              <div class="dot dot2"></div>
+            </div>
+            <div class="card">
+              <div style="text-align: right;font-size: 14px">{{$t('message.Subtotal')}} <span
+                class="countStyle">￥{{item.price}}</span></div>
+            </div>
           </div>
         </div>
+      </div>
+      <div v-if="isCharge==1" class="card">
+        群思科技有限公司预付款充值  ({{"Advc" + new Date().getTime()}})
+        <mu-text-field  v-model="orderPrice" fullWidth label="充值金额（元）" hintText="请输入" type="number" labelFloat/>
+        <br/>
       </div>
       <div class="card-box" style="margin-top: 10px">
         <div class="cell" @click="payType">
@@ -92,19 +99,59 @@
           </div>
         </div>
         <label class="zf-cell">
-          <input type="radio" name="payType" v-model="payWayCode" value="ALIPAY">
-          <img :src="require('@/assets/img/zfb.png')" alt="">{{$t('message.Alipay')}} <i class="iconfont icon-right"
-                                                                                         v-if="payWayCode=='ALIPAY'"></i>
+          <table>
+            <tr>
+              <td width="50">
+                <input type="radio" name="payType" v-model="payWayCode" value="ALIPAY">
+                <img :src="require('@/assets/img/zfb.png')" alt="">
+              </td>
+              <td>
+                {{$t('message.Alipay')}} <i class="iconfont icon-right" v-if="payWayCode=='ALIPAY'"></i>
+              </td>
+            </tr>
+          </table>
+
         </label>
         <label class="zf-cell" name="payType">
-          <input type="radio" name="payType" v-model="payWayCode" value="WEIXIN">
-          <img :src="require('@/assets/img/wx.png')" alt="">{{$t('message.WeChat_Pay')}}<i class="iconfont icon-right"
-                                                                                           v-if="payWayCode=='WEIXIN'"></i>
+          <table>
+            <tr>
+              <td width="50">
+                <input type="radio" name="payType" v-model="payWayCode" value="WEIXIN">
+                <img :src="require('@/assets/img/wx.png')" alt="">
+              </td>
+              <td>
+                {{$t('message.WeChat_Pay')}}<i class="iconfont icon-right" v-if="payWayCode=='WEIXIN'"></i>
+              </td>
+            </tr>
+          </table>
+
         </label>
         <label class="zf-cell" name="payType">
-          <input type="radio" name="payType" v-model="payWayCode" value="UNIONPAY">
-          <img :src="require('@/assets/img/yl.png')" alt="">{{$t('message.UnionPay')}}<i class="iconfont icon-right"
-                                                                                         v-if="payWayCode=='UNIONPAY'"></i>
+          <table>
+            <tr>
+              <td width="50">
+                <input type="radio" name="payType" v-model="payWayCode" value="UNIONPAY">
+                <img :src="require('@/assets/img/yl.png')" alt="">
+              </td>
+              <td>
+                {{$t('message.UnionPay')}}<i class="iconfont icon-right" v-if="payWayCode=='UNIONPAY'"></i>
+              </td>
+            </tr>
+          </table>
+
+        </label>
+        <label class="zf-cell" name="payType" v-if="isCharge!=1">
+          <table>
+            <tr>
+              <td  width="50">
+                <input type="radio" name="payType" v-model="payWayCode" value="ADVPAY">
+                <img :src="require('@/assets/img/fw.png')" alt="">
+              </td>
+              <td>
+                {{$t('message.FwonePay')}}<i class="iconfont icon-right"  v-if="payWayCode=='ADVPAY'"></i>
+              </td>
+            </tr>
+          </table>
         </label>
 
         <div class="cell" @click="setInvoice">
@@ -113,7 +160,6 @@
             <span class="value" v-if="invoice.invoiceType==0">{{$t('message.Without_the_invoice')}}</span>
             <span class="value" v-if="invoice.invoiceType==1">{{$t('message.Regular_invoice')}}</span>
             <span class="value" v-if="invoice.invoiceType==2">{{$t('message.Value-added_invoice')}}</span>
-
             <i class="iconfont icon-enter"></i>
           </div>
         </div>
@@ -121,11 +167,11 @@
           class="iconfont icon-prompt_fill"></i>{{$t('message.invoice_information_incomplete')}}
         </div>
       </div>
-      <div style="height: 300px"></div>
+      <div style="height: 100px"></div>
     </scroller>
     <!--提交订单-->
     <div class="pay-group">
-      <div class="payBtn" @click="Pay" :class="{disabled:!orderPrice||disabled}">{{$t('message.Submit_orders')}}</div>
+      <div class="payBtn" @click="Pay" :class="{disabled:orderPrice <= 0 || disabled}">{{$t('message.Submit_orders')}}</div>
       <div class="count" v-if="orderPrice">{{$t('message.Total')}} <span class="countStyle">￥{{orderPrice}}</span></div>
     </div>
     <!--发票-->
@@ -138,6 +184,7 @@
       </mt-header>
       <div class="page-content">
         <label class="zf-cell">
+
           <input type="radio" name="invoice" v-model="invoice.invoiceType" value="0">
           {{$t('message.Without_the_invoice')}} <i class="iconfont icon-right" v-if="invoice.invoiceType=='0'"></i>
         </label>
@@ -163,7 +210,7 @@
           <mt-field type="text" :placeholder="$t('message.company_address')" v-model="invoice.companyAddress"
                     v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
           <mt-field type="text" :placeholder="$t('message.Bill-to_address')" v-model="invoice.invoiceAddress"
-                    v-show="invoice.invoiceType!=0"></mt-field>
+                    v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
         </div>
       </div>
     </mt-popup>
@@ -172,8 +219,8 @@
 </template>
 <script>
   import { mapState } from 'vuex'
-  import { isWeixnBrowser, gatAlipayInWeixin} from '@/utils'
-  import {Indicator} from 'mint-ui';
+  import { isWeixnBrowser, gatAlipayInWeixin, GetQueryString } from '@/utils'
+  import { Indicator } from 'mint-ui';
   export default {
     name: 'pay',
     data () {
@@ -182,8 +229,9 @@
         disabled: false, // 发票信息不全控制
         callDetails: [],
         productName: '',
-        orderPrice: '',
+        orderPrice: 1000,
         invoiceVisible: false,
+        isCharge: '',
         invoice: {
           invoiceType: 0, // 发票类型  0 1 2  无票 普票 增票
           invoiceTitle: '', // 发票抬头
@@ -207,10 +255,7 @@
               return
             } else if (!this.invoice.taxNumber) {
               return
-            } else if (!this.invoice.invoiceAddress) {
-              return
-            }
-            else {
+            } else {
               this.disabled = false
             }
           } else if (this.invoice.invoiceType == 2) {
@@ -268,7 +313,7 @@
             this.callDetails = res.callDetails;
             let sum = 0;
             for (var i = 0; i < res.callDetails.length; i++) {
-              sum += Number(res.callDetails[i][0].price)
+              sum += Number(res.callDetails[i][0].price || 0)
             }
             this.productName = res.callDetails[0][0].serviceName;
             this.orderPrice = sum;
@@ -284,8 +329,13 @@
           orderNo: this.oid,
           productName: this.productName
         }
+        if(this.isCharge==1){
+          data.orderNo= "Advc" + new Date().getTime()
+          productName: '群思科技有限公司预付款充值'
+          data.isCharge=1
+        }
         let openId = window.localStorage.getItem("openId");
-        let postData = Object.assign({}, data, this.invoice, openId ? {openId:openId}:{})
+        let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {})
         if (this.disabled || !this.orderPrice) {return} // 有价格并且发票信息完整
 
         let isInnerWeixin = isWeixnBrowser();
@@ -295,43 +345,43 @@
           spinnerType: 'fading-circle'
         });
         this.$api.post_pay_ment(postData).then(res => {
-        let curThis = this;
-        if(data.payWayCode == 'WEIXIN'){
-            if(isInnerWeixin){
-                if (typeof WeixinJSBridge == "undefined") {
-                  if (document.addEventListener) {
-                    document.addEventListener('WeixinJSBridgeReady',
-                      onBridgeReady(res, curThis), false);
-                  } else if (document.attachEvent) {
-                    document.attachEvent('WeixinJSBridgeReady',
-                      onBridgeReady(res, curThis));
-                    document.attachEvent('onWeixinJSBridgeReady',
-                      onBridgeReady(res, curThis));
-                  }
-                } else {
-                  onBridgeReady(res, curThis);
+          let curThis = this;
+          if (data.payWayCode == 'WEIXIN') {
+            if (isInnerWeixin) {
+              if (typeof WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                  document.addEventListener('WeixinJSBridgeReady',
+                    onBridgeReady(res, curThis), false);
+                } else if (document.attachEvent) {
+                  document.attachEvent('WeixinJSBridgeReady',
+                    onBridgeReady(res, curThis));
+                  document.attachEvent('onWeixinJSBridgeReady',
+                    onBridgeReady(res, curThis));
                 }
-            }else {
-                window.location.href = res.data;
-                Indicator.close();
+              } else {
+                onBridgeReady(res, curThis);
+              }
+            } else {
+              window.location.href = res.data;
+              Indicator.close();
             }
-        }else {
+          } else {
             document.body.innerHTML += res.data;
             setTimeout(() => {
-              if(data.payWayCode == 'ALIPAY' && isInnerWeixin){
+              if (data.payWayCode == 'ALIPAY' && isInnerWeixin) {
                 var queryParam = '';
-                var curForm = document.forms[document.forms.length-1];
+                var curForm = document.forms[document.forms.length - 1];
                 Array.prototype.slice.call(curForm.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
                   queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
                 });
                 var gotoUrl = curForm.getAttribute('action') + '?' + queryParam;
-                if(typeof _AP != 'function'){
+                if (typeof _AP != 'function') {
                   gatAlipayInWeixin();
                 }
                 _AP.pay(gotoUrl);
-                 Indicator.close();
+                Indicator.close();
               } else {
-                document.forms[document.forms.length-1].submit();
+                document.forms[document.forms.length - 1].submit();
                 Indicator.close();
               }
 
@@ -342,11 +392,15 @@
     },
     created(){},
     activated(){
-      this.getList()
+      this.isCharge = GetQueryString("isCharge");
+      if(!this.isCharge){
+        this.getList()
+      }
+
     },
     mounted(){}
   }
-  function onBridgeReady(json, curThis) {
+  function onBridgeReady (json, curThis) {
     let paramJson = JSON.parse(json.data);
 //    alert(json.data);
     WeixinJSBridge.invoke('getBrandWCPayRequest', paramJson, (res) => {
@@ -367,7 +421,7 @@
 //        self.location = "#(ctxPath)/success";
 
       } else {
-         curThis.$toast(res.err_msg);
+        curThis.$toast(res.err_msg);
         /*layer.msg("支付失败", {
          shift : 6
          });*/
@@ -517,9 +571,7 @@
 
   .page-content {
     padding-top: 40px;
-    height: 100vh;
     background: #f8f8f8;
-    overflow: scroll;
   }
 
   .countStyle {

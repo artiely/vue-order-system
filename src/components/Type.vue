@@ -264,7 +264,7 @@
       },
       form: {
         handler(val){
-          if (this.form.typeId == '2' ) {
+          if (this.form.typeId == '2') {
             if (val.company == '') {
 //              this.error.company = this.$t('message.Required_fields')
               this.$set(this.error, 'company', this.$t('message.Required_fields'))
@@ -313,19 +313,16 @@
 
             if (!this.isMobile) { // 是手机注册或登录就不用再验证手机
 
-                let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-                if (val.phone == '') {
-                  this.error.phone = this.$t('message.Required_fields')
-                  return
-                } else if (!re3.test(val.phone)) {
-                  this.error.phone = this.$t('message.Incorrect_format')
-                  return
-                } else if (val.hasPhone) {
-                  this.error.phone = this.$t('message.Already_exists')
-                  return
-                } else {
-                  this.error.phone = ''
-                }
+              let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
+              if (val.phone == '') {
+                this.error.phone = this.$t('message.Required_fields')
+                return
+              } else if (!re3.test(val.phone)) {
+                this.error.phone = this.$t('message.Incorrect_format')
+                return
+              } else {
+                this.error.phone = ''
+              }
 
               if (val.code == '') {
                 this.error.code = this.$t('message.Required_fields')
@@ -363,8 +360,8 @@
               }
             } else if (this.isWechat) { // 微信验证规则
               if (val.userName == '') {
-                this.error.userName = ''
-//                this.error.userName = '必填项'
+//                this.error.userName = ''
+                this.error.userName = '必填项'
               } else {
                 this.error.userName = ''
               }
@@ -420,9 +417,6 @@
                 return
               } else if (!re3.test(val.phone)) {
                 this.error.phone = this.$t('message.Incorrect_format')
-                return
-              } else if (val.hasPhone) {
-                this.error.phone = this.$t('message.Already_exists')
                 return
               } else {
                 this.error.phone = ''
@@ -573,7 +567,7 @@
                 console.log('token无效')
                 this.token = false
               }
-            }else{
+            } else {
               alert(JSON.stringify(res))
             }
           })
@@ -585,7 +579,7 @@
             if (res.code === 0) {
               if (res.state == 4) { // 不完善
                 this.state = 4
-//                   this.checkMobile() 是微信注册都得填写手机号不用判断
+//                   this.checkMobile() // 信息不全的时候还得判断是邮箱的注册的信息不全还是手机注册的信息不全
               } else {
                 this.$router.push('/index');
               }
@@ -593,6 +587,8 @@
               alert(JSON.stringify(res))
             }
           })
+        } else if (GetQueryString('state') && GetQueryString('state') == '4') {
+          this.checkMobile()
         } else {
           this.isMobile = true
           this.isEmail = false
@@ -614,7 +610,7 @@
               if (res.exist === 3) {
                 this.isEmail = true
               } else {
-                this.isEmail = true
+                this.isEmail = false
               }
             }
           } else {

@@ -11,17 +11,16 @@
       :on-infinite="onInfinite"
     >
       <div class="balanceBox">
-        <div class="balanceNum">0.01</div>
-        <p class="balanceTxt">总金额(元)</p>
+        <div v-if="total.length>0" class="balanceNum" v-for="item in total">{{item.balance}}<span
+          class="balanceTxt">{{item.currency}}</span>
+        </div>
+        <div v-if="total.length==0" class="balanceNum">0.00<span class="balanceTxt">总余额</span></div>
+        <div class="btn yellowbg" @click="pay" style="width: 60%;margin: 6px auto;padding: 6px;border-radius: 22px">充值</div>
       </div>
+
       <div class="col">
         <div class="col1">
-          <div class="balanceTop">00.00</div>
-          <div class="balanceBtm">已用金额(元)</div>
-        </div>
-        <div class="col1">
-          <div class="balanceTop">00.00</div>
-          <div class="balanceBtm">剩余金额(元)</div>
+          <router-link tag="div" class="balanceBtm" to="record">交易/充值/消费记录</router-link>
         </div>
       </div>
       <div class="mxBox">
@@ -37,8 +36,8 @@
             <div>{{item.partyAName}}</div>
             <div class="textover">{{item.invoiceContent}}</div>
             <div class="invoiceAmount">{{item.invoiceAmount}}({{item.currencyName}})</div>
-            <div>开票日期：{{item.invoiceDate}} </div>
-            <div>收款日期：{{item.contractReceiveDate}} </div>
+            <div class="rq_text">开票日期：{{item.invoiceDate}} </div>
+            <div class="rq_text">收款日期：{{item.contractReceiveDate}} </div>
           </div>
         </div>
         <div class="mxItem" v-for="(item,index) in mxData" v-if="mxShow[1]" :key="item.id"
@@ -48,8 +47,8 @@
             <div>{{item.partyAName}}</div>
             <div class="textover">{{item.invoiceContent}}</div>
             <div class="invoiceAmount">{{item.invoiceAmount}}({{item.currencyName}})</div>
-            <div>开票日期：{{item.invoiceDate}} </div>
-            <div>收款日期：{{item.receiveDate}} </div>
+            <div class="rq_text">开票日期：{{item.invoiceDate}} </div>
+            <div class="rq_text">收款日期：{{item.receiveDate}} </div>
           </div>
         </div>
       </div>
@@ -75,6 +74,7 @@
       </scroller>
     </mt-popup>
     <div v-show="isBackShow" class="backTop" @click="backTop"><i class="iconfont icon-huidaodingbu1"></i></div>
+
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -91,11 +91,12 @@
         totalPage: 1,
         unPage: 1,
         unTotalPage: 1,
+        total: [], //总金额
         payDetail: false,
         detail: [],
         isBackShow: false,
         receiveId: '',//展示明细的id
-        detailPage: 0//明细分页
+        detailPage: 0 ,//明细分页
       }
     },
     methods: {
@@ -193,6 +194,16 @@
         this.getDetailData(function () {
           done(true)
         })
+      },
+      _getTotal(){
+        this.$api.QUERY_BALANCE_TOTAL().then(res => {
+          if (res.code == 0) {
+            this.total = res.balanceTotal
+          }
+        })
+      },
+      pay(){
+        this.$router.push('/pay?isCharge=1')
       }
 
     },
@@ -210,6 +221,10 @@
       });
       this.getMxUnPaid(function () {
       })
+
+    },
+    activated(){
+      this._getTotal()
     },
     mounted(){
 //      this.showBack()
@@ -219,6 +234,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .rq_text {
+    font-size: 12px;
+    color: #666
+  }
 
   .backTop {
     position: absolute;
@@ -260,6 +279,8 @@
 
   .content {
     padding-top: 15px;
+    font-size: 14px;
+    color: #444;
   }
 
   .mxTit {
@@ -271,8 +292,8 @@
   }
 
   .mxItem {
-    height: 100px;
     padding-left: 20px;
+    padding-bottom: 6px;
     position: relative;
     width: 100%;
     background: #fff;
@@ -334,6 +355,7 @@
     display: flex;
     background: #fff;
     margin-bottom: 10px;
+
   }
 
   .col1 {
@@ -348,7 +370,8 @@
   }
 
   .balanceBtm {
-    padding-bottom: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     line-height: 1;
     color: #333;
     font-size: 14px;
@@ -357,11 +380,12 @@
   .balanceTxt {
     color: #fff;
     margin-top: 0;
+    font-size: 14px;
   }
 
   .balanceBox {
-    height: 100px;
     width: 100%;
+    padding-bottom: 10px;
     background: #26a2ff;
   }
 

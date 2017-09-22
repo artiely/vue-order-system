@@ -24,6 +24,7 @@ export default function fetch (options) {
         console.log(data)
         console.log(typeof data)
         if (typeof data != 'object') {
+
           return {
             code: 1000,
             msg: '请登录'
@@ -80,6 +81,7 @@ export default function fetch (options) {
          router.replace({name: "login"})
          }*/
         if (res.code == 1000) {
+          store.commit('LOGOUT')
           router.replace({name: 'login'})
         } else {
           resolve(res.data)
@@ -93,7 +95,13 @@ export default function fetch (options) {
       .catch((error) => {
         //请求失败时,根据业务判断状态
         console.error('来自响应结果的错误')
-        reject(error)
+        if (error.code == 1000) {
+          store.commit('LOGOUT')
+          router.replace({name: 'login'})
+        } else {
+          reject(error)
+        }
+
       })
   })
 }
