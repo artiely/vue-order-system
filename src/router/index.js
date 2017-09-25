@@ -284,6 +284,11 @@ const router = new Router({
   routes
 })
 router.beforeEach((to, from, next) => {
+  //url传过来的k缓存openId
+  let openId = to.query.openId;
+  if(openId){
+    window.localStorage.setItem("openId", openId);
+  }
   // 语言
   let lang = window.localStorage.getItem('lang')
   if (!lang) {

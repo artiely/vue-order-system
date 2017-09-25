@@ -5,9 +5,10 @@
       <div class="video-success">
         <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="0" cy="0" r="0" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
       </div>
-      <p class="t">订单号：478546485446978546</p>
-      <p class="t">交易时间：2017-02-27</p>
-      <router-link to="order">返回订单</router-link>
+      <p class="t">交易金额：{{payResult.orderPrice | formatMoney}}元</p>
+      <p class="t">订单号：{{payResult.orderNo}}</p>
+      <p class="t">交易时间：{{payResult.orderTime}}</p>
+      <router-link to="order">返回订单页</router-link>
     </div>
   </div>
 </template>
@@ -17,7 +18,13 @@
     name: 'reject',
     data () {
       return {
-        state: ''
+        state: '',
+        payResult : this.$route.query
+      }
+    },
+    filters : {
+      formatMoney : function (value) {
+        return Number(value).toFixed(2);
       }
     },
     activated(){

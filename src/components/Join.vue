@@ -14,9 +14,16 @@
             <mu-text-field label="手机号" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
             <div class="help">手机号为登录账号</div>
             <!--只有微信注册手机号才可以为登录账号-->
-            <div>
-              <mu-text-field label="短信验证码" v-model="form.code" :errorText="error.code" labelFloat style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center" @click="getMsgCode">点击获取</span>
+            <div style="text-align: left">
+              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" type="text" :errorText="error.code"
+                             name="code" labelFloat
+                             style="width: 60%"/>
+              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
+              <span v-if="count!=60"
+                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+                {{count}}s {{$t('message.resend')}}
+              </span>
             </div>
             <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
                            fullWidth/>
@@ -37,6 +44,7 @@
     name: 'login',
     data () {
       return {
+        count: 60,
         form: {
           userName: '',
           sex: '1',
@@ -158,12 +166,21 @@
       },
       getMsgCode () {
 //        console.log('biu....')
-        let data = {
-          telephone: this.form.phone,
-          type: 0
-        }
-        this.$api.GET_MSG_CODE(data).then(res => {
-          if (res.code === 0) {
+          if (this.form.phone.length != 11)return
+          let data = {
+            telephone: this.form.phone,
+            type: 0
+          }
+          let s = setInterval(() => {
+              this.count--
+          if (this.count == 0) {
+            this.count = 60
+            clearInterval(s)
+          }
+        }, 1000)
+
+          this.$api.GET_MSG_CODE(data).then(res => {
+            if (res.code === 0) {
             if (res.state === 1) {
               this.$toast('短信已发出，请查收')
             } else {

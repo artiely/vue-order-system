@@ -88,7 +88,7 @@
         </div>
       </div>
       <div v-if="isCharge==1" class="card">
-        群思科技有限公司预付款充值  ({{"Advc" + new Date().getTime()}})
+        群思科技有限公司预付款充值  ({{orderNo}})
         <mu-text-field  v-model="orderPrice" fullWidth label="充值金额（元）" hintText="请输入" type="number" labelFloat/>
         <br/>
       </div>
@@ -232,6 +232,7 @@
         orderPrice: 1000,
         invoiceVisible: false,
         isCharge: '',
+        orderNo:'',
         invoice: {
           invoiceType: 0, // 发票类型  0 1 2  无票 普票 增票
           invoiceTitle: '', // 发票抬头
@@ -297,7 +298,7 @@
       },
       payType() {},
       getList () {
-        let oid = this.$route.params.oid
+        let oid = this.$route.params.oid;
         if (oid) {
           this.$store.commit('SET_ORDER_NUMBER', oid)
         } else {
@@ -330,9 +331,9 @@
           productName: this.productName
         }
         if(this.isCharge==1){
-          data.orderNo= "Advc" + new Date().getTime()
-          productName: '群思科技有限公司预付款充值'
-          data.isCharge=1
+          data.orderNo= this.orderNo;
+          data.productName = '群思科技有限公司预付款充值';
+          data.isCharge=1;
         }
         let openId = window.localStorage.getItem("openId");
         let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {})
@@ -340,49 +341,54 @@
 
         let isInnerWeixin = isWeixnBrowser();
 
-        Indicator.open({
-          text: '正在打开支付端,请稍后...',
-          spinnerType: 'fading-circle'
-        });
+//        Indicator.open({
+//          text: '正在打开支付端,请稍后...',
+//          spinnerType: 'fading-circle'
+//        });
         this.$api.post_pay_ment(postData).then(res => {
+//          Indicator.close();
           let curThis = this;
-          if (data.payWayCode == 'WEIXIN') {
-            if (isInnerWeixin) {
-              if (typeof WeixinJSBridge == "undefined") {
-                if (document.addEventListener) {
-                  document.addEventListener('WeixinJSBridgeReady',
-                    onBridgeReady(res, curThis), false);
-                } else if (document.attachEvent) {
-                  document.attachEvent('WeixinJSBridgeReady',
-                    onBridgeReady(res, curThis));
-                  document.attachEvent('onWeixinJSBridgeReady',
-                    onBridgeReady(res, curThis));
-                }
-              } else {
-                onBridgeReady(res, curThis);
+          if(data.payWayCode == 'WEIXIN'){
+              if(isInnerWeixin){
+                  if (typeof WeixinJSBridge == "undefined") {
+                    if (document.addEventListener) {
+                      document.addEventListener('WeixinJSBridgeReady',
+                        onBridgeReady(res, curThis), false);
+                    } else if (document.attachEvent) {
+                      document.attachEvent('WeixinJSBridgeReady',
+                        onBridgeReady(res, curThis));
+                      document.attachEvent('onWeixinJSBridgeReady',
+                        onBridgeReady(res, curThis));
+                    }
+                  } else {
+                    onBridgeReady(res, curThis);
+                  }
+
+              }else {
+//                  alert(res.data+"?orderPrice="+curThis.orderPrice+"&orderNo="+curThis.oid+"&orderTime=2017-09-22 08:30:01");
+                  window.location.href = res.data+"?resultData="+curThis.orderPrice+"_"+data.orderNo;
+//                  Indicator.close();
               }
-            } else {
-              window.location.href = res.data;
-              Indicator.close();
-            }
-          } else {
-            document.body.innerHTML += res.data;
-            setTimeout(() => {
-              if (data.payWayCode == 'ALIPAY' && isInnerWeixin) {
+           }if(data.payWayCode == 'ADVPAY') {
+              window.location.href = SERVER_BASE_URL+"/"+res.data;
+           }else {
+              document.body.innerHTML += res.data;
+              setTimeout(() => {
+              if(data.payWayCode == 'ALIPAY' && isInnerWeixin){
                 var queryParam = '';
-                var curForm = document.forms[document.forms.length - 1];
+                var curForm = document.forms[document.forms.length-1];
                 Array.prototype.slice.call(curForm.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
                   queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
                 });
                 var gotoUrl = curForm.getAttribute('action') + '?' + queryParam;
-                if (typeof _AP != 'function') {
+                if(typeof _AP != 'function'){
                   gatAlipayInWeixin();
                 }
                 _AP.pay(gotoUrl);
-                Indicator.close();
+//                 Indicator.close();
               } else {
-                document.forms[document.forms.length - 1].submit();
-                Indicator.close();
+                document.forms[document.forms.length-1].submit();
+//                Indicator.close();
               }
 
             }, 20)
@@ -398,7 +404,29 @@
       }
 
     },
-    mounted(){}
+    mounted(){
+      this.isCharge = GetQueryString("isCharge");
+      if(this.isCharge){
+        this.orderNo = "Advc" + new Date().getTime();
+      }
+    }
+  }
+  function dateFtt(fmt,date) {
+    var o = {
+      "M+" : date.getMonth()+1,                 //月份
+      "d+" : date.getDate(),                    //日
+      "h+" : date.getHours(),                   //小时
+      "m+" : date.getMinutes(),                 //分
+      "s+" : date.getSeconds(),                 //秒
+      "q+" : Math.floor((date.getMonth()+3)/3), //季度
+      "S"  : date.getMilliseconds()             //毫秒
+    };
+    if(/(y+)/.test(fmt))
+      fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+    for(var k in o)
+      if(new RegExp("("+ k +")").test(fmt))
+        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+    return fmt;
   }
   function onBridgeReady (json, curThis) {
     let paramJson = JSON.parse(json.data);
@@ -408,24 +436,59 @@
 //      layer.msg('res.err_msg=>'+res.err_msg, {
 //        shift : 30
 //      });
-//      alert(JSON.stringify(res));
-      Indicator.close();
       if (res.err_msg == "get_brand_wcpay_request:ok") {
-//        layer.msg("支付成功", {
-//          shift : 6
-//        });
-        curThis.$toast(this.$t('message.Pay_success'))
+           curThis.$toast(this.$t('message.Pay_success'))
+//         alert("支付成功");
+//          alert(SERVER_BASE_URL+"/mobile.html#/payok?orderPrice="+curThis.orderPrice+"&orderNo="+curThis.oid+"&orderTime=2017-09-23 19:30:01");
+//          window.setTimeout(function(){
+//            window.location.href = SERVER_BASE_URL+"/mobile.html#/payok?orderPrice="+curThis.orderPrice+"&orderNo="+curThis.oid+"&orderTime=2017-09-23 19:30:01&v="+(new Date().getTime());
+//          }, 50);
+              var form1 = document.createElement("form");
+              form1.name = "formSubmitForm1";
+              document.body.appendChild(form1);
+              form1.method = "POST";
+              form1.action = SERVER_BASE_URL+"/mobile.html#/payok?orderPrice="+curThis.orderPrice+"&orderNo="+(curThis.oid || curThis.orderNo)+"&orderTime="+dateFtt("yyyy年MM月dd日 hh:mm:ss",new Date());
+              form1.submit();
+              return true;
+//          window.setTimeout(function(){
+//              curThis.$router.push({
+//                name: 'payok',
+//                path: '/payok',
+//                query: {
+//                  orderPrice : curThis.orderPrice,
+//                  orderNo : curThis.oid,
+//                  orderTime : '2017-09-22 08:30:01'
+//
+//                }
+//              });
+//          }, 1000);
 
-//        alert("支付成功");
-
-//        self.location = "#(ctxPath)/success";
-
-      } else {
-        curThis.$toast(res.err_msg);
+      }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+        curThis.$toast("您取消了支付");
         /*layer.msg("支付失败", {
          shift : 6
          });*/
+        var form1 = document.createElement("form");
+        form1.name = "formSubmitForm1";
+        document.body.appendChild(form1);
+        form1.method = "POST";
+        form1.action = SERVER_BASE_URL+"/mobile.html#/index";
+        form1.submit();
+        return true;
+      }else{
+          curThis.$toast("支付失败");
+          /*layer.msg("支付失败", {
+           shift : 6
+           });*/
+        var form1 = document.createElement("form");
+        form1.name = "formSubmitForm1";
+        document.body.appendChild(form1);
+        form1.method = "POST";
+        form1.action = SERVER_BASE_URL+"/mobile.html#/index";
+        form1.submit();
+        return true;
       }
+
     });
   }
 </script>
