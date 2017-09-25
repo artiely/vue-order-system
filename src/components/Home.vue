@@ -128,10 +128,6 @@
       }
     },
     mounted() {
-      let openId = this.$route.query.openId;
-      if(openId){
-        window.localStorage.setItem("openId", openId);
-      }
       this.selectPath()
       this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
         if (r.code == ERR_OK) {
