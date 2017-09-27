@@ -114,7 +114,7 @@
           :tooltipStyle="rangeTimeOption.tooltipStyle"></vue-slider>
 
       </mt-popup>
-      <mt-cell :title="$t('message.Price_curve')">
+      <mt-cell :title="$t('message.Price_curve')" v-if="addressObj.id!=null">
         <mt-switch v-model="popupVisiblechart"></mt-switch>
       </mt-cell>
       <div v-if="popupVisiblechart">

@@ -8,7 +8,7 @@
       <p class="t">交易金额：{{payResult.orderPrice | formatMoney}}元</p>
       <p class="t">订单号：{{payResult.orderNo}}</p>
       <p class="t">交易时间：{{payResult.orderTime}}</p>
-      <router-link to="order">返回订单页</router-link>
+      <router-link :to="{path:payResult.backPath}" replace>返回订单页</router-link>
     </div>
   </div>
 </template>

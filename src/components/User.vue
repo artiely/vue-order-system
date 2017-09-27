@@ -40,10 +40,22 @@
 
       <div class="user-cell" @click="goBalance">
         <div class="left-icon">
-          <i class="iconfont icon-coupons"></i>
+          <i class="iconfont icon-transaction_fill"></i>
         </div>
         <div class="right-des">
           {{$t('message.Payment')}}
+        </div>
+        <div class="right-icon">
+          <i class="iconfont icon-enter"></i>
+        </div>
+      </div>
+
+      <div class="user-cell" @click="goCoupons">
+        <div class="left-icon">
+          <i class="iconfont icon-coupons"></i>
+        </div>
+        <div class="right-des">
+          我的优惠券
         </div>
         <div class="right-icon">
           <i class="iconfont icon-enter"></i>
@@ -165,6 +177,9 @@
       },
       goAddress(){
         this.$router.push({name: 'address', path: '/address'})
+      },
+      goCoupons(){
+        this.$router.push('/coupons')
       },
       goUrge(){
         this.$router.push({name: 'urge', path: '/urge'})
