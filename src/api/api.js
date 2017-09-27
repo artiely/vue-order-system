@@ -682,6 +682,45 @@ const GET_PERSON_ACCOUNT_USER = params => {
     params: params
   })
 }
+/**
+ * 获取优惠券
+ *  "state": 0表示未使用、1表示已使用
+ *  "expire": 0表示未过期、1表示已过期
+ *  "page":第几页
+ *  "limit":每页显示数量
+ * @param params
+ * @constructor
+ */
+const COUPON = params => {
+  return fetch({
+    url: '/coupon/pagedQuery',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 获取不可用的优惠券
+ * */
+const UN_COUPON = params => {
+  return fetch({
+    url: '/coupon/pagedDisable',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 自动填充发票
+ * */
+const AUTO_COM_INVOICE = params => {
+  return fetch({
+    url: '/invoice/queryInvoiceHistory',
+    method: 'get',
+    params: params
+  })
+}
+
 
 const apiList = {
   login,
@@ -736,6 +775,9 @@ const apiList = {
   QUERY_BALANCE,
   QUERY_BALANCE_TOTAL,
   GET_PERSON_ACCOUNT_USER,
+  COUPON,
+  UN_COUPON,
+  AUTO_COM_INVOICE
 }
 
 export default apiList

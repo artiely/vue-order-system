@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>支付提示</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="email=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
+
+</head>
+<body>
+
+<button onclick="Pay()">提交数据</button>
+<script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
+<script>
+  function Pay() {
+    alert(1)
+//        window.location.href='http://www.baidu.com'
+//        return
+    let data = {
+      payWayCode: 'UNIONPAY',
+      orderPrice: '0.01',
+      orderNo: '2017092617291121403',
+      productName: '111111'
+    }
+
+    let openId = window.localStorage.getItem("openId");
+    let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {})
+//    if (this.disabled || !this.orderPrice) {return} // 有价格并且发票信息完整
+
+    let isInnerWeixin = '';
+
+//        Indicator.open({
+//          text: '正在打开支付端,请稍后...',
+//          spinnerType: 'fading-circle'
+//        });
+    axios({ url: 'http://pt.fwone.com/fwonePay/scanPay',
+      method: 'get',
+      params: postData}).then(res => {
+//          Indicator.close();
+      history.pushState({}, "newtitle","#");
+      alert(JSON.stringify(res))
+      alert('7777')
+      if(res.code!=0){
+        alert('出错')
+        return
+      }
+//        if(this.$route.isBack==false)return
+      alert('8888')
+      let curThis = this;
+      if(data.payWayCode == 'WEIXIN'){
+        if(isInnerWeixin){
+          onBridgeReady(res, curThis);
+
+        }else {
+//                  alert(res.data+"?orderPrice="+curThis.orderPrice+"&orderNo="+curThis.oid+"&orderTime=2017-09-22 08:30:01");
+          window.location.href = res.data+"?resultData="+curThis.orderPrice+"_"+data.orderNo;
+//                  Indicator.close();
+        }
+      }if(data.payWayCode == 'ADVPAY') {
+        window.location.href = SERVER_BASE_URL+"/"+res.data;
+      }else {
+        document.body.innerHTML += res.data;
+        setTimeout(() => {
+          if(data.payWayCode == 'ALIPAY' && isInnerWeixin){
+            var queryParam = '';
+            var curForm = document.forms[document.forms.length-1];
+            Array.prototype.slice.call(curForm.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+              queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
+            });
+            var gotoUrl = curForm.getAttribute('action') + '?' + queryParam;
+            if(typeof _AP != 'function'){
+              gatAlipayInWeixin();
+            }
+            _AP.pay(gotoUrl);
+          } else {
+            document.forms[document.forms.length-1].submit();
+          }
+        }, 20);
+      }
+    })
+  }
+</script>
+</body>
+</html>

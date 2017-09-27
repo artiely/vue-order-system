@@ -3,7 +3,7 @@
     <mt-header :title="$t('message.Residency_service')" fixed style="z-index: 7;">
       <mt-button icon="back" @click.native="back()" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
-    <div class="page-content">
+    <div class="page-content" style="overflow: hidden">
       <div class="wrapper-box">
         <mt-cell class="title-box">
         <span class="title" slot="title">
@@ -100,7 +100,7 @@
         <mt-field type="textarea" rows="4" :placeholder="$t('message.Please_describe')" v-model="faultDesc"></mt-field>
       </div>
       <div>
-        <mt-button type="primary" size="large" @click.native="getPriceMa" :disabled="checkValue==''||faultDesc==''">
+        <mt-button type="primary" class="bluebg" style="border-radius: 22px" size="large" @click.native="getPriceMa" :disabled="checkValue==''||faultDesc==''">
           {{$t('message.Cost_Estimation')}}
         </mt-button>
       </div>
@@ -122,7 +122,7 @@
 
       <div class="footerBar">
         <div class="b_btn" style="z-index:7">
-          <mt-button class="an_order" @click.native="anOrder" type="danger" :disabled="trPriceList.length==0">
+          <mt-button class="an_order redbg" @click.native="anOrder" type="danger" style="border-radius: 0" :disabled="trPriceList.length==0">
             {{$t('message.Confirm')}}
           </mt-button>
         </div>

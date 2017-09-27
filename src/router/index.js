@@ -6,7 +6,7 @@ import Index from '@/components/Index'
 import Shop from '@/components/Shop'
 import store from '.././store/index'
 import i18n from '@/i18n'
-// import Cookies from 'js-cookie'
+import {Toast} from 'mint-ui'
 Vue.use(Router)
 
 Router.prototype.goBack = function () {
@@ -27,128 +27,141 @@ if (window.sessionStorage.getItem('token')) {
 if (window.sessionStorage.getItem('person')) {
   store.commit('PERSON_INFO', window.sessionStorage.getItem('person'))
 }
-import { Indicator } from 'mint-ui'
+
 const Order = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Order'], () => {
-    resolve(require('@/components/Order'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Order'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 const User = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/User'], () => {
-    resolve(require('@/components/User'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/User'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 const Ma = resolve => {
-  Indicator.open({
-    text: '加载...',
-    spinnerType: 'fading-circle'
-  });
-  require.ensure(['@/components/Ma'], () => {
-    resolve(require('@/components/Ma'))
-  })
-    .then(()=>{
-    // console.log(123)
-    Indicator.close()})
-}
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Ma'], (component) => {
+    resolve(component)
+    instance.close();
+  })}
+
 const Oncall = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Oncall'], () => {
-    resolve(require('@/components/Oncall'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Oncall'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 const Balance = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Balance'], () => {
-    resolve(require('@/components/Balance'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Balance'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 const Complain = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Complain'], () => {
-    resolve(require('@/components/Complain'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Complain'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 const Address = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Address'], () => {
-    resolve(require('@/components/Address'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Address'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 const Urge = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Urge'], () => {
-    resolve(require('@/components/Urge'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Urge'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 const Orderdetail = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/items/Orderdetail'], () => {
-    resolve(require('@/components/items/Orderdetail'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/items/Orderdetail'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const Pay = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Pay'], () => {
-    resolve(require('@/components/Pay'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Pay'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const Register = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Register'], () => {
-    resolve(require('@/components/Register'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Register'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
-// const Register2 = resolve => {
-//   Indicator.open()
-//   require.ensure(['@/components/Register2'], () => {
-//     resolve(require('@/components/Register2'))
-//   }).then(()=>{Indicator.close()})
-// }
 
 const Type = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Type'], () => {
-    resolve(require('@/components/Type'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Type'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const Join = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Join'], () => {
-    resolve(require('@/components/Join'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Join'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const Reject = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Reject'], () => {
-    resolve(require('@/components/Reject'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Reject'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const Info = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Info'], () => {
-    resolve(require('@/components/Info'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Info'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const Payok = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Payok'], () => {
-    resolve(require('@/components/Payok'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Payok'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const Record = resolve => {
-  Indicator.open()
-  require.ensure(['@/components/Record'], () => {
-    resolve(require('@/components/Record'))
-  }).then(()=>{Indicator.close()})
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Record'], (component) => {
+    resolve(component)
+    instance.close();
+  })
+}
+
+const Coupons = resolve => {
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Coupons'], (component) => {
+    resolve(component)
+    instance.close();
+  })
 }
 
 const routes = [{
@@ -236,12 +249,6 @@ const routes = [{
     meta: {requiresAuth: false},
     component: Register
   },
-  // {
-  //   path: '/register2',
-  //   name: 'register2',
-  //   meta: {requiresAuth: false},
-  //   component: Register2
-  // },
   {
     path: '/type',
     name: 'type',
@@ -277,6 +284,12 @@ const routes = [{
     name: 'Record',
     meta: {requiresAuth: false},
     component: Record
+  },
+  {
+    path: '/coupons',
+    name: 'Coupons',
+    meta: {requiresAuth: false},
+    component: Coupons
   }
 ]
 

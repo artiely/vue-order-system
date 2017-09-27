@@ -89,7 +89,7 @@
       </div>
       <div v-if="isCharge==1" class="card">
         群思科技有限公司预付款充值  ({{orderNo}})
-        <mu-text-field  v-model="orderPrice" fullWidth label="充值金额（元）" hintText="请输入" type="number" labelFloat/>
+        <mu-text-field v-model="orderPrice" fullWidth label="充值金额（元）" hintText="请输入" type="number" labelFloat/>
         <br/>
       </div>
       <div class="card-box" style="margin-top: 10px">
@@ -143,12 +143,12 @@
         <label class="zf-cell" name="payType" v-if="isCharge!=1">
           <table>
             <tr>
-              <td  width="50">
+              <td width="50">
                 <input type="radio" name="payType" v-model="payWayCode" value="ADVPAY">
                 <img :src="require('@/assets/img/fw.png')" alt="">
               </td>
               <td>
-                {{$t('message.FwonePay')}}<i class="iconfont icon-right"  v-if="payWayCode=='ADVPAY'"></i>
+                {{$t('message.FwonePay')}}<i class="iconfont icon-right" v-if="payWayCode=='ADVPAY'"></i>
               </td>
             </tr>
           </table>
@@ -170,9 +170,13 @@
       <div style="height: 100px"></div>
     </scroller>
     <!--提交订单-->
+
     <div class="pay-group">
-      <div class="payBtn" @click="Pay" :class="{disabled:orderPrice <= 0 || disabled}">{{$t('message.Submit_orders')}}</div>
-      <div class="count" v-if="orderPrice">{{$t('message.Total')}} <span class="countStyle">￥{{orderPrice}}</span></div>
+      <div class="payBtn" @click="Pay" :class="{disabled:(orderPrice <= 0 || disabled)&& couponId==''}">
+        {{$t('message.Submit_orders')}}
+      </div>
+      <div class="count" v-if="orderPrice>=0">{{$t('message.Total')}} <span class="countStyle">￥{{orderPrice}}</span>
+      </div>
     </div>
     <!--发票-->
     <mt-popup
@@ -182,45 +186,141 @@
         <mt-button icon="back" @click="invoiceHide" slot="left"></mt-button>
         <mt-button @click="invoiceHide" slot="right">{{$t('message.Done')}}</mt-button>
       </mt-header>
-      <div class="page-content">
-        <label class="zf-cell">
+      <div class="page-content2" style="height: 100vh;overflow: auto">
+        <div>
+          <div style="height: 40px;"></div>
+          <label class="zf-cell">
 
-          <input type="radio" name="invoice" v-model="invoice.invoiceType" value="0">
-          {{$t('message.Without_the_invoice')}} <i class="iconfont icon-right" v-if="invoice.invoiceType=='0'"></i>
-        </label>
-        <label class="zf-cell" name="invoice">
-          <input type="radio" name="payType" v-model="invoice.invoiceType" value="1">
-          {{$t('message.Regular_invoice')}}<i class="iconfont icon-right" v-if="invoice.invoiceType=='1'"></i>
-        </label>
-        <label class="zf-cell" name="invoice">
-          <input type="radio" name="payType" v-model="invoice.invoiceType" value="2">
-          {{$t('message.Value-added_invoice')}}<i class="iconfont icon-right" v-if="invoice.invoiceType=='2'"></i>
-        </label>
-        <div style="margin-top: 10px">
-          <mt-field type="text" :placeholder="$t('message.Company_name')" v-model="invoice.invoiceTitle"
-                    v-show="invoice.invoiceType!=0"></mt-field>
-          <mt-field type="text" :placeholder="$t('message.taxpayer_registration_number')" v-model="invoice.taxNumber"
-                    v-show="invoice.invoiceType!=0"></mt-field>
-          <mt-field type="text" :placeholder="$t('message.bank_of_deposit')" v-model="invoice.bankName"
-                    v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
-          <mt-field type="text" :placeholder="$t('message.credit_card_numbers')" v-model="invoice.accountNumber"
-                    v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
-          <mt-field type="text" :placeholder="$t('message.company_tel')" v-model="invoice.telephone"
-                    v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
-          <mt-field type="text" :placeholder="$t('message.company_address')" v-model="invoice.companyAddress"
-                    v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
-          <mt-field type="text" :placeholder="$t('message.Bill-to_address')" v-model="invoice.invoiceAddress"
-                    v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+            <input type="radio" name="invoice" v-model="invoice.invoiceType" value="0">
+            {{$t('message.Without_the_invoice')}} <i class="iconfont icon-right" v-if="invoice.invoiceType=='0'"></i>
+          </label>
+          <label class="zf-cell" name="invoice">
+            <input type="radio" name="payType" v-model="invoice.invoiceType" value="1">
+            {{$t('message.Regular_invoice')}}<i class="iconfont icon-right" v-if="invoice.invoiceType=='1'"></i>
+          </label>
+          <label class="zf-cell" name="invoice">
+            <input type="radio" name="payType" v-model="invoice.invoiceType" value="2">
+            {{$t('message.Value-added_invoice')}}<i class="iconfont icon-right" v-if="invoice.invoiceType=='2'"></i>
+          </label>
+
+          <div @click="showInvoiceHistory" v-if="invoice.invoiceType!=0&&invoiceList.length>0" class="yellowbg"
+               style=";border-radius: 22px;font-size: 12px;display: inline-block;margin: 4px auto;padding: 8px 14px">
+            您有历史开票记录，点击选择
+          </div>
+          <div style="margin-top: 10px">
+            <mt-field type="text" :placeholder="$t('message.Company_name')" v-model="invoice.partAName"
+                      v-show="invoice.invoiceType!=0"></mt-field>
+            <mt-field type="text" :placeholder="$t('message.taxpayer_registration_number')" v-model="invoice.taxNumber"
+                      v-show="invoice.invoiceType!=0"></mt-field>
+            <mt-field type="text" :placeholder="$t('message.bank_of_deposit')" v-model="invoice.bankName"
+                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+            <mt-field type="text" :placeholder="$t('message.credit_card_numbers')" v-model="invoice.accountNumber"
+                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+            <mt-field type="text" :placeholder="$t('message.company_tel')" v-model="invoice.telephone"
+                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+            <mt-field type="text" :placeholder="$t('message.company_address')" v-model="invoice.companyAddress"
+                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+            <mt-field type="text" :placeholder="$t('message.Bill-to_address')" v-model="invoice.invoiceAddress"
+                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+          </div>
         </div>
       </div>
     </mt-popup>
     <!--发票/-->
+    <!--优惠券-->
+    <mt-popup
+      v-model="couponVisible"
+      position="right" style="height: 100%;width: 100%">
+      <mt-header title="优惠券" fixed style="z-index: 9;">
+        <mt-button icon="back" @click="hideCoupons" slot="left"></mt-button>
+        <mt-button @click="hideCoupons" slot="right">{{$t('message.Done')}}</mt-button>
+      </mt-header>
+      <scroller class="page-content"
+                :on-infinite="onInfinite"
+                :refreshText="$t('message.Pull_to_refresh')"
+                :noDataText="$t('message.No_more_data')">
+        <!--<label v-for="item in couponsList" class="card "-->
+        <!--style="background:#fff;text-align: left;padding: 6px;margin-bottom: 2px;position:relative;display: block">-->
+        <!--<input type="radio" name="payType" v-model="couponId" :value="item.id" style="display: none">-->
+        <!--<p style="font-size: 14px">金额：{{item.amount}}</p>-->
+        <!--<p style="font-size: 10px">有效期至：{{item.expStartDate}}</p>-->
+        <!--<i v-show="couponId===item.id" class="iconfont icon-right"-->
+        <!--style="position: absolute;top: 0;right: 0;font-size: 24px"></i>-->
+        <!--</label>-->
+        <label v-for="item in couponsList" class="coupons-item redbg "
+               style=";text-align: left;padding: 6px;margin-bottom: 2px">
+          <div class="dot-line left">
+            <div v-for="i in 10" class="o-o"></div>
+          </div>
+          <div class="dot-line right">
+            <div v-for="i in 10" class="o-o"></div>
+          </div>
+          <input type="radio" name="" v-model="couponId" :value="item.id" style="display: none">
+          <div style="display: flex">
+            <div style="font-size: 14px;margin: 0;padding: 6px;box-sizing: border-box;flex: 1">
+              <table style="width: 100%" cellspacing="0" border="0" cellpadding="0">
+                <tr>
+                  <td rowspan="2">￥<span style="font-size: 40px">{{item.amount}}</span></td>
+                  <td style="text-align: right">
+                    <div>优惠券</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: right">
+                    <div style="font-size: 10px"> 不可叠加</div>
+                  </td>
+                </tr>
+              </table>
+              <div style="font-size: 10px">请于{{item.expStartDate}}前使用</div>
+            </div>
+            <div style="width: 80px;border-left: 1px dashed #fff;padding: 8px;font-size: 20px;line-height: 58px;">
+              <div v-show="couponId!==item.id" style="font-size: 14px">点击使用</div>
+              <div v-show="couponId===item.id" style="text-align: center">
+                <i class="iconfont icon-right"
+                   style="font-size: 40px"></i>
+              </div>
+
+            </div>
+          </div>
+        </label>
+        <div style="height: 80px;"></div>
+      </scroller>
+    </mt-popup>
+    <!--优惠券/-->
+    <!--历史开票-->
+    <mt-popup
+      v-model="invoiceHistoryVisible"
+      position="bottom" style="height: 60%;width: 100%;background:#eee;overflow: auto">
+      <div>
+        <label v-for="item in invoiceList"
+               style="position: relative;text-align: left;margin-bottom: 8px;background:#fff;overflow: hidden;display: block"
+               @click="checkHistory(item)">
+          <span v-if="item.accountNumber" class="bluebg invoice-type">增票</span>
+          <span v-else class="greenbg invoice-type">普票</span>
+          <div style="padding-left: 50px;padding-bottom:10px;padding-top:10px;font-size: 14px ">
+            <div style="color: #444">{{item.partAName}}</div>
+            <div style="color: #777">{{item.taxNumber}}</div>
+          </div>
+          <div class="right-box " v-if="invoice.taxNumber==item.taxNumber&&invoice.partAName==item.partAName">
+            <span class="check-right bluebg"></span>
+            <i class="iconfont icon-right"></i>
+          </div>
+        </label>
+      </div>
+    </mt-popup>
+    <!--历史开票/-->
+    <form id="rppaysubmit" name="rppaysubmit" :action="payFormData.actionUrl" :method="payFormData.submitMethod">
+      <input type="text" :name="key" :value="val" v-for="(val, key) in payFormData.formItemMap"/>
+    </form>
+
   </div>
 </template>
 <script>
   import { mapState } from 'vuex'
   import { isWeixnBrowser, gatAlipayInWeixin, GetQueryString } from '@/utils'
   import { Indicator } from 'mint-ui';
+  import { MessageBox } from 'mint-ui';
+
   export default {
     name: 'pay',
     data () {
@@ -231,11 +331,17 @@
         productName: '',
         orderPrice: 1000,
         invoiceVisible: false,
+        invoiceHistoryVisible: false,
+        invoiceList: [],
+        couponVisible: false,
+        couponsList: [],
+        couponId: '',
+        choiceCoupon: '',
         isCharge: '',
-        orderNo:'',
+        orderNo: '',
         invoice: {
           invoiceType: 0, // 发票类型  0 1 2  无票 普票 增票
-          invoiceTitle: '', // 发票抬头
+          partAName: '', // 发票抬头
           companyAddress: '', // 公司地址
           taxNumber: '',    // 纳税人识别号
           bankName: '',      // 开户银行
@@ -243,6 +349,17 @@
           invoiceAddress: '', // 收票地址
           telephone: '' // 公司电话
         },
+        params: {
+          page: 1,
+          limit: 10,
+          state: 0, // 表示未使用、1表示已使用
+          expire: 0 // 表示未过期、1表示已过期
+        },
+        payFormData: {
+          actionUrl: '',
+          submitMethod: 'post',
+          formItemMap: {}
+        }
       }
     },
     watch: {
@@ -252,7 +369,7 @@
             this.disabled = false
           } else if (this.invoice.invoiceType == 1) {
             this.disabled = true
-            if (!this.invoice.invoiceTitle) {
+            if (!this.invoice.partAName) {
               return
             } else if (!this.invoice.taxNumber) {
               return
@@ -261,7 +378,7 @@
             }
           } else if (this.invoice.invoiceType == 2) {
             this.disabled = true
-            if (!this.invoice.invoiceTitle) {
+            if (!this.invoice.partAName) {
               return
             } else if (!this.invoice.bankName) {
               return
@@ -283,21 +400,27 @@
         deep: true
       }
     },
-    computed: mapState({
-      oid: state => state.detail.oid,
-    }),
+    computed: {
+      oid(){
+        return this.$store.state.detail.oid
+      },
+      invoiceUrl(){
+        return SERVER_BASE_URL + '/invoice/queryInvoiceHistory?taxNumber=' + this.invoice.taxNumber + '&columnName=PARTY_A_NAME&partAName' + this.invoice.partAName
+      }
+    },
+
     methods: {
-      back () {
+      back(){
         this.$router.back()
       },
-      invoiceHide () {
+      invoiceHide() {
         this.invoiceVisible = false
       },
-      setInvoice () {
+      setInvoice() {
         this.invoiceVisible = true
       },
       payType() {},
-      getList () {
+      getList(){
         let oid = this.$route.params.oid;
         if (oid) {
           this.$store.commit('SET_ORDER_NUMBER', oid)
@@ -323,17 +446,19 @@
           }
         })
       },
-      Pay(){
+      Pay() {
+//        window.location.href='http://www.baidu.com'
+//        return
         let data = {
           payWayCode: this.payWayCode,
           orderPrice: this.orderPrice,
           orderNo: this.oid,
           productName: this.productName
         }
-        if(this.isCharge==1){
-          data.orderNo= this.orderNo;
+        if (this.isCharge == 1) {
+          data.orderNo = this.orderNo;
           data.productName = '群思科技有限公司预付款充值';
-          data.isCharge=1;
+          data.isCharge = 1;
         }
         let openId = window.localStorage.getItem("openId");
         let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {})
@@ -341,161 +466,218 @@
 
         let isInnerWeixin = isWeixnBrowser();
 
-//        Indicator.open({
-//          text: '正在打开支付端,请稍后...',
-//          spinnerType: 'fading-circle'
-//        });
+        Indicator.open({
+          text: '正在打开支付端,请稍后...',
+          spinnerType: 'fading-circle'
+        });
         this.$api.post_pay_ment(postData).then(res => {
-//          Indicator.close();
+          Indicator.close();
+          if (res.code != 0) {
+            alert('支付出错')
+            return
+          }
           let curThis = this;
-          if(data.payWayCode == 'WEIXIN'){
-              if(isInnerWeixin){
-                  if (typeof WeixinJSBridge == "undefined") {
-                    if (document.addEventListener) {
-                      document.addEventListener('WeixinJSBridgeReady',
-                        onBridgeReady(res, curThis), false);
-                    } else if (document.attachEvent) {
-                      document.attachEvent('WeixinJSBridgeReady',
-                        onBridgeReady(res, curThis));
-                      document.attachEvent('onWeixinJSBridgeReady',
-                        onBridgeReady(res, curThis));
-                    }
-                  } else {
-                    onBridgeReady(res, curThis);
-                  }
-
-              }else {
-//                  alert(res.data+"?orderPrice="+curThis.orderPrice+"&orderNo="+curThis.oid+"&orderTime=2017-09-22 08:30:01");
-                  window.location.href = res.data+"?resultData="+curThis.orderPrice+"_"+data.orderNo;
-//                  Indicator.close();
-              }
-           }if(data.payWayCode == 'ADVPAY') {
-              window.location.href = SERVER_BASE_URL+"/"+res.data;
-           }else {
-              document.body.innerHTML += res.data;
-              setTimeout(() => {
-              if(data.payWayCode == 'ALIPAY' && isInnerWeixin){
+          if (data.payWayCode == 'WEIXIN') {
+            if (isInnerWeixin) {
+              onBridgeReady(res, curThis);
+            } else {
+              window.location.href = res.data + "?resultData=" + curThis.orderPrice + "_" + data.orderNo;
+              return false;
+            }
+          }
+          if (data.payWayCode == 'ADVPAY') {
+            window.location.href = SERVER_BASE_URL + "/" + res.data;
+          } else {
+            curThis.payFormData = JSON.parse(res.data);
+            setTimeout(() => {
+              if (data.payWayCode == 'ALIPAY' && isInnerWeixin) {
                 var queryParam = '';
-                var curForm = document.forms[document.forms.length-1];
+                var curForm = document.forms[document.forms.length - 1];
                 Array.prototype.slice.call(curForm.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
                   queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
                 });
                 var gotoUrl = curForm.getAttribute('action') + '?' + queryParam;
-                if(typeof _AP != 'function'){
+                if (typeof _AP != 'function') {
                   gatAlipayInWeixin();
                 }
                 _AP.pay(gotoUrl);
-//                 Indicator.close();
               } else {
-                document.forms[document.forms.length-1].submit();
-//                Indicator.close();
+                document.forms[document.forms.length - 1].submit();
               }
+            }, 20);
+          }
+        })
+      },
+      showCoupons() {
+        this.couponVisible = true
+      },
+      hideCoupons() {
+        this.couponVisible = false
+      },
+      getCouponsList(cb){
+        this.$api.COUPON(this.params).then(res => {
+          if (res.code == 0) {
+            if (this.params.page == 1) {
+              this.couponsList = res.page.list
+            } else {
+              this.couponsList = this.couponsList.concat(res.page.list)
+            }
+            cb && cb()
+          } else {
+            alert(JSON.stringify(res))
+          }
+        })
+      },
+      onInfinite(done) {
+        this.params.page++
+        this.getCouponsList(function () {done(true)})
+      },
+      showInvoiceHistory(){
+        this.invoiceHistoryVisible = true
+        this.initInvoiceData()
+      },
+      checkHistory(item){
+        this.invoice = Object.assign({}, this.invoice, item)
+        if (this.invoice.accountNumber != '') {
+          this.invoice.invoiceType = 2
+        } else {
+          this.invoice.invoiceType = 1
+        }
+      },
+      initInvoiceData(){
+        this.$api.AUTO_COM_INVOICE({
+          taxNumber: this.invoice.taxNumber,
+          columnName: 'PARTY_A_NAME',
+          partAName: this.invoice.partAName
+        }).then(res => {
+          if (res.code == 0) {
+            this.invoiceList = res.invoiceHistory
+          }
+        })
 
-            }, 20)
+      },
+      autoInput(item){
+        this.$api.AUTO_COM_INVOICE({
+          taxNumber: '',
+          columnName: 'PARTY_A_NAME',
+          partAName: ''
+        }).then(res => {
+          console.log('res99999' + res)
+          if (res.code == 0) {
+            this.invoice = res.invoiceHistory[0]
           }
         })
       }
     },
-    created(){},
-    activated(){
-      this.isCharge = GetQueryString("isCharge");
-      if(!this.isCharge){
-        this.getList()
+    created(){
+    },
+    activated() {
+      if (!this.$router.isBack) {
+        this.isCharge = GetQueryString("isCharge");
+        if (!this.isCharge) {
+          this.getList()
+        }
+        this.params.page = 1
+        this.getCouponsList()
+      } else {
+//        this.$router.go(0)
       }
 
     },
-    mounted(){
+    mounted() {
       this.isCharge = GetQueryString("isCharge");
-      if(this.isCharge){
+      if (this.isCharge) {
         this.orderNo = "Advc" + new Date().getTime();
       }
     }
   }
-  function dateFtt(fmt,date) {
+  function dateFtt (fmt, date) {
     var o = {
-      "M+" : date.getMonth()+1,                 //月份
-      "d+" : date.getDate(),                    //日
-      "h+" : date.getHours(),                   //小时
-      "m+" : date.getMinutes(),                 //分
-      "s+" : date.getSeconds(),                 //秒
-      "q+" : Math.floor((date.getMonth()+3)/3), //季度
-      "S"  : date.getMilliseconds()             //毫秒
+      "M+": date.getMonth() + 1,                 //月份
+      "d+": date.getDate(),                    //日
+      "h+": date.getHours(),                   //小时
+      "m+": date.getMinutes(),                 //分
+      "s+": date.getSeconds(),                 //秒
+      "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+      "S": date.getMilliseconds()             //毫秒
     };
-    if(/(y+)/.test(fmt))
-      fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
-    for(var k in o)
-      if(new RegExp("("+ k +")").test(fmt))
-        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+    if (/(y+)/.test(fmt))
+      fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+      if (new RegExp("(" + k + ")").test(fmt))
+        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
   }
   function onBridgeReady (json, curThis) {
     let paramJson = JSON.parse(json.data);
-//    alert(json.data);
-    WeixinJSBridge.invoke('getBrandWCPayRequest', paramJson, (res) => {
+    WeixinJSBridge.invoke('getBrandWCPayRequest', paramJson, function (res2) {
       // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-//      layer.msg('res.err_msg=>'+res.err_msg, {
-//        shift : 30
-//      });
-      if (res.err_msg == "get_brand_wcpay_request:ok") {
-           curThis.$toast(this.$t('message.Pay_success'))
-//         alert("支付成功");
-//          alert(SERVER_BASE_URL+"/mobile.html#/payok?orderPrice="+curThis.orderPrice+"&orderNo="+curThis.oid+"&orderTime=2017-09-23 19:30:01");
-//          window.setTimeout(function(){
-//            window.location.href = SERVER_BASE_URL+"/mobile.html#/payok?orderPrice="+curThis.orderPrice+"&orderNo="+curThis.oid+"&orderTime=2017-09-23 19:30:01&v="+(new Date().getTime());
-//          }, 50);
-              var form1 = document.createElement("form");
-              form1.name = "formSubmitForm1";
-              document.body.appendChild(form1);
-              form1.method = "POST";
-              form1.action = SERVER_BASE_URL+"/mobile.html#/payok?orderPrice="+curThis.orderPrice+"&orderNo="+(curThis.oid || curThis.orderNo)+"&orderTime="+dateFtt("yyyy年MM月dd日 hh:mm:ss",new Date());
-              form1.submit();
-              return true;
-//          window.setTimeout(function(){
-//              curThis.$router.push({
-//                name: 'payok',
-//                path: '/payok',
-//                query: {
-//                  orderPrice : curThis.orderPrice,
-//                  orderNo : curThis.oid,
-//                  orderTime : '2017-09-22 08:30:01'
-//
-//                }
-//              });
-//          }, 1000);
-
-      }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+      if (res2.err_msg == "get_brand_wcpay_request:ok") {
+        let backPath = curThis.isCharge ? "/balance" : "/order";
+        curThis.$router.replace({
+          path: '/payok',
+          query: {
+            orderPrice: curThis.orderPrice,
+            orderNo: (curThis.oid || curThis.orderNo),
+            orderTime: dateFtt("yyyy年MM月dd日 hh:mm:ss", new Date()),
+            backPath: backPath
+          }
+        });
+        return true;
+      } else if (res2.err_msg == "get_brand_wcpay_request:cancel") {
         curThis.$toast("您取消了支付");
-        /*layer.msg("支付失败", {
-         shift : 6
-         });*/
-        var form1 = document.createElement("form");
-        form1.name = "formSubmitForm1";
-        document.body.appendChild(form1);
-        form1.method = "POST";
-        form1.action = SERVER_BASE_URL+"/mobile.html#/index";
-        form1.submit();
-        return true;
-      }else{
-          curThis.$toast("支付失败");
-          /*layer.msg("支付失败", {
-           shift : 6
-           });*/
-        var form1 = document.createElement("form");
-        form1.name = "formSubmitForm1";
-        document.body.appendChild(form1);
-        form1.method = "POST";
-        form1.action = SERVER_BASE_URL+"/mobile.html#/index";
-        form1.submit();
-        return true;
+      } else {
+        curThis.$toast("支付失败");
       }
-
+      return true;
     });
+    if (typeof WeixinJSBridge == "undefined") {
+      if (document.addEventListener) {
+        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+      } else if (document.attachEvent) {
+        document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+      }
+    } else {
+      onBridgeReady();
+    }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less" type="text/less">
   .pay-group .payBtn.disabled {
     background: #e8e8e8;
     color: #999;
+  }
+
+  .right-box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    i {
+      position: absolute;
+      top: -3px;
+      right: 0;
+      color: #fff;
+    }
+  }
+
+  .check-right {
+    height: 50px;
+    width: 50px;
+    display: block;
+    position: absolute;
+    top: -25px;
+    right: -25px;
+    transform: rotate(45deg);
+  }
+
+  .invoice-type {
+    font-size: 12px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 2px 6px;
+
   }
 
   .warning {
@@ -642,7 +824,7 @@
   }
 
   .pay-group {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     height: 40px;
@@ -657,7 +839,7 @@
     .payBtn {
       float: right;
       height: 100%;
-      width: 88px;
+      width: 120px;
       text-align: center;
       line-height: 40px;
       font-size: 14px;
