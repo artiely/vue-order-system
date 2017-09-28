@@ -7,53 +7,53 @@
         </mt-header>
         <scroller class="page-content" style="background:#fafafa;">
           <div class="shadow-box">
-            <div class="titlebox">{{$t('message.Order_status')}}</div>
-            <swiper :options="swiperOption" ref="mySwiper">
+            <div class="titlebox yellowbg">{{$t('message.Order_status')}}</div>
+            <swiper :options="swiperOption" ref="mySwiper" class="step-box">
               <!-- slides -->
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 0 ? true : false}">
+                <div class="item"  :class="status >= 0 ?'fw1':'fw0'">
                   <i class="iconfont icon-marketing_fill"></i><br>
                   {{$t('message.Accept')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 1 ? true : false}">
+                <div class="item" :class="status >= 1 ?'fw1':'fw0'">
                   <i class="iconfont icon-time_fill"></i><br>
                   {{$t('message.Depart')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 2 ? true : false}">
+                <div class="item" :class="status >= 2 ?'fw1':'fw0'">
                   <i class="iconfont icon-emoji_fill"></i><br>
                   {{$t('message.Arrive')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 3 ? true : false}">
+                <div class="item" :class="status >= 3 ?'fw1':'fw0'">
                   <i class="iconfont icon-brush_fill"></i><br>
                   {{$t('message.Sign')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 4 ? true : false}">
+                <div class="item" :class="status >= 4 ?'fw1':'fw0'">
                   <i class="iconfont icon-financial_fill"></i><br>
                   {{$t('message.Confirm_price')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 5 ? true : false}">
+                <div class="item" :class="status >= 5 ?'fw1':'fw0'">
                   <i class="iconfont icon-coupons_fill"></i><br>
                   {{$t('message.Invoice')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 6 ? true : false}">
+                <div class="item" :class="status >= 6 ?'fw1':'fw0'">
                   <i class="iconfont icon-transaction_fill"></i><br>
                   {{$t('message.Payment')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="{'fw1':status >= 7 ? true : false}">
+                <div class="item" :class="status >= 7 ?'fw1':'fw0'">
                   <i class="iconfont icon-task_fill"></i><br>
                   {{$t('message.Complete')}}
                 </div>
@@ -61,11 +61,11 @@
             </swiper>
           </div>
           <div class="shadow-box">
-            <div class="titlebox">{{$t('message.Service_detail')}}</div>
+            <div class="titlebox yellowbg">{{$t('message.Service_detail')}}</div>
             <div v-for="(item,index) in detailData.callDetails" :key="index">
               <table v-for="(subitem,i) in item " :key="i" class="callDetails" style="width: 100%">
                 <tr>
-                  <td colspan="2">{{subitem.serviceName}}  <span class="label"
+                  <td colspan="2">{{subitem.serviceName}}  <span class="label greenbg"
                                                                  v-if="subitem.price">{{subitem.price}} <span
                     v-if="detailData.workFlow.serviceType">({{detailData.workFlow.serviceType}})</span></span>
                   </td>
@@ -106,7 +106,7 @@
             </div>
           </div>
           <div class="shadow-box">
-            <div class="titlebox">{{$t('message.Engineer_information')}}</div>
+            <div class="titlebox yellowbg">{{$t('message.Engineer_information')}}</div>
             <table v-for="(item,key) in detailData.engineers" :key="key">
               <tr>
                 <td rowspan="3">
@@ -124,7 +124,7 @@
               <tr>
                 <td>{{$t('message.Service_years')}}：</td>
                 <td><span class="null" v-if="!item.entrytime">{{$t('message.No_found')}}</span>
-                  <div v-if="item.entrytime" v-cutTime="item.entrytime">{{item.entrytime}}</div>
+                  <div v-if="item.entrytime" >{{item.entrytime}}</div>
                 </td>
               </tr>
               <tr>
@@ -507,7 +507,22 @@
     }
   }
 </script>
-<style scoped>
+<style scoped lang="less">
+  .step-box{
+    item{
+      position: relative;
+      overflow: hidden;
+    }
+    .item:after{
+      overflow: hidden;
+      content: '';
+      position: absolute;
+      top:10px;
+      left: 0;
+      height:1px;
+      width: 110%;
+    }
+  }
   .orderdetail {
     font-size: 12px !important
   }
@@ -543,7 +558,6 @@
 
   .titlebox {
     padding: 8px;
-    background: #fff;
     display: block;
     width: 100%;
     position: relative;
@@ -563,15 +577,13 @@
   }
 
   span.label {
-    color: #fff;
-    background: #1ab394;
     border-radius: 10px;
     font-size: 13px;
     padding: 2px 4px;
   }
 
   .shadow-box {
-    width: 90%;
+    width: 98%;
     margin: 10px auto;
     box-shadow: 0 0 0px rgba(0, 0, 0, .1);
     background: #fff;
@@ -594,14 +606,23 @@
 
   .fw0 {
     color: #666;
+    &:after{
+      border-bottom: 1px dashed #666;
+    }
   }
 
   .fw1 {
     color: #26a2ff;
+    &:after{
+      border-bottom: 1px dashed #26a2ff;
+    }
   }
 
   .fw2 {
     color: #f44336;
+    &:after{
+      border-bottom: 1px dashed #f44336;
+    }
   }
 
   #oidbtn {
@@ -614,7 +635,7 @@
   }
 
   .content {
-    width: 90%;
+    width: 98%;
     margin: 10px auto;
     box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
     text-align: left;

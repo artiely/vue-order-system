@@ -90,7 +90,8 @@
         });
       },
       toPay(oid){
-       this.$router.push({name:'pay',params:{oid:oid}})
+        this.$store.commit('SET_ORDER_NUMBER', oid)
+        this.$router.push({name:'pay',params:{oid:oid}})
       },
       showReservationTime(){
         var html = "";

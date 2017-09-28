@@ -19,7 +19,7 @@
     data () {
       return {
         state: '',
-        payResult : this.$route.query
+        payResult : {}
       }
     },
     filters : {
@@ -28,7 +28,7 @@
       }
     },
     activated(){
-
+      this.payResult = this.$route.query
     }
   }
 </script>
