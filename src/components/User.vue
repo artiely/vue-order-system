@@ -55,7 +55,7 @@
           <i class="iconfont icon-coupons"></i>
         </div>
         <div class="right-des">
-          我的优惠券
+          {{$t('message.Coupon')}}
         </div>
         <div class="right-icon">
           <i class="iconfont icon-enter"></i>
@@ -114,12 +114,7 @@
       <div style="height: 100px;"></div>
 
     </scroller>
-    <!--<mt-popup v-model="settingVisible" position="left" style="width: 200px;height: 100%;text-align: left">-->
-    <!--<mt-cell :title="$t('message.Personal_information')" is-link @click.native="showUserInfo"></mt-cell>-->
-    <!--<mt-button type="danger" @click="loginOut" size="large"-->
-    <!--style="width: 100%;margin: 0 auto;position: absolute;bottom: 10px;">{{$t('message.Logout')}}-->
-    <!--</mt-button>-->
-    <!--</mt-popup>-->
+
     <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left"
               v-if="customerNotificationList.length>0">
       <scroller>

@@ -166,6 +166,13 @@
         <div v-if="disabled" class="warning"><i
           class="iconfont icon-prompt_fill"></i>{{$t('message.invoice_information_incomplete')}}
         </div>
+        <div class="cell" @click="showCoupons" v-if="couponsList.length>0&&isCharge!=1">
+          <div class="title">
+            使用优惠券
+            <span class="value" v-if="couponId!=''">已为您优惠{{choiceCoupon[0].amount}}元</span>
+            <i class="iconfont icon-enter"></i>
+          </div>
+        </div>
       </div>
       <div style="height: 100px"></div>
     </scroller>
@@ -190,7 +197,6 @@
         <div>
           <div style="height: 40px;"></div>
           <label class="zf-cell">
-
             <input type="radio" name="invoice" v-model="invoice.invoiceType" value="0">
             {{$t('message.Without_the_invoice')}} <i class="iconfont icon-right" v-if="invoice.invoiceType=='0'"></i>
           </label>
@@ -239,14 +245,6 @@
                 :on-infinite="onInfinite"
                 :refreshText="$t('message.Pull_to_refresh')"
                 :noDataText="$t('message.No_more_data')">
-        <!--<label v-for="item in couponsList" class="card "-->
-        <!--style="background:#fff;text-align: left;padding: 6px;margin-bottom: 2px;position:relative;display: block">-->
-        <!--<input type="radio" name="payType" v-model="couponId" :value="item.id" style="display: none">-->
-        <!--<p style="font-size: 14px">金额：{{item.amount}}</p>-->
-        <!--<p style="font-size: 10px">有效期至：{{item.expStartDate}}</p>-->
-        <!--<i v-show="couponId===item.id" class="iconfont icon-right"-->
-        <!--style="position: absolute;top: 0;right: 0;font-size: 24px"></i>-->
-        <!--</label>-->
         <label v-for="item in couponsList" class="coupons-item redbg "
                style=";text-align: left;padding: 6px;margin-bottom: 2px">
           <div class="dot-line left">
@@ -310,9 +308,8 @@
     </mt-popup>
     <!--历史开票/-->
     <form id="rppaysubmit" name="rppaysubmit" :action="payFormData.actionUrl" :method="payFormData.submitMethod">
-      <input type="text" :name="key" :value="val" v-for="(val, key) in payFormData.formItemMap"/>
+      <input type="hidden" :name="key" :value="val" v-for="(val, key) in payFormData.formItemMap"/>
     </form>
-
   </div>
 </template>
 <script>
@@ -338,7 +335,7 @@
         couponId: '',
         choiceCoupon: '',
         isCharge: '',
-        orderNo: '',
+        orderNo: '', // 订单号oid
         invoice: {
           invoiceType: 0, // 发票类型  0 1 2  无票 普票 增票
           partAName: '', // 发票抬头
@@ -398,6 +395,16 @@
           }
         },
         deep: true
+      },
+      couponId: {
+        handler(val){
+          this.choiceCoupon = this.couponsList.filter(item => {
+            if (item.id == val) {
+              return item
+            }
+          })
+          this.orderPrice = this.orderPrice - this.choiceCoupon[0].amount < 0 ? 0 : this.orderPrice - this.choiceCoupon[0].amount
+        }
       }
     },
     computed: {
@@ -418,20 +425,19 @@
       },
       setInvoice() {
         this.invoiceVisible = true
+        this.initInvoiceData()
       },
       payType() {},
       getList(){
-        let oid = this.$route.params.oid;
-        if (oid) {
-          this.$store.commit('SET_ORDER_NUMBER', oid)
-        } else {
-          let _oid = sessionStorage.getItem('oid')
-          this.$store.commit('SET_ORDER_NUMBER', _oid)
+        let _oid = this.$route.params.oid;
+        if (!_oid) {
+          _oid = sessionStorage.getItem('oid')
+        }
+        this.orderNo = _oid
+        let data = {
+          ordernumber: _oid
         }
 
-        let data = {
-          ordernumber: this.oid
-        }
         this.$api.get_call_detail(data).then(res => {
           if (res.code === ERR_OK) {
             this.callDetails = res.callDetails;
@@ -447,12 +453,10 @@
         })
       },
       Pay() {
-//        window.location.href='http://www.baidu.com'
-//        return
         let data = {
           payWayCode: this.payWayCode,
           orderPrice: this.orderPrice,
-          orderNo: this.oid,
+          orderNo: this.orderNo,
           productName: this.productName
         }
         if (this.isCharge == 1) {
@@ -461,8 +465,12 @@
           data.isCharge = 1;
         }
         let openId = window.localStorage.getItem("openId");
+
         let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {})
-        if (this.disabled || !this.orderPrice) {return} // 有价格并且发票信息完整
+
+        if ((this.orderPrice <= 0 || this.disabled)&& this.couponId=='') {
+          return
+        }// 没有价格或者发票信息完整并且优惠券为空
 
         let isInnerWeixin = isWeixnBrowser();
 
@@ -470,6 +478,7 @@
           text: '正在打开支付端,请稍后...',
           spinnerType: 'fading-circle'
         });
+
         this.$api.post_pay_ment(postData).then(res => {
           Indicator.close();
           if (res.code != 0) {
@@ -492,11 +501,10 @@
             setTimeout(() => {
               if (data.payWayCode == 'ALIPAY' && isInnerWeixin) {
                 var queryParam = '';
-                var curForm = document.forms[document.forms.length - 1];
-                Array.prototype.slice.call(curForm.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
-                  queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
-                });
-                var gotoUrl = curForm.getAttribute('action') + '?' + queryParam;
+                for (let k in curThis.payFormData.formItemMap) {
+                  queryParam += k + "=" + encodeURIComponent(curThis.payFormData.formItemMap[k]) + '&';
+                }
+                var gotoUrl = curThis.payFormData.actionUrl + '?' + queryParam;
                 if (typeof _AP != 'function') {
                   gatAlipayInWeixin();
                 }
@@ -534,7 +542,6 @@
       },
       showInvoiceHistory(){
         this.invoiceHistoryVisible = true
-        this.initInvoiceData()
       },
       checkHistory(item){
         this.invoice = Object.assign({}, this.invoice, item)
@@ -574,7 +581,9 @@
     activated() {
       if (!this.$router.isBack) {
         this.isCharge = GetQueryString("isCharge");
-        if (!this.isCharge) {
+        if (this.isCharge) {
+          this.orderNo = "Advc" + new Date().getTime();
+        } else {
           this.getList()
         }
         this.params.page = 1
@@ -585,10 +594,6 @@
 
     },
     mounted() {
-      this.isCharge = GetQueryString("isCharge");
-      if (this.isCharge) {
-        this.orderNo = "Advc" + new Date().getTime();
-      }
     }
   }
   function dateFtt (fmt, date) {
@@ -614,11 +619,12 @@
       // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
       if (res2.err_msg == "get_brand_wcpay_request:ok") {
         let backPath = curThis.isCharge ? "/balance" : "/order";
+        let od = curThis.orderNo || curThis.oid;
         curThis.$router.replace({
           path: '/payok',
           query: {
             orderPrice: curThis.orderPrice,
-            orderNo: (curThis.oid || curThis.orderNo),
+            orderNo: od,
             orderTime: dateFtt("yyyy年MM月dd日 hh:mm:ss", new Date()),
             backPath: backPath
           }

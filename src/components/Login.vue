@@ -8,14 +8,14 @@
             <div class="errorMeg" v-if="error">{{errorMsg}}</div>
             <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model="username">
             <input type="password" :placeholder="$t('message.Account_password')" v-model="password">
-            <button id="login-button" @click="login">{{$t('message.Login')}}</button>
+            <button id="login-button" @click="login" style="border-radius: 0">{{$t('message.Login')}}</button>
           </div>
-          <div style="height: 10px;width: 100%"></div>
+          <div style="height: 30px;width: 100%"></div>
           <div class="footer-btn clearfix"><span @click="back" class="pull-left"
                                                  style="padding-right: 50px"> {{$t('message.Back')}}</span> <span
             class="pull-right" style="padding-left: 50px" @click="toRegister">{{$t('message.signup')}}</span></div>
-          <div style="text-align: left;width: 250px;margin:0 auto ;padding: 20px 0">
-            <select style="padding: 4px;outline: none;background:rgba(255,255,255,.9);" v-model="lang">
+          <div style="text-align: left;width: 100%;margin:0 auto ;padding: 20px 0">
+            <select style="padding: 8px;outline: none;background:rgba(255,255,255,.9);border: none;" v-model="lang">
               <option value="EN">English</option>
               <option value="CN">中文简体</option>
               <option value="TN">中文繁体</option>
@@ -142,7 +142,7 @@
 </script>
 <style scoped lang="less" rel="stylesheet/less" type="text/less">
   .footer-btn {
-    width: 250px;
+    width: 100%;
     margin: 0 auto;
     color: #fff;
     font-weight: 600;
@@ -183,7 +183,7 @@
   }
 
   .container {
-    max-width: 600px;
+    max-width: 90%;
     margin: 0 auto;
     padding: 40px 0;
     height: 400px;
@@ -214,9 +214,9 @@
     border: none;
     border-bottom: 2px solid rgba(255, 255, 255, 0.4);
     background-color: rgba(255, 255, 255, 0.2);
-    width: 250px;
+    width: 100%;
     border-radius: 0;
-    padding: 4px 15px;
+    padding: 8px 15px;
     margin: 0 auto 10px auto;
     display: block;
     text-align: center;
@@ -244,10 +244,10 @@
     outline: 0;
     background-color: white;
     border: 0;
-    padding: 4px 15px;
+    padding: 8px 15px;
     color: #26a2ff;
     border-radius: 3px;
-    width: 250px;
+    width:100%;
     cursor: pointer;
     font-size: 18px;
     transition-duration: 0.25s;
