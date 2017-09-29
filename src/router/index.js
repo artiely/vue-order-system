@@ -4,6 +4,8 @@ import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Index from '@/components/Index'
 import Shop from '@/components/Shop'
+import Order from '@/components/Order'
+import User from '@/components/User'
 import store from '.././store/index'
 import i18n from '@/i18n'
 import {Toast} from 'mint-ui'
@@ -28,20 +30,20 @@ if (window.sessionStorage.getItem('person')) {
   store.commit('PERSON_INFO', window.sessionStorage.getItem('person'))
 }
 
-const Order = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
-  require(['@/components/Order'], (component) => {
-    resolve(component)
-    instance.close();
-  })
-}
-const User = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
-  require(['@/components/User'], (component) => {
-    resolve(component)
-    instance.close();
-  })
-}
+// const Order = resolve => {
+//   let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+//   require(['@/components/Order'], (component) => {
+//     resolve(component)
+//     instance.close();
+//   })
+// }
+// const User = resolve => {
+//   let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+//   require(['@/components/User'], (component) => {
+//     resolve(component)
+//     instance.close();
+//   })
+// }
 const Ma = resolve => {
   let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
   require(['@/components/Ma'], (component) => {

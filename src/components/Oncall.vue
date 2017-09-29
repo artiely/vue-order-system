@@ -612,6 +612,9 @@
       if (this.promotionIndex == 4) {
         this.popupVisibleTime = !this.popupVisibleTime
       }
+      this.$nextTick(()=>{
+        this.promotionIndex=2
+      })
     },
     activated(){
       this._checkAccountType(() => {

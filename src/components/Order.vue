@@ -111,7 +111,6 @@
     data() {
       return {
         orderinfo: [],
-        isCompany:true,
         totalPage: 1,
         popupVisible: false, //筛选的
         activeIndex: [0, 1, 2, 3, 4, 5, 7, 6], //选中的 //    :class="{'active':index==query.orderStateId-1}"
@@ -230,6 +229,9 @@
         }else{
           return 'CN'
         }
+      },
+      isCompany(){
+        return this.$store.state.userInfo.isCompany
       }
     },
     methods: {
@@ -415,21 +417,6 @@
             break;
         }
       },
-      checkAccountType(){
-        // 检查账号类型，是个人还是企业
-        this.$api.CHECK_ACCOUNT_TYPE().then(res => {
-          if (res.code == 0) {
-            if (res.state == 2) {
-              this.isCompany = true
-            } else {
-              this.isCompany = false
-            }
-          }else{
-            alert(`获取账号类型出错`+JSON.stringify(res))
-          }
-        })
-      },
-
       setScrollerPosition() { //设置滚动条位置
         let y = sessionStorage.getItem('scrollTop');
         if (!y) {
@@ -444,8 +431,7 @@
       this.getdata()
     },
     activated(){
-      console.log("当前语言order",this.$store.state.userInfo.lang)
-      this.checkAccountType()
+      this.$store.dispatch('isCompany_action')
     },
 
     mounted() {

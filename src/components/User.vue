@@ -157,11 +157,11 @@
         userInfo: {},
         switchVisible: false,
         accountList: [],
-        isCompany:true
       }
     },
     computed: mapState({
       state: state => state.userInfo,
+      isCompany:state=>state.userInfo.isCompany
     }),
     methods: {
       goBalance(){
@@ -274,20 +274,6 @@
           }
         }).catch(err => console.error(err))
       },
-      checkAccountType(){
-        // 检查账号类型，是个人还是企业
-        this.$api.CHECK_ACCOUNT_TYPE().then(res => {
-          if (res.code == 0) {
-            if (res.state == 2) {
-              this.isCompany = true
-            } else {
-              this.isCompany = false
-            }
-          }else{
-            alert(`获取账号类型出错`+JSON.stringify(res))
-          }
-        })
-      }
     },
     created(){
 
@@ -296,7 +282,7 @@
       this.getCustomerNotification()
       this.getIds()
       this.getAccountList()
-      this.checkAccountType()
+      this.$store.dispatch('isCompany_action')
     },
     mounted(){
 
