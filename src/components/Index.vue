@@ -20,6 +20,9 @@
           <div style="color: #9e9e9e;margin: 10px auto ;width: 90%;border-radius: 10px;padding:4px 6px;background:#fff">
             <p>{{$t('message.title')}}</p>
           </div>
+          <p style="font-size: 12px;color: #999">网站名称：Fwone.com <br>
+                审核通过时间：2013-11-13<br>
+            备案/许可证编号：京ICP备11003662号</p>
         </div>
       </div>
     </scroller>

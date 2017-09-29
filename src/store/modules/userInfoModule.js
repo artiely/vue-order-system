@@ -1,7 +1,7 @@
 //vuex状态管理
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import Cookies from 'js-cookie'
+import api from '../../api/api.js'
 Vue.use(Vuex)
 
 const state = {//状态
@@ -9,7 +9,8 @@ const state = {//状态
   personId: '',
   lang: '',
   accountState: '',
-  isCompany: true
+  accountInfo:'',
+  isCompany: true // 判断当前用户是个人还是公司
 }
 
 const mutations = {//状态只能通过此改变
@@ -17,20 +18,14 @@ const mutations = {//状态只能通过此改变
     state.token = payload.userId
     if (payload.personId) {
       state.personId = payload.personId
-      // sessionStorage.personId = payload.personId;
       sessionStorage.setItem('personId', payload.personId)
-      // Cookies.set('personId', payload.personId)
     }
-    // sessionStorage.token = payload.userId;
     sessionStorage.setItem('token', payload.userId)
-    // Cookies.set('token', payload.userId)
   },
   ['LOGOUT'](state){
     state.token = null
     sessionStorage.removeItem('token')
-    // Cookies.remove('token')
     sessionStorage.removeItem('personId')
-    // Cookies.remove('personId')
   },
   ['SET_LANG'](state, payload){
     state.lang = payload
@@ -40,12 +35,48 @@ const mutations = {//状态只能通过此改变
   },
   ['IS_COMPANY'](state, payload){
     state.isCompany = payload
-  }
+  },
+  ['SET_ACCOUNT_INFO'](state, payload){
+    state.accountInfo = payload
+  },
 }
 const actions = {
   login: ({commit}, payload) => {
     commit('LOGIN', payload)
   },
+  /**
+   * 判断当前的账号类型，state==2 为公司 ==1为个人
+   * @param commit
+   * @param payload
+   */
+  isCompany_action:({commit},payload)=>{
+    api.CHECK_ACCOUNT_TYPE().then(res=>{
+      if(res.code==ERR_OK){
+        if(res.state==2){
+          commit('IS_COMPANY',true)
+        }else{
+          commit('IS_COMPANY',false)
+        }
+      }else{
+        alert('获取账号类型错误',JSON.stringify(res))
+      }
+    })
+  },
+  /**
+   * 获取当前账号的信息
+   * @param commit
+   * @param payload
+   */
+  getAccountInfo:({commit,state},payload)=>{
+    api.get_person_info({personId: state.personId}).then(res => {
+      if (res.code == ERR_OK) {
+        commit('SET_ACCOUNT_INFO',res.person)
+      }else{
+        alert('获取账号信息错误',JSON.stringify(res))
+      }
+
+    })
+  }
   /**
    * 检查账号信息是否完整，是否在审核中 state=4 信息不完整 state=7 审核中 state=8 拒绝
    * @param commit

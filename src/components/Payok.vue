@@ -9,6 +9,8 @@
       <p class="t">订单号：{{payResult.orderNo}}</p>
       <p class="t">交易时间：{{payResult.orderTime}}</p>
       <router-link :to="{path:payResult.backPath}" replace>返回订单页</router-link>
+      <div style="height: 40px"></div>
+      <router-link to="/index" replace>返回首页</router-link>
     </div>
   </div>
 </template>
@@ -25,6 +27,11 @@
     filters : {
       formatMoney : function (value) {
         return Number(value).toFixed(2);
+      }
+    },
+    methods:{
+      toOrder(){
+        this.$router.push('/order')
       }
     },
     activated(){
@@ -110,7 +117,7 @@
     }
   }
   .t {
-    font-size: 10px;
+    font-size: 12px;
   }
   .info-box {
     background: #fff;

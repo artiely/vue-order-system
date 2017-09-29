@@ -15,7 +15,7 @@
                      style="padding: 8px 6px">
         <div class="addressBox" slot="title">
           <table>
-            <tr>
+            <tr v-if="isCompany">
               <td><span class="top-icon"><i class="iconfont icon-homepage_fill"></i></span></td>
               <td><span style="color: #3F536E;font-size: 16px;">{{item.companyName}}</span></td>
             </tr>
@@ -48,7 +48,7 @@
           </div>
         </mt-popup>
         <div>
-          <mt-field label="" :state="companyName.length>0?'success':'error'" v-model="companyName"
+          <mt-field label="" v-if="isCompany" :state="companyName.length>0?'success':'error'" v-model="companyName"
                     :placeholder="$t('message.Company')"></mt-field>
           <div @click="showAddress" class="cell-ad">{{ $t('message.Area')}}:{{ addressProvince }} {{ addressCity }} {{addressXian}}</div>
         </div>
@@ -120,6 +120,14 @@
         serviceAddress: [],
         noStreet: true,
         showEditAddress: false
+      }
+    },
+    computed: {
+      isCompany(){
+        return this.$store.state.userInfo.isCompany
+      },
+      accountInfo(){
+        return this.$store.state.userInfo.accountInfo
       }
     },
     methods: {
@@ -200,6 +208,12 @@
           operationType: 1,
           shortName: _this.companyName
         };
+        /**
+         * 如果是个人账号提交的公司名为用户名
+         */
+        if (!this.isCompany) {
+          data.companyname = this.accountInfo.personName
+        }
 
         this.$api.save_service_address(data).then(res => {
           if (res.code == ERR_OK) {
@@ -209,10 +223,7 @@
           } else {
             alert(res.msg)
           }
-        }).catch(err => {
-          console.error(err);
         })
-
       },
       /**
        * 删除服务点地址
@@ -234,8 +245,6 @@
               } else {
                 this.$toast(res.msg);
               }
-            }).catch(err => {
-              console.error(err)
             })
           }
         })
@@ -255,10 +264,11 @@
       }
     },
     created(){
-//      this.getServiceAddress()
     },
     activated(){
       this.getServiceAddress()
+      this.$store.dispatch('isCompany_action')
+      this.$store.dispatch('getAccountInfo')
     },
     mounted(){
     }

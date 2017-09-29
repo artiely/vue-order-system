@@ -4,7 +4,7 @@
     <tr class="item-header">
       <td colspan="3">
         <div class="flex-box">
-          <div class="company-tit" >{{item.companyname}}</div>
+          <div class="company-tit" v-if="isCompany">{{item.companyname}}</div>
           <!-- payway 等于1 并且是在支付状态下的单就显示支付按钮 -->
           <div v-if="item.payway==1 && orderStateId==6" class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}</div>
         </div>
@@ -43,7 +43,6 @@
         <span style="color: #888;font-size: 11px" class="textover3" v-for="desc in item.description" v-if="item.description.length>0">{{desc.faultDescription}} </span>
         </div></td>
     </tr>
-    </tbody>
     <tr class="item-body nopadding item-header">
       <td colspan="3" class="text-left" style="font-size: 10px;padding:9px 5px 7px 5px"> {{item.repairpersonname}} <span class="text-gray">报修于</span> {{item.reporttime}}<span class="yh pull-right" @click="showReservationTime">预约时间</span></td>
     </tr>
@@ -62,6 +61,11 @@
     },
     data() {
       return {}
+    },
+    computed:{
+      isCompany(){
+        return this.$store.state.userInfo.isCompany
+      }
     },
     methods: {
       goDetail(item) {

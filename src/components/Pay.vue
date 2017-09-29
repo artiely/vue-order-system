@@ -326,7 +326,8 @@
         disabled: false, // 发票信息不全控制
         callDetails: [],
         productName: '',
-        orderPrice: 1000,
+        orderPrice: 1000,// 最后的价格
+        originalPrice: 0,
         invoiceVisible: false,
         invoiceHistoryVisible: false,
         invoiceList: [],
@@ -447,6 +448,7 @@
             }
             this.productName = res.callDetails[0][0].serviceName;
             this.orderPrice = sum;
+            this.originalPrice = sum;// 原始的订单价格
           } else {
             alert(res.msg)
           }
@@ -455,7 +457,7 @@
       Pay() {
         let data = {
           payWayCode: this.payWayCode,
-          orderPrice: this.orderPrice,
+          orderPrice: this.originalPrice, // 默认提交不减优惠券的价格 呵呵
           orderNo: this.orderNo,
           productName: this.productName
         }
@@ -463,12 +465,14 @@
           data.orderNo = this.orderNo;
           data.productName = '群思科技有限公司预付款充值';
           data.isCharge = 1;
+          data.orderPrice = this.orderPrice;
         }
+
         let openId = window.localStorage.getItem("openId");
 
         let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {})
 
-        if ((this.orderPrice <= 0 || this.disabled)&& this.couponId=='') {
+        if ((this.orderPrice <= 0 || this.disabled) && this.couponId == '') {
           return
         }// 没有价格或者发票信息完整并且优惠券为空
 
@@ -486,18 +490,22 @@
             return
           }
           let curThis = this;
+          let backPath = curThis.isCharge ? "/balance" : "/order";
           if (data.payWayCode == 'WEIXIN') {
             if (isInnerWeixin) {
               onBridgeReady(res, curThis);
             } else {
-              window.location.href = res.data + "?resultData=" + curThis.orderPrice + "_" + data.orderNo;
+              window.location.href = res.data + "?resultData=" + data.orderPrice + "_" + data.orderNo + '_' + backPath;
               return false;
             }
           }
           if (data.payWayCode == 'ADVPAY') {
-            window.location.href = SERVER_BASE_URL + "/" + res.data;
+            let _data = JSON.parse(res.data)
+            _data.backPath = backPath
+            window.location.href = SERVER_BASE_URL + "/" + JSON.stringify(_data);
           } else {
             curThis.payFormData = JSON.parse(res.data);
+            curThis.payFormData.formItemMap.backPath = curThis.isCharge ? "/balance" : "/order";
             setTimeout(() => {
               if (data.payWayCode == 'ALIPAY' && isInnerWeixin) {
                 var queryParam = '';
@@ -579,18 +587,14 @@
     created(){
     },
     activated() {
-      if (!this.$router.isBack) {
-        this.isCharge = GetQueryString("isCharge");
-        if (this.isCharge) {
-          this.orderNo = "Advc" + new Date().getTime();
-        } else {
-          this.getList()
-        }
-        this.params.page = 1
-        this.getCouponsList()
+      this.isCharge = GetQueryString("isCharge");
+      if (this.isCharge) {
+        this.orderNo = "Advc" + new Date().getTime();
       } else {
-//        this.$router.go(0)
+        this.getList()
       }
+      this.params.page = 1
+      this.getCouponsList()
 
     },
     mounted() {
@@ -613,6 +617,7 @@
         fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
   }
+
   function onBridgeReady (json, curThis) {
     let paramJson = JSON.parse(json.data);
     WeixinJSBridge.invoke('getBrandWCPayRequest', paramJson, function (res2) {
