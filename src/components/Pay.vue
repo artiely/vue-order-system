@@ -333,7 +333,7 @@
         invoiceList: [],
         couponVisible: false,
         couponsList: [],
-        couponId: '',
+        couponId: '', // 优惠券id
         choiceCoupon: '',
         isCharge: '',
         orderNo: '', // 订单号oid
@@ -455,6 +455,10 @@
         })
       },
       Pay() {
+        if ((this.orderPrice <= 0 || this.disabled) && this.couponId == '') {
+          return
+        }// 没有价格或者发票信息完整并且优惠券为空
+
         let data = {
           payWayCode: this.payWayCode,
           orderPrice: this.originalPrice, // 默认提交不减优惠券的价格 呵呵
@@ -470,12 +474,7 @@
 
         let openId = window.localStorage.getItem("openId");
 
-        let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {})
-
-        if ((this.orderPrice <= 0 || this.disabled) && this.couponId == '') {
-          return
-        }// 没有价格或者发票信息完整并且优惠券为空
-
+        let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {}, this.couponId ? {couponId : this.couponId} : {})
         let isInnerWeixin = isWeixnBrowser();
 
         Indicator.open({
@@ -491,21 +490,17 @@
           }
           let curThis = this;
           let backPath = curThis.isCharge ? "/balance" : "/order";
-          if (data.payWayCode == 'WEIXIN') {
+          if (data.payWayCode == 'ADVPAY' || this.orderPrice === 0) {
+              window.location.href = SERVER_BASE_URL + "/" + res.data;
+          } else if (data.payWayCode == 'WEIXIN') {
             if (isInnerWeixin) {
               onBridgeReady(res, curThis);
             } else {
               window.location.href = res.data + "?resultData=" + data.orderPrice + "_" + data.orderNo + '_' + backPath;
-              return false;
             }
-          }
-          if (data.payWayCode == 'ADVPAY') {
-            let _data = JSON.parse(res.data)
-            _data.backPath = backPath
-            window.location.href = SERVER_BASE_URL + "/" + JSON.stringify(_data);
           } else {
             curThis.payFormData = JSON.parse(res.data);
-            curThis.payFormData.formItemMap.backPath = curThis.isCharge ? "/balance" : "/order";
+            curThis.payFormData.formItemMap.backPath = backPath;
             setTimeout(() => {
               if (data.payWayCode == 'ALIPAY' && isInnerWeixin) {
                 var queryParam = '';
@@ -595,6 +590,11 @@
       }
       this.params.page = 1
       this.getCouponsList()
+      // 清除历史
+      this.invoiceType = 0
+      this.couponId = ''
+      this.payWayCode = 'ALIPAY'
+      this.orderPrice=1000
 
     },
     mounted() {
