@@ -111,7 +111,8 @@
               <tr>
                 <td rowspan="3">
                   <div class="en-icon" style="line-height: 100px;">
-                    <span v-if="">{{$t('message.No_found')}}</span>
+                    <img :src="'../uploading/'+item.photoPath" alt="" style="width: 100%;object-fit: cover">
+                    <span v-if="!item.photoPath">{{$t('message.No_found')}}</span>
                   </div>
                 </td>
                 <td>{{$t('message.Name')}}：</td>
