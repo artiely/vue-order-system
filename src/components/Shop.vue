@@ -102,6 +102,7 @@
     display: flex;
     .btn-text{
       flex: 1;
+      padding-left: 60px;
     }
     .btn-icon{
       width: 60px;

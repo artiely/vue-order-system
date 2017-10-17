@@ -56,9 +56,16 @@
 
         <mt-field type="textarea" :placeholder="$t('message.Detailed_address')" id="" cols="4" rows="3"
                   v-model="desMore"></mt-field>
-        <mt-button size="large" type="danger" class="redbg" style="width:95%;margin: 20px auto;border-radius: 22px"
-                   :disabled="desMore.length<3" @click="saveAddress">{{$t('message.Save')}}
+        <!--公司-->
+        <mt-button v-if="isCompany" size="large" type="danger" class="redbg" style="width:95%;margin: 20px auto;border-radius: 22px"
+                   :disabled="desMore.length<2||companyName.length==0" @click="saveAddress">{{$t('message.Save')}}
         </mt-button>
+        <!--公司/-->
+        <!--个人-->
+        <mt-button v-else size="large" type="danger" class="redbg" style="width:95%;margin: 20px auto;border-radius: 22px"
+                   :disabled="desMore.length<2" @click="saveAddress">{{$t('message.Save')}}
+        </mt-button>
+        <!--个人/-->
       </div>
     </mt-popup>
     <div class="addAddressBtn " @click="showAddM">{{ $t('message.Add')}}</div>

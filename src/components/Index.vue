@@ -124,10 +124,10 @@
         name: '中文简体',
         method: this.CNFN
       },
-//        {
-//          name: '中文繁体',
-//          method: this.TNFN
-//        }
+        {
+          name: '中文繁体',
+          method: this.TNFN
+        }
       ];
       let lang = window.localStorage.getItem('lang');
       if (lang) {

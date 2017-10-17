@@ -246,7 +246,7 @@
                 :refreshText="$t('message.Pull_to_refresh')"
                 :noDataText="$t('message.No_more_data')">
         <label v-for="item in couponsList" class="coupons-item redbg "
-               style=";text-align: left;padding: 6px;margin-bottom: 2px">
+               style=";text-align: left;padding: 6px;margin-bottom: 2px" @click.prevent="couponHandler(item)">
           <div class="dot-line left">
             <div v-for="i in 10" class="o-o"></div>
           </div>
@@ -404,7 +404,12 @@
               return item
             }
           })
-          this.orderPrice = this.orderPrice - this.choiceCoupon[0].amount < 0 ? 0 : this.orderPrice - this.choiceCoupon[0].amount
+          if (val === '') {
+            this.orderPrice = this.originalPrice
+          } else {
+            this.orderPrice = this.originalPrice - this.choiceCoupon[0].amount < 0 ? 0 : this.originalPrice - this.choiceCoupon[0].amount
+          }
+
         }
       }
     },
@@ -473,8 +478,8 @@
         }
 
         let openId = window.localStorage.getItem("openId");
-
-        let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {}, this.couponId ? {couponId : this.couponId} : {})
+        this.invoice.invoiceTitle = this.invoice.partAName;
+        let postData = Object.assign({}, data, this.invoice, openId ? {openId: openId} : {}, this.couponId ? {couponId: this.couponId} : {})
         let isInnerWeixin = isWeixnBrowser();
 
         Indicator.open({
@@ -491,7 +496,7 @@
           let curThis = this;
           let backPath = curThis.isCharge ? "/balance" : "/order";
           if (data.payWayCode == 'ADVPAY' || this.orderPrice === 0) {
-              window.location.href = SERVER_BASE_URL + "/" + res.data;
+            window.location.href = SERVER_BASE_URL + "/" + res.data;
           } else if (data.payWayCode == 'WEIXIN') {
             if (isInnerWeixin) {
               onBridgeReady(res, curThis);
@@ -524,6 +529,16 @@
       },
       hideCoupons() {
         this.couponVisible = false
+      },
+      couponHandler(item){
+        console.log(item)
+        if (this.couponId == item.id) {
+          this.couponId = ''
+//          this.orderPrice = this.orderPrice + item.amount
+        } else {
+          this.couponId = item.id
+//          this.orderPrice = this.orderPrice - item.amount < 0 ? 0 : this.orderPrice - item.amount
+        }
       },
       getCouponsList(cb){
         this.$api.COUPON(this.params).then(res => {
@@ -594,7 +609,7 @@
       this.invoiceType = 0
       this.couponId = ''
       this.payWayCode = 'ALIPAY'
-      this.orderPrice=1000
+      this.orderPrice = 1000
 
     },
     mounted() {

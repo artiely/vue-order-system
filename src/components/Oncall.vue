@@ -3,7 +3,7 @@
     <mt-header :title="$t('message.Timely_assistance')" fixed>
       <mt-button icon="back" @click.native='back()' slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
-    <div class="page-content">
+    <div class="page-content" style="overflow: hidden;">
       <mt-badge type="error" v-if="noBindMobile">您还未绑定手机号，下单后我们将无法联系您,
         <router-link style="color: #fff" to="info?edit=1">前去绑定!</router-link>
       </mt-badge>
@@ -75,7 +75,7 @@
           </mt-cell>
           <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
             <tr v-for="(item,index) in timeMap" :key="index" :index="index" class="timeItem" v-if="timeMap.length>0">
-              <td>{{item.date}}</td>
+              <td><span >{{item.date}}</span></td>
               <td><span class="label">{{item.weekday}}</span></td>
               <td @click="selectTime(index)">{{item.sTime}}</td>
               <td @click="selectTime(index)">{{item.eTime}}</td>
@@ -92,7 +92,7 @@
       </div>
       <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 200px;font-size: 14px">
         <div style="height: 30px;"></div>
-        <table style="width: 100%" border="0" cellspacing="0" cellpadding="0" v-if="timeMap.length>0">
+        <table style="width: 100%" border="0" cellspacing="0" cellpadding="0" v-if="timeMap.length>0&&selectIndex>=0">
           <tr class="timeItem">
             <td>{{timeMap[selectIndex].date}}</td>
             <td><span class="label">{{timeMap[selectIndex].weekday}}</span></td>
@@ -114,7 +114,7 @@
           :tooltipStyle="rangeTimeOption.tooltipStyle"></vue-slider>
 
       </mt-popup>
-      <mt-cell :title="$t('message.Price_curve')" v-if="addressObj.id!=null">
+      <mt-cell :title="$t('message.Price_curve')" v-if="addressObj.id&&addressObj.address">
         <mt-switch v-model="popupVisiblechart"></mt-switch>
       </mt-cell>
       <div v-if="popupVisiblechart">
@@ -129,7 +129,7 @@
 
     <div class="footerBar">
       <div class="b_btn">
-        <mt-button class="an_order" @click="anOrder" type="danger" :disabled="addressObj.id==null || faultDesc==''">
+        <mt-button class="an_order" @click="anOrder" type="danger" :disabled="addressObj.id==null || faultDesc==''||timeMap==''">
           {{$t('message.Confirm')}}
         </mt-button>
       </div>
@@ -164,14 +164,14 @@
         endTime: '18:00',//最迟上门日期
         startDate: moment().format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
-        timeMap: [{
+        timeMap: [/*{
           'date': moment().format('YYYY-MM-DD'),
-          'sTime': '08:00',
-          's': 8 * 60,
+          'sTime': moment().format('HH:mm'),
+          's':moment().format('HH:mm').split(':')[0]*60+Number(moment().format('HH:mm').split(':')[1]),
           'eTime': '18:00',
           'e': 18 * 60,
           'weekday': this.$t('message.Today')
-        }],//上门时间列表
+        }*/],//上门时间列表
         showOther: false,//是否显示其他可选日期
         selectIndex: 0,
         selectRangeValue: [8 * 60, 18 * 60],//选择后修改时间 和下面的全局初始一样
@@ -209,7 +209,8 @@
         datepickerOption: {
           ok: this.$t('message.Ok'),
           cancel: this.$t('message.Cancel')
-        }
+        },
+        timer: ''
       }
     },
     watch: {
@@ -303,6 +304,27 @@
           }
         }
       },
+      'timeMap': {
+        handler(){
+          if (this.popupVisiblechart == true) {
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+              this.getPriceLine()
+            }, 500)
+
+          }
+        },
+        deep: true
+      },
+      'addressObj': {
+        handler(){
+          if (this.popupVisiblechart == true) {
+//            this.popupVisiblechart=false
+            this.getPriceLine()
+          }
+        },
+        deep: true
+      },
       'selectRangeValue': {
         handler: function (val, oldVal) {
           this.timeMap[this.selectIndex].s = this.selectRangeValue[0]
@@ -317,6 +339,8 @@
 
           this.timeMap[this.selectIndex].sTime = formatTime(this.selectRangeValue[0])
           this.timeMap[this.selectIndex].eTime = formatTime(this.selectRangeValue[1])
+          this.timeMap[this.selectIndex].date = this.timeMap[this.selectIndex].date
+
         }
       }
     },
@@ -340,8 +364,8 @@
               }
             }
             cb && cb()
-          }else{
-            alert(JSON.stringify(`获取服务点`,JSON.stringify(res)))
+          } else {
+            alert(JSON.stringify(`获取服务点`, JSON.stringify(res)))
           }
         })
       },
@@ -368,7 +392,11 @@
         }
       },
       deleteDate(index){
-        this.timeMap.splice(index, 1)
+        console.log(index,this.selectIndex)
+//        this.timeMap.splice(index, 1)  // 两种方法都可以
+        this.$delete(this.timeMap,index)
+        this.selectIndex=0 // selectIndex 初始化为0 因为删除后selectIndex对应的值已不存在会报错
+
         Toast(this.$t('message.Del_success'))
       },
       timeMapTable(){
@@ -376,20 +404,57 @@
         this.timeMap = []
         let _timeMap = this.splitDate()
         for (let i = 0; i < _timeMap[0].length; i++) {
-          this.timeMap.push({
-            'date': moment(_timeMap[0][i], 'YYYY-MM-DD').format('YYYY-MM-DD'),
-            'sTime': this.startTime,
-            's': this.rangeTimeOption.rangeTimeValue[0],
-            'eTime': this.endTime,
-            'e': this.rangeTimeOption.rangeTimeValue[1],
-            'weekday': _timeMap[1][i]
-          })
+          if(moment().format('YYYY-MM-DD') == moment(_timeMap[0][i]).format('YYYY-MM-DD')){
+            console.log("相等的")
+            let _sh=moment().format('HH:mm')
+            let _sa=_sh.split(':')
+            console.log(_sh,moment().format('HH:mm'),Number(_sa[0])*60+Number(_sa[1] ))
+            this.timeMap.push({
+              'date': moment(_timeMap[0][i], 'YYYY-MM-DD').format('YYYY-MM-DD'),
+              'sTime': _sh,
+              's':  Number(_sa[0])*60+Number(_sa[1] ),
+              'eTime': this.endTime,
+              'e': this.rangeTimeOption.rangeTimeValue[1],
+              'weekday': _timeMap[1][i]
+            })
+          }else{
+            console.log("不等的")
+            this.timeMap.push({
+              'date': moment(_timeMap[0][i], 'YYYY-MM-DD').format('YYYY-MM-DD'),
+              'sTime': this.startTime,
+              's': this.rangeTimeOption.rangeTimeValue[0],
+              'eTime': this.endTime,
+              'e': this.rangeTimeOption.rangeTimeValue[1],
+              'weekday': _timeMap[1][i]
+            })
+          }
         }
+        console.log('123',this.timeMap)
+
+//          if (moment().format('YYYY-MM-DD') == moment(_timeMap[0][0]).format('YYYY-MM-DD')) {
+//          let  zou = this.$t('message.Today')
+//            let _sh=moment().format('HH:mm').split(':')
+//            console.log(_sh)
+//            this.timeMap[0].sTime= moment().format('HH:mm')
+//            this.timeMap[0].s= Number(_sh[0])*60+Number(_sh[1] )
+//
+////            this.timeMap[0].sTime={
+////              'date': moment().format('YYYY-MM-DD'),
+////              'sTime': moment().format('HH:mm'),
+////              's':Number(_sh[0])*60+Number(_sh[1] ),
+////              'eTime': this.endTime,
+////              'e': this.rangeTimeOption.rangeTimeValue[1],
+////              'weekday':zou
+////            }
+//            console.log('123',this.timeMap)
+//          }
+
 //        this.getPriceLine()
       },
-      timeChanged(){ //全局的世界滑块
+      timeChanged(){ //全局的时间滑块
         let _timeMap = this.timeMap
         for (let i = 0; i < _timeMap.length; i++) {
+
           this.timeMap[i].sTime = this.startTime
 
           this.timeMap[i].eTime = this.endTime
@@ -438,6 +503,14 @@
           }
           if (moment().format('YYYY-MM-DD') == moment(d_arr[i]).format('YYYY-MM-DD')) {
             zou = this.$t('message.Today')
+//            this.timeMap[0]={
+//              'date': moment().format('YYYY-MM-DD'),
+//              'sTime': moment().format('HH:mm'),
+//              's': this.rangeTimeOption.rangeTimeValue[0],
+//              'eTime': this.endTime,
+//              'e': this.rangeTimeOption.rangeTimeValue[1],
+//              'weekday':zou
+//            }
           }
 //          if (moment().add(1, 'days').format('YYYY-MM-DD') == moment(d_arr[i]).format('YYYY-MM-DD')) {
 //            zou = '明天';
@@ -451,13 +524,17 @@
         /*这里先做一个数据处理 提交过去的时间是页面表上的全部时间*/
 
         var _upTable = []
-        for (let i = 0; i < _upTable.length; i++) {
+        /*[{oncallDate: "2017-10-13", oncallTimeFrom: "16:35", oncallTimeTo: "18:00", oncallWeek: "今天"},…]*/
+        for (let i = 0; i < _this.timeMap.length; i++) {
           _upTable.push({
-            reservationDate: _this.timeMap.date,
-            startTime: _this.timeMap.sTime,
-            endTime: _this.timeMap.eTime
+            oncallDate: _this.timeMap[i].date,
+            oncallTimeFrom: _this.timeMap[i].sTime,
+            oncallTimeTo: _this.timeMap[i].eTime,
+            oncallWeek: _this.timeMap[i].weekday
           })
         }
+        console.log(_upTable)
+        console.log(_this.timeMap)
         var data = {
           companyId: this.addressObj.id,//服务点ID  要等服务点列表加载成功后才有值，所以先让图表隐藏
           oncallDateFrom: this.startDate//开始日期 yyyy-MM-dd
@@ -470,11 +547,11 @@
 
         this.$api.get_price_line(data).then(res => {
           if (res.code == ERR_OK) {
-            if (!!res.oncallPriceList && res.oncallPriceList != null) {
+            if (res.oncallPriceList) {
+              this.showchart = true
               this.GMoption = res.oncallPriceList
               this.renderLine()
             } else {
-              priceList = [] // 无返回则为包月
               this.showchart = false
             }
           } else {
@@ -612,16 +689,17 @@
       if (this.promotionIndex == 4) {
         this.popupVisibleTime = !this.popupVisibleTime
       }
-      this.$nextTick(()=>{
-        this.promotionIndex=2
+      this.$nextTick(() => {
+        this.promotionIndex = 2
       })
     },
     activated(){
+//      this.timeMapTable()
       this._checkAccountType(() => {
         if (this.isCompany == false) {
           this._getEmployeeId()
         } else {
-          this.getCompanyList(()=>{
+          this.getCompanyList(() => {
             this._getUser()
           })
         }

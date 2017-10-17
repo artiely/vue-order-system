@@ -6,12 +6,23 @@
           <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
         </mt-header>
         <scroller class="page-content" style="background:#fafafa;">
+          <div class="shadow-box content">
+            <div style="padding: 8px">
+              <div> {{$t('message.NO')}}：<span id="oid">{{orderNum}}</span><span class="state-label"
+                                                                                 v-if="status==8">{{$t('message.Complete')}}
+
+              </span>
+                <div v-if="priceRemark" v-html="priceRemark">123</div>
+              </div>
+
+            </div>
+          </div>
           <div class="shadow-box">
             <div class="titlebox yellowbg">{{$t('message.Order_status')}}</div>
             <swiper :options="swiperOption" ref="mySwiper" class="step-box">
               <!-- slides -->
               <swiper-slide>
-                <div class="item"  :class="status >= 0 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 0 ?'fw1':'fw0'">
                   <i class="iconfont icon-marketing_fill"></i><br>
                   {{$t('message.Accept')}}
                 </div>
@@ -65,8 +76,9 @@
             <div v-for="(item,index) in detailData.callDetails" :key="index">
               <table v-for="(subitem,i) in item " :key="i" class="callDetails" style="width: 100%">
                 <tr>
-                  <td colspan="2">{{subitem.serviceName}}  <span class="label greenbg"
-                                                                 v-if="subitem.price">{{subitem.price}} <span
+                  <td colspan="2" style="width: 100%"><label>{{subitem.serviceName}}</label> <span class="label greenbg"
+                                                                                                   style="float: right"
+                                                                                                   v-if="subitem.price">{{subitem.price}} <span
                     v-if="detailData.workFlow.serviceType">({{detailData.workFlow.serviceType}})</span></span>
                   </td>
                 </tr>
@@ -125,7 +137,7 @@
               <tr>
                 <td>{{$t('message.Service_years')}}：</td>
                 <td><span class="null" v-if="!item.entrytime">{{$t('message.No_found')}}</span>
-                  <div v-if="item.entrytime" >{{item.entrytime}}</div>
+                  <div v-if="item.entrytime">{{item.entrytime}}</div>
                 </td>
               </tr>
               <tr>
@@ -159,15 +171,12 @@
               </tr>
             </table>
           </div>
-          <div class="content">
-            <div class="content-header">
-              <div> {{$t('message.NO')}}：<span id="oid">{{orderNum}}</span></div>
-            </div>
-          </div>
           <div style="height: 80px"></div>
         </scroller>
         <div class="footerBar">
-          <button size="small" class="footerBtn" v-if="status>=0 && status<2 && show_reminder" @click="reminder">{{$t('message.Reminder')}}</button>
+          <button size="small" class="footerBtn" v-if="status>=0 && status<2 && show_reminder" @click="reminder">
+            {{$t('message.Reminder')}}
+          </button>
           <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">
             {{$t('message.complaint')}}
           </button>
@@ -306,6 +315,7 @@
     data () {
       return {
         swiperOption: {
+          notNextTick: true,
           pagination: '.swiper-pagination',
           slidesPerView: 'auto',
           paginationClickable: true,
@@ -325,7 +335,7 @@
         subList: [],
         evaluate: '',
         complainTxt: '',
-        show_reminder:true,
+        show_reminder: true,
         reason: [
           {
             label: this.$t('message.Response_not_timely'),
@@ -362,10 +372,17 @@
             value: '3'
           }
         ],
-        departmentIds: ['3']
+        departmentIds: ['3'],
+        timeout: '',
+        priceRemark: ''
       }
     },
     watch: {
+      'status': {
+        handler(val){
+          this.$refs.mySwiper.swiper.slideTo(val > 4 ? 7 : 0)
+        }
+      },
       'ratingToService': {
         handler(val){
           this.ratingToAll = Math.ceil((val + this.ratingToEngineer) / 2)
@@ -407,6 +424,11 @@
       },
       getData() {
 
+      },
+      getPriceRemark(){
+        this.$api.GET_PRICE_REMARK({callId: this.state.callId.toString()}).then(res => {
+          this.priceRemark = res.remarkTrPrice
+        })
       },
       pingjia(id)  {
         this.callDetailId = id
@@ -465,9 +487,9 @@
           if (res.code == ERR_OK) {
             alert(res.msg)
             this.show_reminder = false
-            setTimeout(()=>{
+            this.timeout = setTimeout(() => {
               this.show_reminder = true
-            },10*60*1000)
+            }, 10 * 60 * 1000)
           } else {
             alert(res.msg)
           }
@@ -505,25 +527,32 @@
     },
     activated(){
       this.getSubOrder()
+      this.show_reminder = true
+      this.getPriceRemark()
+    },
+    deactivated(){
+      clearTimeout(this.timeout)
     }
+
   }
 </script>
 <style scoped lang="less">
-  .step-box{
-    item{
+  .step-box {
+    item {
       position: relative;
       overflow: hidden;
     }
-    .item:after{
+    .item:after {
       overflow: hidden;
       content: '';
       position: absolute;
-      top:10px;
+      top: 10px;
       left: 0;
-      height:1px;
+      height: 1px;
       width: 110%;
     }
   }
+
   .orderdetail {
     font-size: 12px !important
   }
@@ -607,21 +636,21 @@
 
   .fw0 {
     color: #666;
-    &:after{
+    &:after {
       border-bottom: 1px dashed #666;
     }
   }
 
   .fw1 {
     color: #26a2ff;
-    &:after{
+    &:after {
       border-bottom: 1px dashed #26a2ff;
     }
   }
 
   .fw2 {
     color: #f44336;
-    &:after{
+    &:after {
       border-bottom: 1px dashed #f44336;
     }
   }
@@ -681,6 +710,21 @@
     width: 20%;
     font-size: 14px;
     margin-right: 0;
+  }
+
+  .state-label {
+    margin-top: -2px;
+    float: right;
+    border: 2px solid #26a2ff;
+    color: #26a2ff;
+    border-radius: 2px;
+    font-weight: 700;
+    padding: 0 10px;
+    transform: rotate(10deg);
+  }
+
+  label {
+    font-weight: 700;
   }
 
 </style>

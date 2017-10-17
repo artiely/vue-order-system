@@ -35,7 +35,7 @@
                            labelFloat/>
             <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
                            labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" @input="checkPhone" v-model="form.phone"
+            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone"
                            :errorText="error.phone" labelFloat/>
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
@@ -72,7 +72,7 @@
                            labelFloat/>
             <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
                            labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone" @input="checkPhone"
+            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone"
                            :errorText="error.phone" labelFloat/>
             <div>
               <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
@@ -103,7 +103,7 @@
               :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
-            <mu-text-field :label="$t('message.Phone_number')" @input="checkPhone" @blur="checkPhone"
+            <mu-text-field :label="$t('message.Phone_number')"
                            v-model="form.phone" :errorText="error.phone" labelFloat/>
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
@@ -135,7 +135,7 @@
               :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
             </mt-radio>
 
-            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" @input="checkPhone"
+            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone"
                            :errorText="error.phone" labelFloat/>
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <div>
@@ -285,10 +285,11 @@
               this.error.mark = ''
             }
 
-            if (val.companyIdNum == '') {
-              this.error.companyIdNum = this.$t('message.Required_fields')
-              return
-            } else if (val.companyIdNum.toString().length !== 15 && val.companyIdNum.toString().length !== 18) {
+            /*if (val.companyIdNum == '') {
+             this.error.companyIdNum = this.$t('message.Required_fields')
+             return
+             } else */
+            if (val.companyIdNum !== '' && val.companyIdNum.toString().length !== 15 && val.companyIdNum.toString().length !== 18) {
               this.error.companyIdNum = this.$t('message.Incorrect_format')
               return
             } else {
@@ -462,8 +463,8 @@
               personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
               idCard: this.form.idCard,
               telephone: this.form.phone,
-              promotionTableName: GetQueryString('promotionTableName') || '',
-              promotionTableId: GetQueryString('promotionTableId') || '',
+              table_name: GetQueryString('table_name') || '',
+              table_id: GetQueryString('table_id') || '',
               email: GetQueryString('e') || '',
               code: this.form.code,
               source: GetQueryString('source') || ''
@@ -474,8 +475,8 @@
               personName: this.form.userName,
               personSex: this.form.sex,
               telephone: this.form.phone,
-              promotionTableName: GetQueryString('promotionTableName') || '',
-              promotionTableId: GetQueryString('promotionTableId') || '',
+              table_name: GetQueryString('table_name') || '',
+              table_id: GetQueryString('table_id') || '',
               email: GetQueryString('e') || '',
               code: this.form.code,
               source: GetQueryString('source') || ''
@@ -618,24 +619,24 @@
           }
         })
       },
-      checkPhone (val) { // 判断手机是否被注册
-        console.log("电话", val)
-        if (val.length < 10)return
-        this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
-//          console.log(res)
-          if (res.code === 0) {
-            if (res.state == '0') {
-              this.form.hasPhone = true
-              this.$set(this.form, this.form.x, this.form.x++)
-            } else {
-              this.form.hasPhone = false
-//              this.$set(this.form, this.form.x, this.form.x--)
-            }
-          } else {
-            alert(JSON.stringify(res))
-          }
-        })
-      },
+      /* checkPhone (val) { // 判断手机是否被注册
+       console.log("电话", val)
+       if (val.length < 10)return
+       this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
+       //          console.log(res)
+       if (res.code === 0) {
+       if (res.state == '0') {
+       this.form.hasPhone = true
+       this.$set(this.form, this.form.x, this.form.x++)
+       } else {
+       this.form.hasPhone = false
+       //              this.$set(this.form, this.form.x, this.form.x--)
+       }
+       } else {
+       alert(JSON.stringify(res))
+       }
+       })
+       },*/
     },
     created () {
 

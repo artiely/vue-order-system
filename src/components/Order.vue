@@ -10,14 +10,15 @@
         <swiper v-if="lang=='CN'"
                 :options="swiperOption"
                 ref="mySwiper"
-                style="height: 40px;padding-right: 45px"
+                style="height: 40px;padding-right: 70px"
                 class="CN_swiper"
         >
           <!-- slides -->
           <swiper-slide v-for="(item,index) in status" @click.native="dosearch(item)" :index="index" :key="index"
                         :class="{'active':item.orderStateId==query.orderStateId}">
             <span class="itemname">{{item.name}} </span>
-            <mt-badge size="small" type="error" v-show="item.count>0">{{item.count}}</mt-badge>
+            <mt-badge size="small" type="error" v-show="item.count>0" class="order-count">{{item.count}}</mt-badge>
+            <div style="width: 100px"></div>
           </swiper-slide>
         </swiper>
 
@@ -29,7 +30,7 @@
           <swiper-slide v-for="(item,index) in status" @click.native="dosearch(item)" :index="index" :key="index"
                         :class="{'active':item.orderStateId==query.orderStateId}">
             <span class="itemname">{{item.name}} </span>
-            <mt-badge size="small" type="error" v-show="item.count>0">{{item.count}}</mt-badge>
+            <mt-badge size="small" type="error" v-show="item.count>0" class="order-count">{{item.count}}</mt-badge>
           </swiper-slide>
         </swiper>
 
@@ -61,7 +62,7 @@
           </mt-radio>
         </div>
         <div class="">
-          <mt-button class="bt-margin" :class="{'active':rangeDateActive==item.id}" v-for="(item,index) in rangeDate"
+          <mt-button class="bt-margin date-range-btn" :class="{'active':rangeDateActive==item.id}" v-for="(item,index) in rangeDate"
                      size="small" type="primary" @click.native="choiceRangeDate(item)" :key="index">{{item.text}}
           </mt-button>
         </div>
@@ -93,8 +94,8 @@
         <div style="height: 60px;width: 100%"></div>
       </scroller>
       <div class="b_btn" @click="hiddenPop">
-        <div style="width: 40%;float: left;background: #eee" @click="resetQuery">{{$t('message.Reset')}}</div>
-        <div style="width: 60%;float:right;background: #ea5a49;color: #fff" @click="getdata">{{$t('message.Done')}}</div>
+        <div style="width: 50%;float: left;background: #eee" @click="resetQuery">{{$t('message.Reset')}}</div>
+        <div style="width: 50%;float:right;background: #ea5a49;color: #fff" @click="getdata">{{$t('message.Done')}}</div>
       </div>
     </mt-popup>
   </div>
@@ -524,6 +525,7 @@
     z-index: 99;
     width: 100px;
     display: inline-block;
+    padding: 0 10px
   }
 
   .my-title {
@@ -553,14 +555,17 @@
   .swiper-slide .itemname {
     line-height: 40px;
   }
+  .order-count{
+    position:absolute;margin: 5px 0 0 -5px;
+  }
+  .date-range-btn{
+    border: 1px solid lightgrey;
+    background: white;
+    color: lightgrey;
+  }
+  .mint-button.active{
+    border: 1px solid #26a2ff;
+    background: #26a2ff;
+    color: white!important;
+  }
 </style>
-/style>
-
-}
-</
-
-style
-
->
-/
-style >

@@ -95,7 +95,7 @@
       form: {
         handler(val){
           if (this.selected == '1') {
-            let re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+            let re = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
             if (val.email == '') {
               this.error.email = '必填项'
               return
@@ -211,7 +211,7 @@
             this._postInfoByMobile()
           }
         } else {
-          alert('请完善信息')
+          alert('请检查填写是否完整或有误')
         }
       },
       getMsgCode () {
@@ -244,10 +244,17 @@
       _postInfo () {
         let url = window.location.href
         if (window.location.search === '') {
-          url = window.location.href
+          var href = window.location.href.replace('&amp;','&')
+          var index = href.indexOf('?')
+          if(index!=-1){
+            url = href.substring(0,index)
+          }else{
+            url = window.location.href
+          }
         } else {
-          url = url.split(window.location.search)[0]
+          url = url.split(window.location.search)[0];
         }
+        console.log('url',url)
         url = url.replace('register', 'type')
         let data = {
           email: this.form.email,
@@ -267,7 +274,9 @@
         let data = {
           telephone: this.form.phone,
           code: this.form.code,
-          password: this.form.pwd
+          password: this.form.pwd,
+          table_name: GetQueryString('table_name') || '',
+          table_id: GetQueryString('table_id') || '',
         }
         this.$api.REGISTER_BY_MOBILE(data).then(res => {
           if (res.code === 0) {
