@@ -721,6 +721,17 @@ const AUTO_COM_INVOICE = params => {
   })
 }
 
+/**
+ * 价格说明 callId 目合同id
+ * */
+const GET_PRICE_REMARK = params => {
+  return fetch({
+    url: '/Tr/getPriceRemark',
+    method: 'get',
+    params: params
+  })
+}
+
 
 const apiList = {
   login,
@@ -777,7 +788,8 @@ const apiList = {
   GET_PERSON_ACCOUNT_USER,
   COUPON,
   UN_COUPON,
-  AUTO_COM_INVOICE
+  AUTO_COM_INVOICE,
+  GET_PRICE_REMARK
 }
 
 export default apiList

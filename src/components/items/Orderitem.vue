@@ -11,7 +11,7 @@
       </td>
     </tr>
     <tr class="item-body">
-      <td rowspan="4" width="70" class="text-center" style="border-right: 1px solid #eee;">
+      <td rowspan="4" width="65" class="text-center" style="border-right: 1px dashed #eee;color:#26a2ff;font-size: 12px">
         <span v-if="item.busniesstypeid==5"><i class="iconfont icon-coordinates_fill"></i><br>{{$t('message.On_site')}} </span>
         <span v-if="item.busniesstypeid==2"><i
           class="iconfont icon-computer_fill"></i><br>{{$t('message.Remote_desktop')}} </span>
@@ -19,7 +19,7 @@
           class="iconfont icon-customerservice_fill"></i><br>{{$t('message.Telephone')}} </span>
       </td>
       <td class="text-left" ><span v-if="item.description.length!=0">{{item.description[0].yh}} </span></td>
-      <td rowspan="4" width="20">
+      <td rowspan="4" width="15">
         <a v-if="item.orderstateid>0" @click="goDetail(item)" class="text-center orderBtn"
         >
           <!--{{$t('message.Detail')}}-->
@@ -116,8 +116,8 @@
     float: right;
     background: #ffbd17;
     color: #fff;
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: 1px 5px 1px 1px;
+    border-radius: 2px;
     margin-top: -4px;
   }
   .company-tit{
@@ -126,7 +126,6 @@
     overflow: hidden;white-space: nowrap;text-overflow: ellipsis;
   }
   .orderBtn {
-    padding: 10px;
     display: block;
     color: #26a2ff;
   }
@@ -201,5 +200,15 @@
   .item-body.nopadding td {
     padding: 0 5px;
     padding-right: 0;
+  }
+  .text-gray{
+    color:lightgrey;
+  }
+  .yh{
+    border:1px solid lightgrey;
+    border-radius: 3px;
+    padding:2px 3px 1px 1px;
+    color:lightgrey;
+    font-size:8px!important;
   }
 </style>
