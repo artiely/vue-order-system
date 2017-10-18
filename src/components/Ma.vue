@@ -353,7 +353,7 @@
         }
         this.$api.save_price_Ma(newData).then(res => {
           if (res.code == ERR_OK) {
-            Toast(this.$t('message.Checkout_success'));
+            alert(this.$t('message.Checkout_success'));
             this.trPriceList = []
           } else {
             alert(res.msg)
