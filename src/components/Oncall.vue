@@ -637,7 +637,7 @@
         }
         this.$api.save_price_oncall(data).then(res => {
           if (res.code == ERR_OK) {
-            Toast('预约成功')
+            alert('预约成功')
             this.faultDesc = '' // 清空描述让button disabled
           } else {
             alert(`预约` + res.msg)

@@ -519,7 +519,7 @@ const SAVE_USER_INFO = params => {
 }
 /**
  * 短信验证码
- * @param params
+ * @param params type 0 1 2 绑定 注册 重置
  */
 const GET_MSG_CODE = params => {
   return fetch({

@@ -219,7 +219,7 @@
         if (this.form.phone.length != 11)return
         let data = {
           telephone: this.form.phone,
-          type: 0
+          type: 1
         }
         let s = setInterval(() => {
           this.count--
