@@ -13,7 +13,7 @@
                            labelFloat/>
             <div class="help">{{$t('message.Company_name_help')}}</div>
             <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <div class="help">{{$t('message.Mark_help')}}</div>
+            <!--<div class="help">{{$t('message.Mark_help')}}</div>-->
             <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
                            :errorText="error.companyIdNum" labelFloat/>
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
@@ -27,7 +27,7 @@
                            labelFloat/>
             <div class="help">{{$t('message.Company_name_help')}}</div>
             <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <div class="help">{{$t('message.Mark_help')}}</div>
+            <!--<div class="help">{{$t('message.Mark_help')}}</div>-->
             <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
                            :errorText="error.companyIdNum" labelFloat/>
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
@@ -64,7 +64,7 @@
                            labelFloat/>
             <div class="help">{{$t('message.Company_name_help')}}</div>
             <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <div class="help">{{$t('message.Mark_help')}}</div>
+            <!--<div class="help">{{$t('message.Mark_help')}}</div>-->
             <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
                            :errorText="error.companyIdNum" labelFloat/>
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
@@ -442,6 +442,20 @@
         deep: true
       }
     },
+    beforeCreate () {
+      // 获取地址栏地址
+      let uri = window.location.href
+      console.log(uri)
+      if (uri.indexOf('&amp;') !== -1) {
+        uri = window.location.href.replace(/&amp;/g, '&')
+        window.location.href = uri
+      }
+      if (uri.indexOf('&;') !== -1) {
+        uri = window.location.href.replace(/&;/g, '&')
+        window.location.href = uri
+      }
+      console.log(uri)
+    },
     methods: {
       back(){
         this.$router.back()
@@ -527,6 +541,7 @@
           telephone: this.form.phone,
           type: 0
         }
+        this.count--
         let s = setInterval(() => {
           this.count--
           if (this.count == 0) {
