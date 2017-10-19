@@ -396,7 +396,6 @@
 //        this.timeMap.splice(index, 1)  // 两种方法都可以
         this.$delete(this.timeMap,index)
         this.selectIndex=0 // selectIndex 初始化为0 因为删除后selectIndex对应的值已不存在会报错
-
         Toast(this.$t('message.Del_success'))
       },
       timeMapTable(){

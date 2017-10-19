@@ -6,7 +6,7 @@
         <div class="flex-box">
           <div class="company-tit" v-if="isCompany">{{item.companyname}}</div>
           <!-- payway 等于1 并且是在支付状态下的单就显示支付按钮 -->
-          <div v-if="item.payway==1 && orderStateId==6" class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}</div>
+          <div v-if="item.payway==1 && orderStateId==6 && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30" class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}</div>
         </div>
       </td>
     </tr>

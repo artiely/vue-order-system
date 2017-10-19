@@ -8,10 +8,8 @@
         <scroller class="page-content" style="background:#fafafa;">
           <div class="shadow-box content">
             <div style="padding: 8px">
-              <div> {{$t('message.NO')}}：<span id="oid">{{orderNum}}</span><span class="state-label"
-                                                                                 v-if="status==8">{{$t('message.Complete')}}
-
-              </span>
+              <div> {{$t('message.NO')}}：<span id="oid">{{orderNum}}</span>
+                <span class="state-label" v-if="status==8">{{$t('message.Complete')}}</span>
                 <div v-if="priceRemark" v-html="priceRemark">123</div>
               </div>
 
@@ -177,7 +175,7 @@
           <button size="small" class="footerBtn" v-if="status>=0 && status<2 && show_reminder" @click="reminder">
             {{$t('message.Reminder')}}
           </button>
-          <button size="small" class="footerBtn" v-if="status>=3" @click="toushuVisible=!toushuVisible">
+          <button size="small" class="footerBtn" v-if="status<8 && status>=3" @click="toushuVisible=!toushuVisible">
             {{$t('message.complaint')}}
           </button>
           <!--<button size="small" class="footerBtn" v-if="status>=5">发票</button>-->

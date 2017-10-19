@@ -457,7 +457,7 @@ const messages = {
       'Msg_send': '短信已发出，请查收',
       'Validation_fails': '表单验证失败',
       'Company_name_help': '需与当地政府颁发的商业许可证或企业注册证上的企业名称完全一致',
-      'Mark': '标识',
+      'Mark': '英文简称',
       'Mark_help': '标识即为公司英文简称',
       'Company_id_num': '营业执照注册号',
       'Company_id_num_help': '请输入15位营业执照号或18位的统一社会信用代码',
