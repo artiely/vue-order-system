@@ -420,3 +420,36 @@ body {
     transform:rotate(360deg) translateZ(0) ;
   }
 }
+
+
+.mu-text-field{
+  margin-bottom: 0!important;
+  min-height: 0 !important;
+  overflow: hidden;
+  &.require:before{
+    content: '*';
+    position: absolute;
+    top:10px;
+    left: 3px;
+    color: #f44336;
+  }
+}
+#app .mu-text-field .mu-text-field-content{
+  padding-bottom: 1px!important;
+}
+
+.form-group__message {
+  font-size: 8px;
+  color: #ff4949;
+  display: block;
+}
+.countBtn{
+  display: inline-block;width: 30%;text-align: center;padding: 8px 0;background:#eee;float:right;
+}
+.account-btn {
+  width: 80%;
+  margin: 8px auto;
+  border-radius: 22px;
+  padding: 6px;
+  box-sizing: border-box;
+}

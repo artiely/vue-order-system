@@ -4,15 +4,17 @@
       <div class="wrapper">
         <div class="container">
           <div class="form" ref="form">
-            <h1 class="elegantshadow">Fwone</h1>
+            <div style="margin-bottom: 10px">
+              <img src="../.././statics/mobile/img/logo.png" alt="" width="50%">
+            </div>
             <div class="errorMeg" v-if="error">{{errorMsg}}</div>
             <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model="username">
             <input type="password" :placeholder="$t('message.Account_password')" v-model="password">
             <button id="login-button" @click="login" style="border-radius: 0">{{$t('message.Login')}}</button>
           </div>
           <div style="height: 30px;width: 100%"></div>
-          <div class="footer-btn clearfix"><span @click="back" class="pull-left"
-                                                 style="padding-right: 50px"> {{$t('message.Back')}}</span> <span
+          <div class="footer-btn clearfix"><span @click="forget_password" class="pull-left"
+                                                 style="padding-right: 50px"> {{$t('message.forget_password')}}</span> <span
             class="pull-right" style="padding-left: 50px" @click="toRegister">{{$t('message.signup')}}</span></div>
           <div style="text-align: left;width: 100%;margin:0 auto ;padding: 20px 0">
             <select style="padding: 8px;outline: none;background:rgba(255,255,255,.9);border: none;" v-model="lang">
@@ -126,6 +128,9 @@
       },
       toRegister () {
         this.$router.push('/register')
+      },
+      forget_password(){
+        this.$router.push('/f_password')
       }
     },
     mounted(){
@@ -155,7 +160,6 @@
   .errorMeg {
     background: rgba(254, 0, 13, 0.87);
     color: #fff;
-    width: 250px;
     margin: 10px auto;
     padding: 8px 0;
     border-radius: 0;

@@ -3,153 +3,131 @@
     <div class="page-content">
       <div class="wrapper" style="text-align: left;background:#fff;" v-if="token||state==4">
         <mt-navbar v-model="form.typeId">
-          <mt-tab-item id="2">{{$t('message.Company')}}</mt-tab-item>
           <mt-tab-item id="1">{{$t('message.Personage')}}</mt-tab-item>
+          <mt-tab-item id="2">{{$t('message.Company')}}</mt-tab-item>
         </mt-navbar>
-        <!--<div class="help">一个邮箱只能注册一种类型账号</div>-->
         <div v-if="form.typeId==2">
+
           <div v-if="isMobile">
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
-                           labelFloat/>
-            <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <!--<div class="help">{{$t('message.Mark_help')}}</div>-->
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
-                           :errorText="error.companyIdNum" labelFloat/>
-            <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
-                           labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
-                           labelFloat/>
+            <mu-text-field :hintText="$t('message.Company_name')" v-model="mobile2.company"
+                          class="require" />
+            <mu-text-field :hintText="$t('message.Mark')" class="require" v-model="mobile2.mark"  />
+            <mu-text-field :hintText="$t('message.Company_id_num')" v-model="mobile2.companyIdNum"
+                            />
+            <mu-text-field :hintText="$t('message.AdminName')" class="require" v-model="mobile2.personName"
+                           />
           </div>
+
           <div v-if="isWechat">
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
-                           labelFloat/>
-            <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <!--<div class="help">{{$t('message.Mark_help')}}</div>-->
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
-                           :errorText="error.companyIdNum" labelFloat/>
-            <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
-                           labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
-                           labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone"
-                           :errorText="error.phone" labelFloat/>
-            <div class="help">{{$t('message.cell-phone_help')}}</div>
+            <mu-text-field :hintText="$t('message.Company_name')" v-model="wechat2.company" class="require"
+                           />
+            <mu-text-field :hintText="$t('message.Mark')" v-model="wechat2.mark" class="require" />
+            <mu-text-field :hintText="$t('message.Company_id_num')" v-model="wechat2.companyIdNum"
+                            />
+            <mu-text-field :hintText="$t('message.AdminName')" v-model="wechat2.personName" class="require"
+                           />
+
+            <mu-text-field :hintText="$t('message.Admin_phone_num')" v-model="wechat2.phone" class="require"
+                            />
+
             <!--只有微信注册手机号才可以为登录账号-->
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+              <mu-text-field :hintText="$t('message.Msg_code')" v-model="wechat2.code" class="require"
                              style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
+              <span class="countBtn"
+                    @click="getMsgCode(wechat2.phone)" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
-                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+                    class="countBtn">
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
             <div>
-              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd"
-                             name="pwd" labelFloat
+              <mu-text-field :hintText="$t('message.Password')" v-model="wechat2.pwd" type="password"
+                             name="pwd" class="require"
                              fullWidth/>
-              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password"
-                             :errorText="error.pwd2" name="pwd2"
-                             labelFloat
+              <mu-text-field :hintText="$t('message.repeat_password')" v-model="wechat2.pwd2" type="password"
+                              name="pwd2" class="require"
+
                              fullWidth/>
             </div>
           </div>
           <div v-if="isEmail">
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
-                           labelFloat/>
-            <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
-            <!--<div class="help">{{$t('message.Mark_help')}}</div>-->
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
-                           :errorText="error.companyIdNum" labelFloat/>
-            <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
-                           labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
-                           labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone"
-                           :errorText="error.phone" labelFloat/>
+            <mu-text-field :hintText="$t('message.Company_name')" class="require" v-model="email2.company"
+                           />
+            <mu-text-field :hintText="$t('message.Mark')" class="require" v-model="email2.mark"  />
+            <mu-text-field :hintText="$t('message.Company_id_num')"  v-model="email2.companyIdNum"
+                           />
+            <mu-text-field :hintText="$t('message.AdminName')" class="require" v-model="email2.personName" />
+
+            <mu-text-field :hintText="$t('message.Admin_phone_num')" class="require" v-model="email2.phone"
+                          />
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
-                             style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
+              <mu-text-field :hintText="$t('message.Msg_code')" class="require" v-model="email2.code"  style="width: 60%"/>
+              <span class="countBtn"
+                    @click="getMsgCode(email2.phone)" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
-                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+                    class="countBtn">
+              {{count}}s {{$t('message.resend')}}
+            </span>
+            </div>
+          </div>
+        </div>
+        <!--*******************************************************************************************-->
+        <div v-if="form.typeId==1">
+          <div v-if="isMobile">
+            <mu-text-field :hintText="$t('message.Name')" class="require" v-model="mobile1.personName" />
+          </div>
+          <div v-if="isWechat">
+            <mu-text-field :hintText="$t('message.Name')" class="require" v-model="wechat1.personName" />
+            <mu-text-field :hintText="$t('message.Phone_number')"
+                           v-model="wechat1.phone" />
+            <!--只有微信注册手机号才可以为登录账号-->
+            <div>
+              <mu-text-field :hintText="$t('message.Msg_code')" v-model="wechat1.code" style="width: 60%"/>
+              <span class="countBtn"
+                    @click="getMsgCode(wechat1.phone)" v-if="count==60">{{$t('message.click')}}</span>
+              <span v-if="count!=60"
+                    class="countBtn">
+              {{count}}s {{$t('message.resend')}}
+            </span>
+            </div>
+            <div>
+              <mu-text-field :hintText="$t('message.Password')" class="require" v-model="wechat1.pwd" type="password" name="pwd"
+                             fullWidth/>
+              <mu-text-field :hintText="$t('message.repeat_password')" class="require" v-model="wechat1.pwd2" type="password"
+                            name="pwd2"
+
+                             fullWidth/>
+            </div>
+          </div>
+          <div v-if="isEmail">
+            <mu-text-field :hintText="$t('message.Name')" class="require" v-model="email1.personName" />
+
+            <mu-text-field :hintText="$t('message.Phone_number')"  v-model="email1.phone"
+                           />
+            <div>
+              <mu-text-field :hintText="$t('message.Msg_code')"  v-model="email1.code"  style="width: 60%"/>
+              <span class="countBtn"
+                    @click="getMsgCode(email1.phone)" v-if="count==60">{{$t('message.click')}}</span>
+              <span v-if="count!=60"
+                    class="countBtn">
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
           </div>
         </div>
         <div v-if="form.typeId==1">
-          <div v-if="isMobile">
-            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mt-radio
-              :title="$t('message.Gender')"
-              v-model="form.sex"
-              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
-            </mt-radio>
-          </div>
-          <div v-if="isWechat">
-            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mt-radio
-              :title="$t('message.Gender')"
-              v-model="form.sex"
-              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
-            </mt-radio>
-
-            <mu-text-field :label="$t('message.Phone_number')"
-                           v-model="form.phone" :errorText="error.phone" labelFloat/>
-            <div class="help">{{$t('message.cell-phone_help')}}</div>
-            <!--只有微信注册手机号才可以为登录账号-->
-            <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
-                             style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
-              <span v-if="count!=60"
-                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s {{$t('message.resend')}}
-            </span>
-            </div>
-            <div>
-              <mu-text-field :label="$t('message.Password')" v-model="form.pwd" type="password" :errorText="error.pwd"
-                             name="pwd" labelFloat
-                             fullWidth/>
-              <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password"
-                             :errorText="error.pwd2" name="pwd2"
-                             labelFloat
-                             fullWidth/>
-            </div>
-          </div>
-          <div v-if="isEmail">
-            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mt-radio
-              :title="$t('message.Gender')"
-              v-model="form.sex"
-              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
-            </mt-radio>
-
-            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone"
-                           :errorText="error.phone" labelFloat/>
-            <div class="help">{{$t('message.cell-phone_help')}}</div>
-            <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
-                             style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                    @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
-              <span v-if="count!=60"
-                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
-              {{count}}s {{$t('message.resend')}}
-            </span>
-            </div>
-          </div>
+          <span class="form-group__message" v-if="!$v.wechat1.pwd.minLength">密码长度不够.</span>
+          <span class="form-group__message" v-if="$v.wechat1.pwd.minLength&&!$v.wechat1.pwd2.sameAs">密码不一致.</span>
         </div>
+        <div v-if="form.typeId==2">
+          <span class="form-group__message" v-if="!$v.wechat2.companyIdNum.minLength||!$v.mobile2.companyIdNum.minLength||!$v.email2.companyIdNum.minLength">营业执照号格式不正确.</span>
+          <span class="form-group__message" v-if="!$v.wechat2.pwd.minLength">密码长度不够.</span>
+          <span class="form-group__message" v-if="$v.wechat2.pwd.minLength&&!$v.wechat2.pwd2.sameAs">密码不一致.</span>
+          <span class="form-group__message" v-if="!$v.mobile2.mark.alpha||!$v.wechat2.mark.alpha||!$v.email2.mark.alpha">英文简称只支持英文字母.</span>
+          <span class="form-group__message" v-if="!$v.email2.phone.minLength||!$v.email2.phone.maxLength||!$v.wechat2.phone.minLength||!$v.wechat2.phone.maxLength">手机号格式错误.</span>
+        </div>
+
         <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
       </div>
       <div style="padding: 20px" v-if="isEmail&&!token">
@@ -163,288 +141,163 @@
 </template>
 <script>
   import { GetQueryString } from '@/utils'
+  import { validationMixin } from 'vuelidate'
+  import { required, minLength, maxLength, sameAs, email,requiredUnless ,alpha}from 'vuelidate/lib/validators'
   export default {
     name: 'login',
     data () {
       return {
         form: {
-          typeId: '2', // 2 企业 1 个人
+          typeId: '1', // 2 企业 1 个人
+        },
+        mobile1:{
+          personName: '',
+        },
+        mobile2:{
           company: '',
           mark: '',
           companyIdNum: '', // 营业执照号
           userName: '',
-          idCard: '',
-          sex: '1',
+        },
+        email1:{
+          personName: '',
+          phone: '',
+          code: '',
+        },
+        email2:{
+          company: '',
+          mark: '',
+          companyIdNum: '', // 营业执照号
+          personName: '',
+          phone: '',
+          code: '',
+        },
+        wechat1:{
+          personName: '',
           phone: '',
           code: '',
           pwd: '',
           pwd2: '',
-          hasPhone: false, //判断手机是否被注册
-          x: 0
+        },
+        wechat2:{
+          company: '',
+          mark: '',
+          companyIdNum: '', // 营业执照号
+          personName: '',
+          phone: '',
+          code: '',
+          pwd: '',
+          pwd2: '',
         },
         state: '', // state=4 位信息不完善
         editData: {},
         count: 60,
         token: true,
-        fail: true,
         isEmail: false,
         isMobile: false, // 是否手机号登录
         isWechat: false, // 是否微信进入
       }
     },
-    computed: {
-      error(){
-        if (this.form.typeId == '2') {
-          if (this.isMobile) {
-            return {
-              company: '',
-              mark: '',
-              companyIdNum: '',
-              userName: '',
-              idCard: '',
-            }
-          } else if (this.isWechat) {
-            return {
-              company: '',
-              mark: '',
-              companyIdNum: '',
-              userName: '',
-              idCard: '',
-              pwd: '',
-              pwd2: ''
-            }
-          } else {
-            return {
-              company: '',
-              mark: '',
-              companyIdNum: '',
-              userName: '',
-              idCard: '',
-              phone: '',
-              code: ''
-            }
-          }
-        } else {
-          if (this.isMobile) {
-            return {
-              userName: '',
-            }
-          } else if (this.isWechat) {
-            return {
-              userName: '',
-//              phone: '',
-//              code: '',
-//              pwd: '',
-//              pwd2: ''
-            }
-          } else {
-            return {
-              userName: '',
-              phone: '',
-              code: ''
-            }
-          }
-        }
-      }
-    },
-    watch: {
-      'form.typeId': {
-        handler(){
-          this.error.company = '',
-            this.error.mark = '',
-            this.error.companyIdNum = '',
-            this.error.userName = '',
-            this.error.idCard = '',
-            this.error.pwd = '',
-            this.error.pwd2 = '',
-            this.error.phone = '',
-            this.error.code = ''
+    validations: {
+      mobile1: {
+        personName: {
+          required,
         },
-        deep: true
       },
-      form: {
-        handler(val){
-          if (this.form.typeId == '2') {
-            if (val.company == '') {
-//              this.error.company = this.$t('message.Required_fields')
-              this.$set(this.error, 'company', this.$t('message.Required_fields'))
-              console.log(this.error)
-              return
-            } else {
-              this.$set(this.error, 'company', '')
-//              this.error.company = ''
-            }
-            let re = /^[a-z]+$/i
-            if (val.mark == '') {
-              this.error.mark = this.$t('message.Required_fields')
-              return
-            } else if (!re.test(val.mark)) {
-              this.error.mark = this.$t('message.Letter_only')
-              return
-            } else {
-              this.error.mark = ''
-            }
-
-            /*if (val.companyIdNum == '') {
-             this.error.companyIdNum = this.$t('message.Required_fields')
-             return
-             } else */
-            if (val.companyIdNum !== '' && val.companyIdNum.toString().length !== 15 && val.companyIdNum.toString().length !== 18) {
-              this.error.companyIdNum = this.$t('message.Incorrect_format')
-              return
-            } else {
-              this.error.companyIdNum = ''
-            }
-            if (val.userName == '') {
-              this.error.userName = this.$t('message.Required_fields')
-              return
-            } else {
-              this.error.userName = ''
-            }
-            let re2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}\w{1}$/
-            if (val.idCard == '') {
-              this.error.idCard = this.$t('message.Required_fields')
-              return
-            } else if (!re2.test(val.idCard)) {
-              this.error.idCard = this.$t('message.Incorrect_format')
-              return
-            } else {
-              this.error.idCard = ''
-            }
-
-            if (!this.isMobile) { // 是手机注册或登录就不用再验证手机
-
-              let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-              if (val.phone == '') {
-                this.error.phone = this.$t('message.Required_fields')
-                return
-              } else if (!re3.test(val.phone)) {
-                this.error.phone = this.$t('message.Incorrect_format')
-                return
-              } else {
-                this.error.phone = ''
-              }
-
-              if (val.code == '') {
-                this.error.code = this.$t('message.Required_fields')
-                return
-              } else {
-                this.error.code = ''
-              }
-            }
-            if (this.isWechat) { // 是微信注册 得填写密码
-              if (val.pwd == '') {
-                this.error.pwd = this.$t('message.Required_fields')
-                return
-              } else if (val.pwd.length < 6) {
-                this.error.pwd = this.$t('message.Minimum_6')
-                return
-              } else {
-                this.error.pwd = ''
-              }
-              if (val.pwd2 == '') {
-                this.error.pwd2 = this.$t('message.Required_fields')
-                return
-              } else if (val.pwd2 != val.pwd) {
-                this.error.pwd2 = this.$t('message.Entered_differ')
-                return
-              } else {
-                this.error.pwd2 = ''
-              }
-            }
-          } else {
-            if (this.isMobile) {
-              if (val.userName == '') { // 手机
-                this.error.userName = this.$t('message.Required_fields')
-              } else {
-                this.error.userName = ''
-              }
-            } else if (this.isWechat) { // 微信验证规则
-              if (val.userName == '') {
-//                this.error.userName = ''
-                this.error.userName = '必填项'
-              } else {
-                this.error.userName = ''
-              }
-
-              if (val.phone != '') { // 手机号不为空再判断填写的对不对（微信注册不需要填写手机号）
-                let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-                if (val.phone == '') {
-                  this.error.phone = ''
-                  return
-                } else if (!re3.test(val.phone)) {
-                  this.error.phone = this.$t('message.Incorrect_format')
-                  return
-                } else {
-                  this.error.phone = ''
-                }
-                if (val.phone.length == 11 && val.code == '') {  // 以下填写了手机号才是必填项
-                  this.error.code = this.$t('message.Required_fields')
-                  return
-                } else {
-                  this.error.code = ''
-                }
-                if (val.phone.length == 11 && val.pwd == '') {
-                  this.error.pwd = this.$t('message.Required_fields')
-                  return
-                } else if (val.phone.length == 11 && val.pwd.length < 6) {
-                  this.error.pwd = this.$t('message.Minimum_6')
-                  return
-                } else {
-                  this.error.pwd = ''
-                }
-                if (val.phone.length == 11 && val.pwd2 == '') {
-                  this.error.pwd2 = this.$t('message.Required_fields')
-                  return
-                } else if (val.pwd2 != val.pwd) {
-                  this.error.pwd2 = this.$t('message.Entered_differ')
-                  return
-                } else {
-                  this.error.pwd2 = ''
-                }
-              }
-
-            } else { // 邮箱验证规则
-              if (val.userName == '') {
-                this.error.userName = this.$t('message.Required_fields')
-                return
-              } else {
-                this.error.userName = ''
-              }
-
-              let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-              if (val.phone == '') {
-                this.error.phone = this.$t('message.Required_fields')
-                return
-              } else if (!re3.test(val.phone)) {
-                this.error.phone = this.$t('message.Incorrect_format')
-                return
-              } else {
-                this.error.phone = ''
-              }
-
-              if (val.code == '') {
-                this.error.code = this.$t('message.Required_fields')
-                return
-              } else {
-                this.error.code = ''
-              }
-            }
-          }
-          Object.values(this.error).map(item => {
-            if (item === '') {
-              this.fail = false
-            } else {
-              this.fail = true
-            }
-          })
+      mobile2: {
+        company: {
+          required,
         },
-        deep: true
+        mark:{
+          required,
+          alpha
+        },
+        companyIdNum:{
+          minLength:minLength(15)
+        },
+        personName:{
+          required,
+        }
+      },
+      email1:{
+        personName: {
+          required,
+        },
+      },
+      email2:{
+        company: {
+          required,
+        },
+        mark:{
+          required,
+          alpha
+        },
+        companyIdNum:{
+          minLength:minLength(15)
+        },
+        personName:{
+          required,
+        },
+        phone:{
+          required,
+          minLength:minLength(11),
+          maxLength:maxLength(11),
+        },
+        code:{
+          required,
+        },
+
+      },
+      wechat1:{
+        personName: {
+          required,
+        },
+        pwd: {
+          required,
+          minLength: minLength(6),
+        },
+        pwd2: {
+          sameAs: sameAs('pwd'),
+        }
+      },
+      wechat2:{
+        company: {
+          required,
+        },
+        mark:{
+          required,
+          alpha
+        },
+        companyIdNum:{
+          minLength:minLength(15)
+        },
+        personName:{
+          required,
+        },
+        phone:{
+          required,
+          minLength:minLength(11),
+          maxLength:maxLength(11),
+        },
+        code:{
+          required,
+        },
+        pwd: {
+          required,
+          minLength: minLength(6),
+        },
+        pwd2: {
+          sameAs: sameAs('pwd'),
+        }
       }
     },
     beforeCreate () {
       // 获取地址栏地址
       let uri = window.location.href
+      console.log('未转码的uri',uri)
+      uri=decodeURIComponent(uri)
+      window.location.href = uri
+      console.log('转码的uri',uri)
       console.log(uri)
       if (uri.indexOf('&amp;') !== -1) {
         uri = window.location.href.replace(/&amp;/g, '&')
@@ -454,91 +307,172 @@
         uri = window.location.href.replace(/&;/g, '&')
         window.location.href = uri
       }
-      console.log(uri)
+      console.log('最后的',uri)
     },
     methods: {
       back(){
         this.$router.back()
       },
       handleSubmit () {
-        if (this.fail) {
-          alert('请完善信息')
-          return
-        } else {
+        if(this.isMobile){ // 移动端
+          if(this.form.typeId==1){ // 个人
+            if (!this.$v.mobile1.$invalid) {
+              let data={
+                account_type: this.form.typeId,
+                personName: this.mobile1.personName,
+                table_name: GetQueryString('table_name') || '',
+                table_id: GetQueryString('table_id') || '',
+                email: GetQueryString('e') || '',
+                source: GetQueryString('source') || 'telephone'
+              }
+              this._postData(data)
+            }else{
+              alert('请检查填写是否完整或有误')
+            }
+          }else{// 企业
+            if (!this.$v.mobile2.$invalid) {
+              let data={
+                account_type: this.form.typeId,
+                company_name: this.mobile2.company,
+                comp_eng_short_name: this.mobile2.mark,
+                business_license_number: this.mobile2.companyIdNum,
+                personName: this.mobile2.personName,
+                table_name: GetQueryString('table_name') || '',
+                table_id: GetQueryString('table_id') || '',
+                email: GetQueryString('e') || '',
+                source: GetQueryString('source') || 'telephone'
+              }
+              this._postData(data)
+            }else{
+              alert('请检查填写是否完整或有误')
+            }
+          }
 
-          let data
-          if (this.form.typeId == 2) {
-            data = {
-              account_type: this.form.typeId,
-              company_name: this.form.company,
-              comp_eng_short_name: this.form.mark,
-              business_license_number: this.form.companyIdNum,
-              personName: this.form.userName,
-              personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
-              idCard: this.form.idCard,
-              telephone: this.form.phone,
-              table_name: GetQueryString('table_name') || '',
-              table_id: GetQueryString('table_id') || '',
-              email: GetQueryString('e') || '',
-              code: this.form.code,
-              source: GetQueryString('source') || ''
-            }
-          } else {
-            data = {
-              account_type: this.form.typeId,
-              personName: this.form.userName,
-              personSex: this.form.sex,
-              telephone: this.form.phone,
-              table_name: GetQueryString('table_name') || '',
-              table_id: GetQueryString('table_id') || '',
-              email: GetQueryString('e') || '',
-              code: this.form.code,
-              source: GetQueryString('source') || ''
-            }
-          }
-          if (this.isMobile) { // 手机注册改变来源
-            data.source = 'telephone'
-          }
-          if (this.isWechat) { // 微信注册添加密码
-            data.password = this.form.pwd
-          }
-          if (this.form.typeId == '1') { // 个人的话性别按照用户选择赋值
-            data.personSex = this.form.sex
-          }
-          this.$api.POST_USER_INFO(data).then(res => {
-            this.loading = false
-            if (res.code === 0) {
-              if (res.state !== '1') { // 验证码不通过
-                alert(res.info)
-                return
+        }else if(this.isEmail){ // 邮箱
+            if(this.form.typeId==1){ // 个人
+              if(!this.$v.email1.$invalid){
+                if(this.email1.phone.length>0){
+                  if(this.email1.code.length==0){
+                    alert('请填写验证码')
+                    return
+                  }
+                }
+                let data={
+                  account_type: this.form.typeId,
+                  personName: this.email1.personName,
+                  table_name: GetQueryString('table_name') || '',
+                  table_id: GetQueryString('table_id') || '',
+                  email: GetQueryString('e') || '',
+                  source: GetQueryString('source') || '',
+                  telephone: this.email1.phone,
+                  code: this.email1.code,
+                }
+                this._postData(data)
+              }else{
+                alert('请检查填写是否完整或有误')
               }
-              let url = window.location.href
-              if (window.location.search === '') {
-                url = window.location.href
-              } else {
-                url = url.split(window.location.search)[0]
+            }else{
+              if(!this.$v.email2.$invalid){
+                let data = {
+                  account_type: this.form.typeId,
+                  company_name: this.email2.company,
+                  comp_eng_short_name: this.email2.mark,
+                  business_license_number: this.email2.companyIdNum,
+                  personName: this.email2.personName,
+                  telephone: this.email2.phone,
+                  table_name: GetQueryString('table_name') || '',
+                  table_id: GetQueryString('table_id') || '',
+                  email: GetQueryString('e') || '',
+                  code: this.email2.code,
+                  source: GetQueryString('source') || ''
+                }
+                this._postData(data)
+              }else{
+                alert('请检查填写是否完整或有误')
               }
-              if (this.isWechat) {
-                url = url.replace('type', 'index')
-                window.location.href = url
-              } else {
-                url = url.replace('type', 'login')
-                window.location.href = url
-              }
-            } else {
-              alert(JSON.stringify(res))
-            }
-          }).catch(err => {
-            this.loading = false
-            console.error('哎哟~！', err)
-          })
 
+            }
+        }else if(this.isWechat){
+            if(this.form.typeId==1){ // 个人
+              if(!this.$v.wechat1.$invalid){
+                if(this.wechat1.phone.length>0){
+                  if(this.wechat1.code.length==0){
+                    alert("请填写验证码")
+                    return
+                  }
+                }
+                let data={
+                  account_type: this.form.typeId,
+                  personName: this.wechat1.personName,
+                  table_name: GetQueryString('table_name') || '',
+                  table_id: GetQueryString('table_id') || '',
+                  email: GetQueryString('e') || '',
+                  source: GetQueryString('source') || '',
+                  telephone: this.wechat1.phone,
+                  code: this.wechat1.code,
+                  password:this.wechat1.pwd,
+                }
+                this._postData(data)
+              }else{
+                alert('请检查填写是否完整或有误')
+              }
+
+            }else{ // 企业
+              if(!this.$v.wechat2.$invalid){
+                let data = {
+                  account_type: this.form.typeId,
+                  company_name: this.wechat2.company,
+                  comp_eng_short_name: this.wechat2.mark,
+                  business_license_number: this.wechat2.companyIdNum,
+                  personName: this.wechat2.personName,
+                  telephone: this.wechat2.phone,
+                  table_name: GetQueryString('table_name') || '',
+                  table_id: GetQueryString('table_id') || '',
+                  email: GetQueryString('e') || '',
+                  code: this.wechat2.code,
+                  source: GetQueryString('source') || '',
+                  password:this.wechat2.pwd,
+                }
+                this._postData(data)
+              }else{
+                alert('请检查填写是否完整或有误')
+              }
+            }
         }
       },
-      getMsgCode () {
-        if (this.form.phone.length != 11)return
+      _postData(data){
+        this.$api.POST_USER_INFO(data).then(res => {
+          this.loading = false
+          if (res.code === 0) {
+            if (res.state !== '1') { // 验证码不通过
+              alert(res.info)
+              return
+            }
+            let url = window.location.href
+            if (window.location.search === '') {
+              url = window.location.href
+            } else {
+              url = url.split(window.location.search)[0]
+            }
+            if (this.isWechat) {
+              url = url.replace('type', 'index')
+              window.location.href = url
+            } else {
+              url = url.replace('type', 'login')
+              window.location.href = url
+            }
+          } else {
+            alert(JSON.stringify(res))
+          }
+        }).catch(err => {
+          this.loading = false
+          console.error('哎哟~！', err)
+        })
+      },
+      getMsgCode (val) {
+        if (val.length != 11)return
         let data = {
-          telephone: this.form.phone,
+          telephone: val,
           type: 0
         }
         this.count--
@@ -634,24 +568,6 @@
           }
         })
       },
-      /* checkPhone (val) { // 判断手机是否被注册
-       console.log("电话", val)
-       if (val.length < 10)return
-       this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
-       //          console.log(res)
-       if (res.code === 0) {
-       if (res.state == '0') {
-       this.form.hasPhone = true
-       this.$set(this.form, this.form.x, this.form.x++)
-       } else {
-       this.form.hasPhone = false
-       //              this.$set(this.form, this.form.x, this.form.x--)
-       }
-       } else {
-       alert(JSON.stringify(res))
-       }
-       })
-       },*/
     },
     created () {
 

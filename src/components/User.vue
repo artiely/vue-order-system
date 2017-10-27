@@ -152,7 +152,7 @@
         person: {},
         userId: 0,
         settingVisible: false,
-        customerNotificationList: [],
+//        customerNotificationList: [],
         notificationListVisible: false,
         userInfo: {},
         switchVisible: false,
@@ -161,7 +161,8 @@
     },
     computed: mapState({
       state: state => state.userInfo,
-      isCompany:state=>state.userInfo.isCompany
+      isCompany:state=>state.userInfo.isCompany,
+      customerNotificationList:state=>state.userInfo.customerNotificationList
     }),
     methods: {
       goBalance(){
@@ -188,7 +189,7 @@
       showUserInfo(){
         this.$router.push('/info?edit=1')
       },
-      getCustomerNotification () {
+      /*getCustomerNotification () {
         this.$api.get_notification_list().then(res => {
           if (res.code == ERR_OK) {
             this.customerNotificationList = res.customerNotificationList
@@ -196,7 +197,7 @@
             alert(`获取消息`+res.msg)
           }
         })
-      },
+      },*/
       showNotificationList(){
         this.notificationListVisible = !this.notificationListVisible
       },
@@ -217,7 +218,8 @@
         this.$api.read_notification({tableName: item.tableName, tableId: item.tableId}).then(res => {
           if (res.code == ERR_OK) {
             this.$toast('消息已读');
-            this.getCustomerNotification()
+//            this.getCustomerNotification()
+            this.$store.dispatch('getCustomerNotification')
           } else {
             alert(`消息`+res.msg)
           }
@@ -279,7 +281,8 @@
 
     },
     activated(){
-      this.getCustomerNotification()
+//      this.getCustomerNotification()
+      this.$store.dispatch('getCustomerNotification')
       this.getIds()
       this.getAccountList()
       this.$store.dispatch('isCompany_action')
@@ -295,13 +298,7 @@
   .user{
     height:100vh;
   }
-  .account-btn {
-    width: 80%;
-    margin: 8px auto;
-    border-radius: 22px;
-    padding: 6px;
-    box-sizing: border-box;
-  }
+
 
   .user-cell {
     display: flex;

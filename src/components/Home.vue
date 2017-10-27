@@ -19,6 +19,9 @@
         {{ $t('message.order')}}
       </mt-tab-item>
       <mt-tab-item id="4">
+        <mt-badge type="error" size="small" style="position: absolute;top:2px;right: 10px;font-size: 8px" v-if="customerNotificationList.length>0">
+          {{customerNotificationList.length > 99 ?'99' : customerNotificationList.length}}
+        </mt-badge>
         <i slot="icon" class="iconfont" :class="selected==4?'icon-people_fill':'icon-people'"></i> {{ $t('message.user')}}
       </mt-tab-item>
     </mt-tabbar>
@@ -26,14 +29,20 @@
 </template>
 
 <script>
+  import { Toast } from 'mint-ui';
+  import { mapState } from 'vuex';
   export default {
     name: 'home',
     data() {
       return {
         selected: '1',
-        transitionName: 'slide-right'
+        transitionName: 'slide-right',
+//        customerNotificationList:[]
       }
     },
+    computed: mapState({
+      customerNotificationList: state => state.userInfo.customerNotificationList
+    }),
 
     watch: {
       selected: function (val, oldVal) {
@@ -99,7 +108,6 @@
         }
       }
 
-
     },
 
     methods: {
@@ -125,22 +133,54 @@
             this.selected = '4';
             break;
         }
-      }
+      },
+      getMsg(){
+        this.$api.GET_MSG().then(r => {
+          if (r.code == 0) {
+            if (r.msg && r.msg.perm) {
+              Toast(r.msg.content);
+            } else {
+              Toast(r.msg.content);
+            }
+//            this.getCustomerNotification()
+            this.$store.dispatch('getCustomerNotification')
+          } else if (r.code == 600) {  //同一个账号最多能同时打开3浏览器窗口
+            alert("同一个账号最多能同时打开3浏览器窗口");
+            window.close();
+            return;
+          }
+          this.getMsg();
+        })
+      },
+      getCustomerNotification () {
+        this.$api.get_notification_list().then(res => {
+          if (res.code == ERR_OK) {
+            this.customerNotificationList = res.customerNotificationList
+          } else {
+            alert(`获取消息` + res.msg)
+          }
+        })
+      },
     },
     mounted() {
+      this.getMsg();
       this.selectPath()
       this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
         if (r.code == ERR_OK) {
           let userId = r.user.id;
-          let personId=r.user.personId;
-          this.$store.dispatch('login', {userId,personId});
-          console.log('userId',userId)
+          let personId = r.user.personId;
+          this.$store.dispatch('login', {userId, personId});
+          console.log('userId', userId)
           let redirect = decodeURIComponent(this.$route.query.redirect || '/');
         } else {
           this.error = true;
           this.errorMsg = '连接失败'
         }
       })
+    },
+    activated(){
+//      this.getCustomerNotification()
+      this.$store.dispatch('getCustomerNotification')
     }
   }
 </script>

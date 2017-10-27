@@ -166,6 +166,14 @@ const Coupons = resolve => {
   })
 }
 
+const Fpassword = resolve => {
+  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  require(['@/components/Fpassword'], (component) => {
+    resolve(component)
+    instance.close();
+  })
+}
+
 const routes = [{
   path: '/login',
   name: 'login',
@@ -292,6 +300,12 @@ const routes = [{
     name: 'Coupons',
     meta: {requiresAuth: false},
     component: Coupons
+  },
+  {
+    path: '/f_password',
+    name: 'f_password',
+    meta: {requiresAuth: false},
+    component: Fpassword
   }
 ]
 

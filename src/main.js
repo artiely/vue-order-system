@@ -16,6 +16,8 @@ import ButtonBar from './components/items/Btnbar.vue'
 import VueScroller from 'vue-scroller'
 import StarRating from 'vue-star-rating'
 import App from './App.vue'
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
 // import vConsole from 'vconsole'
 
 Vue.component('mu-date-picker', datePicker)

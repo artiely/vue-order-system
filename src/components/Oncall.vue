@@ -21,7 +21,7 @@
         <scroller>
           <div class="bluebg"
                style="padding: 8px;width: 80%;margin: 0 auto;border-radius: 20px;text-align: center;margin-top: 8px"
-               @click="goAddress">新增服务点
+               @click="goAddress">{{$t('message.New_service_address')}}
           </div>
           <mt-radio :title="$t('message.Location_list')" v-model="popupValue" :options='companyOptions'></mt-radio>
         </scroller>
@@ -64,7 +64,7 @@
                       :formatter="rangeTimeOption.formatter"
                       :tooltipStyle="rangeTimeOption.tooltipStyle"
           ></vue-slider>
-          <div style="height: 20px;"></div>
+          <div style="height: 20px;border-bottom: 1px solid #d9d9d9"></div>
         </div>
       </div>
       <!--服务时间选择组件e-->
@@ -75,7 +75,7 @@
           </mt-cell>
           <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
             <tr v-for="(item,index) in timeMap" :key="index" :index="index" class="timeItem" v-if="timeMap.length>0">
-              <td><span >{{item.date}}</span></td>
+              <td><span >&nbsp;&nbsp;{{item.date}}</span></td>
               <td><span class="label">{{item.weekday}}</span></td>
               <td @click="selectTime(index)">{{item.sTime}}</td>
               <td @click="selectTime(index)">{{item.eTime}}</td>
@@ -84,11 +84,21 @@
           </table>
         </div>
       </div>
+      <div style="margin-bottom: -1px">
+      <mt-cell class="my-cell title-box">
+        <span slot="title" class="title">{{$t('message.Fault_description')}}</span>
+      </mt-cell>
+      </div>
       <div class="wrapper-box">
-        <mt-cell class="my-cell title-box">
-          <span slot="title" class="title">{{$t('message.Fault_description')}}</span>
-        </mt-cell>
-        <mt-field :placeholder="$t('message.Please_describe')" type="textarea" rows="4" v-model="faultDesc"></mt-field>
+        <mt-field :placeholder="$t('message.Please_describe')" type="textarea" rows="2" v-model="faultDesc"></mt-field>
+      </div>
+      <div style="margin-bottom: -1px">
+      <mt-cell class="my-cell title-box">
+        <span slot="title" class="title">{{$t('message.Server_need')}}</span>
+      </mt-cell>
+      </div>
+      <div class="wrapper-box">
+        <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model="identify"></mt-field>
       </div>
       <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 200px;font-size: 14px">
         <div style="height: 30px;"></div>
@@ -114,6 +124,7 @@
           :tooltipStyle="rangeTimeOption.tooltipStyle"></vue-slider>
 
       </mt-popup>
+      <div class="wrapper-box">
       <mt-cell :title="$t('message.Price_curve')" v-if="addressObj.id&&addressObj.address">
         <mt-switch v-model="popupVisiblechart"></mt-switch>
       </mt-cell>
@@ -124,6 +135,7 @@
         <div class="flexbox" v-show="!showchart">
           {{$t('message.In_service')}}
         </div>
+      </div>
       </div>
     </div>
 
@@ -205,6 +217,7 @@
         loading: true,//控制图表的loading
         GMoptions: [],
         faultDesc: '',//故障描述,
+        identify:'',
         noBindMobile: false,
         datepickerOption: {
           ok: this.$t('message.Ok'),
@@ -317,11 +330,24 @@
         deep: true
       },
       'addressObj': {
-        handler(){
+        handler(val){
           if (this.popupVisiblechart == true) {
 //            this.popupVisiblechart=false
             this.getPriceLine()
           }
+          if (val.id) {
+            this.$api.WORK_TIME({id:val.id}).then(res=>{
+              if (res.code == 0) {
+                this.startTime = res.defaultWorkTime.amWorkinTime
+                this.endTime = res.defaultWorkTime.pmWorkoffTime
+//                this.selectRangeValue=[this.startTime.split(":")[0]*60,this.endTime.split(":")[0]*60]
+                this.$set(this.selectRangeValue,0,this.startTime.split(":")[0]*60)
+                this.$set(this.selectRangeValue,1,this.endTime.split(":")[0]*60)
+                console.log(this.selectRangeValue)
+              }
+            })
+          }
+
         },
         deep: true
       },
@@ -342,7 +368,8 @@
           this.timeMap[this.selectIndex].date = this.timeMap[this.selectIndex].date
 
         }
-      }
+      },
+
     },
     methods: {
       back(){
@@ -628,6 +655,7 @@
         }
         var data = {
           'orgId': this.addressObj.id,
+          'identify':this.identify,
           'reservationtimeEntityList': newData,
           'callDetailEntity': {
             'customerEmployeeId': this.customerEmployeeId/*下单用户的ID 手机暂时无或者用登录用户的*/,

@@ -5,40 +5,110 @@
         <mt-navbar v-model="selected">
           <mt-tab-item id="1">{{$t('message.signup_email')}}</mt-tab-item>
           <mt-tab-item id="2">{{$t('message.signup_phone')}}</mt-tab-item>
+          <mt-tab-item id="3">{{$t('message.join_company')}}</mt-tab-item>
         </mt-navbar>
-        <div style="background:#fff;">
+        <div style="background:#fff;text-align: left">
+          <!-- 邮箱-->
           <div v-if="selected==1">
-            <mu-text-field :label="$t('message.Email')" v-model="form.email" type="email" :errorText="error.email"
-                           name="email" labelFloat
+            <mu-text-field :hintText="$t('message.Email')" v-model="form.email" type="email"
+                           name="email" class="require"
                            fullWidth @input="checkEmail"/>
+            <mu-text-field :hintText="$t('message.password')" v-model="form.pwd" type="password"
+                           name="pwd" class="require"
+                           fullWidth/>
+            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form.pwd2" type="password"
+                            name="pwd2"
+                           class="require"
+                           fullWidth/>
           </div>
-
+          <!-- 邮箱/-->
+          <!--手机号-->
           <div v-if="selected==2">
-            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" type="number"
-                           :errorText="error.phone" name="phone"
-                           labelFloat fullWidth @blur="checkPhone" @input="checkPhone"/>
-
-          </div>
-          <div style="text-align: left" v-if="selected==2">
-            <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" type="text" :errorText="error.code"
-                           name="code" labelFloat
-                           style="width: 60%"/>
-            <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
-                  @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
-            <span v-if="count!=60"
-                  style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+            <mu-text-field :hintText="$t('message.Phone_number')" v-model="form2.phone" type="number"
+                           name="phone" class="require"
+                           fullWidth/>
+            <div>
+              <mu-text-field :hintText="$t('message.Msg_code')" v-model="form2.code" type="text"
+                             name="code" class="require"
+                             style="width: 60%"/>
+              <span
+                class="countBtn"
+                @click="getMsgCode(form2.phone)" v-if="count==60">{{$t('message.click')}}</span>
+              <span v-if="count!=60"
+                    class="countBtn">
               {{count}}s {{$t('message.resend')}}
             </span>
+            </div>
+            <mu-text-field :hintText="$t('message.password')" v-model="form2.pwd" type="password"
+                           name="pwd" class="require"
+                           fullWidth/>
+            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form2.pwd2" type="password" class="require"
+                           name="pwd2"
+                           fullWidth/>
           </div>
-          <mu-text-field :label="$t('message.password')" v-model="form.pwd" type="password" :errorText="error.pwd"
-                         name="pwd" labelFloat
-                         fullWidth/>
+          <!--手机号/-->
+          <!--加入公司-->
 
-          <mu-text-field :label="$t('message.repeat_password')" v-model="form.pwd2" type="password"
-                         :errorText="error.pwd2" name="pwd2" labelFloat
-                         fullWidth/>
+          <!--加入公司/-->
+          <div v-if="selected==3">
+            <mu-text-field hintText="姓名" v-model="form3.personName" type="text"
+                           name="personName" class="require"
+                           fullWidth/>
+            <mu-text-field hintText="企业邀请码" v-model="form3.InvitationCode" type="text"
+                           name="InvitationCode" class="require"
+                           fullWidth/>
+            <mu-text-field :hintText="$t('message.Phone_number')" v-model="form3.phone" type="number"
+                           name="phone" class="require"
+                           fullWidth />
+            <div>
+              <mu-text-field :hintText="$t('message.Msg_code')" v-model="form3.code" type="text"
+                             name="code" class="require"
+                             style="width: 60%"/>
+              <span
+                class="countBtn"
+                @click="getMsgCode(form3.phone)" v-if="count==60">{{$t('message.click')}}</span>
+              <span v-if="count!=60"
+                    class="countBtn">
+              {{count}}s {{$t('message.resend')}}
+            </span>
+            </div>
+            <mu-text-field :hintText="$t('message.password')" v-model="form3.pwd" type="password"
+                           name="pwd" class="require"
+                           fullWidth/>
+            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form3.pwd2" type="password"
+                           name="pwd2" class="require"
+                           fullWidth/>
+          </div>
+          <!--错误信息-->
+          <div v-if="selected==1">
+            <span class="form-group__message" v-if="!$v.form.email.email">邮箱格式错误.</span>
+            <span class="form-group__message" v-if="!$v.form.email.check">邮箱已被使用.</span>
+            <span class="form-group__message" v-if="!$v.form.pwd.minLength">密码长度不够</span>
+            <span class="form-group__message"
+                  v-if="$v.form.pwd.minLength&&!$v.form.pwd2.sameAs&&this.form.pwd2.length>0">密码不一致</span>
+          </div>
+          <div v-if="selected==2">
+            <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form2.phone.maxLength">号码不合法.</span>
+            <span class="form-group__message" v-if="!$v.form2.phone.isUnique">号码已被使用.</span>
+            <span class="form-group__message" v-if="!$v.form2.pwd.minLength">密码长度不够</span>
+            <span class="form-group__message"
+                  v-if="$v.form2.pwd.minLength&&!$v.form2.pwd2.sameAs&&this.form2.pwd2.length>0">密码不一致</span>
+
+          </div>
+          <div v-if="selected==3">
+            <span class="form-group__message" v-if="!$v.form3.phone.minLength||!$v.form3.phone.maxLength">号码不合法.</span>
+            <span class="form-group__message" v-if="!$v.form3.pwd.minLength">密码长度不够</span>
+            <span class="form-group__message"
+                  v-if="$v.form3.pwd.minLength&&!$v.form3.pwd2.sameAs&&this.form3.pwd2.length>0">密码不一致</span>
+          </div>
+          <!--<pre>{{ $v.form }}</pre>-->
+          <!--{{$v.form.$invalid}}-->
+          <!--{{selected}}-->
+          <!--错误信息/-->
           <button class="Button--primary Button--blue" @click="register">{{$t('message.signup')}}</button>
-          <p style="padding: 20px"><router-link to="login">{{$t('message.Back')}}</router-link></p>
+          <p style="padding: 20px">
+            <router-link to="login">{{$t('message.Back')}}</router-link>
+          </p>
         </div>
       </div>
     </div>
@@ -46,6 +116,8 @@
 </template>
 <script>
   import { GetQueryString } from '@/utils'
+  import { validationMixin } from 'vuelidate'
+  import { required, minLength, maxLength, sameAs, email }from 'vuelidate/lib/validators'
   export default {
     name: 'login',
     data () {
@@ -56,108 +128,114 @@
           pwd: '',
           pwd2: '',
           email: '',
+        },
+        form2: {
+          pwd: '',
+          pwd2: '',
           phone: '',
-          hasPhone: false, // 手机号已被注册
-          hasEmail: false,
           code: '',
-          x: 0 // 占位（用来触发watch）
         },
-        fail: true,
-        isDanger: false,
+        form3: {
+          pwd: '',
+          pwd2: '',
+          phone: '',
+          code: '',
+          InvitationCode: '',
+          personName: '',
+        },
       }
     },
-    computed: {
-      error(){
-        if (this.selected == '1') {
-          return {
-            pwd: '',
-            pwd2: '',
-            email: '',
-          }
-        } else {
-          return {
-            pwd: '',
-            pwd2: '',
-            phone: '',
-            code: ''
-          }
-        }
-      }
-    },
-    watch: {
-      selected: {
-        handler(){
-          this.form.pwd = ''
-          this.form.pwd2 = ''
-          this.form.x = 0
-        }
-      },
+    validations: {
       form: {
-        handler(val){
-          if (this.selected == '1') {
-            let re = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-            if (val.email == '') {
-              this.error.email = '必填项'
-              return
-            } else if (!re.test(val.email)) {
-              this.error.email = '格式错误'
-              return
-            } else if (val.hasEmail) {
-              this.error.email = '已被注册'
-              return
-            } else {
-              this.error.email = ''
+        email: {
+          required,
+          email,
+          check(value){
+            if (value.indexOf('@') <= 0) {
+              return true
             }
-          } else {
-            if (val.phone == '') {
-              this.error.phone = '必填项'
-              return
-            } else if (val.phone.toString().length != 11) {
-              this.error.phone = '格式错误'
-              return
-            } else if (val.hasPhone) {
-              this.error.phone = '已被注册'
-              return
-            } else {
-              this.error.phone = ''
-            }
-            if (val.code == '') {
-              this.error.code = '必填项'
-              return
-            } else {
-              this.error.code = ''
-            }
+            return new Promise((resolve, reject) => {
+              this.$api.CHECK_EMAIL({email: value}).then(res => {
+                if (res.code === 0) {
+                  if (res.state === '-1') {
+                    resolve(false)
+                  } else {
+                    resolve(true)
+                  }
+                } else {
+                  alert(JSON.stringify(res))
+                }
+              })
+            })
           }
-          if (val.pwd == '') {
-            this.error.pwd = '必填项'
-            return
-          } else if (val.pwd.length < 6) {
-            this.error.pwd = '至少6位'
-            return
-          } else {
-            this.error.pwd = ''
-          }
-          if (val.pwd2 == '') {
-            this.error.pwd2 = '必填项'
-            return
-          } else if (val.pwd2 != val.pwd) {
-            this.error.pwd2 = '密码不一致'
-            return
-          } else {
-            this.error.pwd2 = ''
-          }
-
-          Object.values(this.error).map(item => {
-            if (item == '') {
-              this.fail = false
-            } else {
-              this.fail = true
-            }
-          })
-          console.log(Object.values(this.error))
         },
-        deep: true
+        pwd: {
+          required,
+          minLength: minLength(6),
+        },
+        pwd2: {
+          sameAs: sameAs('pwd'),
+        }
       },
+      form2: {
+        phone: {
+          required,
+          minLength: minLength(11),
+          maxLength: maxLength(11),
+          isUnique (value) {
+            // 长度不为11暂且就认为不是合法的手机号
+            if (value.toString().length !== 11) return true
+            return new Promise((resolve, reject) => {
+              this.$api.CHECK_PHONE({telephone: value}).then(res => {
+                if (res.code === 0) {
+                  if (res.state == '0') {
+                    // 表示号码不可用
+                    resolve(false)
+                  } else {
+                    resolve(true)
+                  }
+                } else {
+                  alert(JSON.stringify(res))
+                }
+              })
+
+            })
+          }
+        },
+        code: {
+          required,
+        },
+        pwd: {
+          required,
+          minLength: minLength(6)
+        },
+        pwd2: {
+          sameAs: sameAs('pwd')
+        }
+      },
+      form3: {
+        personName: {
+          required
+        },
+        InvitationCode: {
+          required
+        },
+        phone: {
+          required,
+          minLength: minLength(11),
+          maxLength: maxLength(11),
+        },
+        code: {
+          required,
+        },
+        pwd: {
+          required,
+          minLength: minLength(6)
+        },
+        pwd2: {
+          sameAs: sameAs('pwd')
+        }
+      }
     },
 
     methods: {
@@ -172,11 +250,9 @@
         this.$api.CHECK_EMAIL({email: this.form.email}).then(res => {
           if (res.code === 0) {
             if (res.state === '-1') {
-              this.form.hasEmail = true
-              this.$set(this.form, this.form.x, this.form.x++)
+             //
             } else {
-              this.form.hasEmail = false
-//              this.$set(this.form, this.form.x, this.form.x--)
+             //
             }
             cb && cb()
           } else {
@@ -185,17 +261,13 @@
         })
       },
       checkPhone (val) {
-        console.log("电话", val)
         if (val.length < 10)return
         this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
-//          console.log(res)
           if (res.code === 0) {
             if (res.state == '0') {
-              this.form.hasPhone = true
-              this.$set(this.form, this.form.x, this.form.x++)
+              //
             } else {
-              this.form.hasPhone = false
-//              this.$set(this.form, this.form.x, this.form.x--)
+             //
             }
           } else {
             alert(JSON.stringify(res))
@@ -203,22 +275,34 @@
         })
       },
       register () {
-        if (!this.fail) {
           if (this.selected == '1') { // 邮箱
             /* 后端在此需要先验证邮箱再提交保证没有重复的账号*/
-            this.checkEmail(this.form.email,()=>{this._postInfo()})
-          } else { // 手机号
-            this._postInfoByMobile()
+            if (!this.$v.form.$invalid) {
+              this.checkEmail(this.form.email, () => {this._postInfo()})
+            } else {
+              alert('请检查填写是否完整或有误')
+            }
+
+          } else if (this.selected == '2') { // 手机号
+            if (!this.$v.form2.$invalid) {
+              this._postInfoByMobile()
+            } else {
+              alert('请检查填写是否完整或有误')
+            }
+
+          } else {// 加入公司
+            if (!this.$v.form3.$invalid) {
+              this._joinCompany()
+            } else {
+              alert('请检查填写是否完整或有误')
+            }
           }
-        } else {
-          alert('请检查填写是否完整或有误')
-        }
       },
-      getMsgCode () {
-//        console.log('biu....')
-        if (this.form.phone.length != 11)return
+      getMsgCode (val) {
+       console.log(val)
+        if (val.length != 11)return
         let data = {
-          telephone: this.form.phone,
+          telephone: val,
           type: 1
         }
         this.count--
@@ -245,19 +329,18 @@
       _postInfo () {
         let url = window.location.href
         if (window.location.search === '') {
-          var href = window.location.href.replace('&amp;','&')
+          var href = window.location.href.replace('&amp;', '&')
           var index = href.indexOf('?')
-          if(index!=-1){
-            url = href.substring(0,index)
-          }else{
+          if (index != -1) {
+            url = href.substring(0, index)
+          } else {
             url = window.location.href
           }
         } else {
           url = url.split(window.location.search)[0];
         }
-        console.log('url',url)
+        console.log('url', url)
         url = url.replace('mobile.html#/register', 'type.html') // 这里也换成pc的地址
-//        url = url.replace('register', 'type')
         let data = {
           email: this.form.email,
           password: this.form.pwd,
@@ -274,23 +357,42 @@
       },
       _postInfoByMobile () {
         let data = {
-          telephone: this.form.phone,
-          code: this.form.code,
-          password: this.form.pwd,
+          telephone: this.form2.phone,
+          code: this.form2.code,
+          password: this.form2.pwd,
           table_name: GetQueryString('table_name') || '',
           table_id: GetQueryString('table_id') || '',
         }
         this.$api.REGISTER_BY_MOBILE(data).then(res => {
           if (res.code === 0) {
             if (res.state === '1') { // 成功
-              this.$router.push(`/type?table_id=${GetQueryString('table_name')||''}&table_name=${GetQueryString('table_name')||''}`)
+              this.$router.push(`/type?table_id=${GetQueryString('table_name') || ''}&table_name=${GetQueryString('table_name') || ''}`)
             } else if (res.state == '2') { // 不正确
               alert('验证码错误')
-              this.error.code = '验证码错误'
             } else if (res.state == '3') { // 过期
               alert('验证码过期')
-              this.error.code = '验证码过期'
             }
+          }
+        })
+      },
+      _joinCompany(){
+        let data = {
+          inviteCode: this.form3.InvitationCode,
+          code: this.form3.code,
+          telephone: this.form3.phone,
+          password: this.form3.pwd,
+          personName: this.form3.personName
+        }
+        this.$api.CODE_JOIN_COMPANY(data).then(res => {
+          if (res.code == 0) {
+            if (res.state == 1) {
+              alert('保存成功')
+              this.router.push('login')
+            } else {
+              alert(res.info)
+            }
+          } else {
+            alert(JSON.stringify(res))
           }
         })
       }
@@ -301,6 +403,18 @@
   }
 </script>
 <style scoped lang="less">
+  .mu-text-field {
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden;
+  }
+
+  #app .mu-text-field .mu-text-field-content {
+    padding-bottom: 1px !important;
+  }
+
+
+
   .Button--primary.Button--blue {
     border: none;
     outline: none;

@@ -235,7 +235,7 @@ const get_notification_list = params => {
  */
 const read_notification = params => {
   return fetch({
-    url: `/customernotification/read/${params.tableNmae}/${params.tableId}`,
+    url: `/customernotification/read/${params.tableName}/${params.tableId}`,
     method: 'get'
   })
 }
@@ -732,7 +732,67 @@ const GET_PRICE_REMARK = params => {
   })
 }
 
+/**
+ * oncall 工作时间 id 公司id
+ * */
+const WORK_TIME = params => {
+  return fetch({
+    url: '/company/getDefualtWorkTime',
+    method: 'get',
+    params: params
+  })
+}
 
+/**
+ * 邀请码加入公司
+ * @param params
+ * @constructor
+ */
+const CODE_JOIN_COMPANY = params => {
+  return fetch({
+    url: '/person/inviteCodeJoinCompany',
+    method: 'post',
+    data: params
+  })
+}
+
+/**
+ * 轮询获取消息
+ * @param params
+ * @constructor
+ */
+const GET_MSG = params => {
+  return fetch({
+    url: '/msg/getMsg?_=' + Date.parse(new Date()),
+    method: 'get',
+    params: params
+  })
+}
+/**
+ * 手机号找回密码
+ * @param params /person/checkTelephoneAndCode?telephone=18613157893&code=1234
+ * @constructor
+ */
+const CHECK_TEL_CODE = params => {
+  return fetch({
+    url: '/person/checkTelephoneAndCode',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 手机重置密码
+ * @param params /person/resetPswByMobile?password=65432
+ * @constructor
+ */
+const RESET_PASSWORD= params => {
+  return fetch({
+    url: '/person/resetPswByMobile',
+    method: 'get',
+    params: params
+  })
+}
 const apiList = {
   login,
   initWeiXinOpenId,
@@ -789,7 +849,12 @@ const apiList = {
   COUPON,
   UN_COUPON,
   AUTO_COM_INVOICE,
-  GET_PRICE_REMARK
+  GET_PRICE_REMARK,
+  WORK_TIME,
+  CODE_JOIN_COMPANY,
+  GET_MSG,
+  CHECK_TEL_CODE,
+  RESET_PASSWORD
 }
 
 export default apiList
