@@ -6,6 +6,7 @@ Vue.use(Vuex);
 const state = { //状态
   callId: '', //点击的工单的id ()
   detail: '', //工单详情的数据
+  orderInfo:{},// 工单的信息
   workFlow: '',
   oid: '', //详情页面的ordernum
   type:''// 521 驻场远程电话
@@ -29,6 +30,10 @@ const mutations = { //状态只能通过此改变
   ['SET_ORDER_NUMBER'](state, payload){
     state.oid = payload;
     sessionStorage.oid = payload
+  },
+  ['SET_ORDER_INFO'](state, payload){
+    state.orderInfo = payload;
+    sessionStorage.orderInfo = JSON.stringify(payload)
   }
 };
 const actions = {

@@ -117,11 +117,12 @@
           </div>
           <div class="shadow-box">
             <div class="titlebox yellowbg">{{$t('message.Engineer_information')}}</div>
-            <table v-for="(item,key) in detailData.engineers" :key="key">
+            <table v-for="(item,key) in detailData.engineers" :key="key" class="engineer-info">
               <tr>
                 <td rowspan="3">
                   <div class="en-icon" style="line-height: 100px;">
-                    <img :src="'../uploading/'+item.photoPath" alt="" style="width: 100%;object-fit: cover">
+                    <img :src="'image/download?imgName='+item.photoPath" alt=""
+                         style="width: 100%;height: 100%;object-fit: cover">
                     <span v-if="!item.photoPath">{{$t('message.No_found')}}</span>
                   </div>
                 </td>
@@ -172,12 +173,18 @@
           <div style="height: 80px"></div>
         </scroller>
         <div class="footerBar">
+          <!--{{detailData.payway}},{{orderInfo.auditStatusMin}},{{orderInfo.fwoneCheckState}}-->
+          <div class="pull-right pay-button" @click="toPay(orderNum)"
+               v-if="detailData.payway==1 && orderInfo.auditStatusMin ==11000 && orderInfo.fwoneCheckState!=20 && orderInfo.fwoneCheckState!=30"
+          >支付
+          </div>
           <button size="small" class="footerBtn" v-if="status>=0 && status<2 && show_reminder" @click="reminder">
             {{$t('message.Reminder')}}
           </button>
           <button size="small" class="footerBtn" v-if="status<8 && status>=3" @click="toushuVisible=!toushuVisible">
             {{$t('message.complaint')}}
           </button>
+
           <!--<button size="small" class="footerBtn" v-if="status>=5">发票</button>-->
         </div>
         <!--评价-->
@@ -378,7 +385,7 @@
     watch: {
       'status': {
         handler(val){
-          this.$refs.mySwiper.swiper.slideTo(val > 4 ? 7 : 0)
+          this.$refs.mySwiper.swiper.slideTo(val > 3 ? 7 : 0)
         }
       },
       'ratingToService': {
@@ -396,6 +403,7 @@
       state: state => state.detail,
       detailData: state => state.detail.detail,
       orderNum: state => state.detail.oid,
+      orderInfo: state => state.detail.orderInfo,
       status: state => state.detail.detail.status,
       evaluate_num(){
         return 15 - this.evaluate.length >= 0 ? 15 - this.evaluate.length : 0
@@ -508,6 +516,10 @@
             alert(res.msg)
           }
         }).catch(err => console.error(err))
+      },
+      toPay(oid){
+        this.$store.commit('SET_ORDER_NUMBER', oid)
+        this.$router.push({name: 'pay', params: {oid: oid}})
       }
 
     },
@@ -522,6 +534,11 @@
         id: sessionStorage.getItem('id'),
         type: sessionStorage.getItem('type')
       })
+      var item = sessionStorage.getItem('orderInfo')
+      if (item !== 'null' || item !== 'undefined') {
+        this.$store.commit('SET_ORDER_INFO', JSON.parse(item))
+      }
+
     },
     activated(){
       this.getSubOrder()
@@ -535,6 +552,15 @@
   }
 </script>
 <style scoped lang="less">
+  .pay-button {
+    height: 40px;
+    width: 100px;
+    line-height: 40px;
+    text-align: center;
+    background: #f44336;
+    color: #fff;
+  }
+
   .step-box {
     item {
       position: relative;
@@ -723,6 +749,9 @@
 
   label {
     font-weight: 700;
+  }
+
+  .engineer-info td:nth-child(1) {
   }
 
 </style>

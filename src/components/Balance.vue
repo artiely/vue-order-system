@@ -1,6 +1,6 @@
 <template>
   <div class="balance">
-    <mt-header title="我的余额" fixed style="z-index: 9;">
+    <mt-header :title="$t('message.Balance')" fixed style="z-index: 9;">
       <mt-button icon="back" @click="back" slot="left">返回</mt-button>
     </mt-header>
     <scroller
@@ -14,13 +14,13 @@
         <div v-if="total.length>0" class="balanceNum" v-for="item in total">{{item.balance}}<span
           class="balanceTxt">{{item.currency}}</span>
         </div>
-        <div v-if="total.length==0" class="balanceNum">0.00<span class="balanceTxt">总余额</span></div>
-        <div class="btn yellowbg" @click="pay" style="width: 60%;margin: 6px auto;padding: 6px;border-radius: 22px">充值</div>
+        <div v-if="total.length==0" class="balanceNum">0.00<span class="balanceTxt">{{$t('message.Overall_balance')}}</span></div>
+        <div class="btn yellowbg" @click="pay" style="width: 60%;margin: 6px auto;padding: 6px;border-radius: 22px">{{$t('message.Recharge')}}</div>
       </div>
 
       <div class="col">
         <div class="col1">
-          <router-link tag="div" class="balanceBtm" to="record">交易/充值/消费记录</router-link>
+          <router-link tag="div" class="balanceBtm" to="record">{{$t('message.record')}}</router-link>
         </div>
       </div>
       <div class="mxBox">
@@ -86,7 +86,7 @@
         mxData: [],
         mxUnData: [],
         mxShow: [true, false],
-        mxTit: ['未付款', '已付款'],
+        mxTit: [this.$t('message.Not_Paid'), this.$t('message.Paid')],
         page: 1,
         totalPage: 1,
         unPage: 1,

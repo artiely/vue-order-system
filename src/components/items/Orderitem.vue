@@ -6,7 +6,7 @@
         <div class="flex-box">
           <div class="company-tit" v-if="isCompany">{{item.companyname}}</div>
           <!-- payway 等于1 并且是在支付状态下的单就显示支付按钮 -->
-          <div v-if="item.payway==1 && orderStateId==6 && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30" class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}</div>
+          <div v-if="item.payway==1  && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30" class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}</div>
         </div>
       </td>
     </tr>
@@ -25,7 +25,7 @@
           <!--{{$t('message.Detail')}}-->
           <i class="iconfont icon-enter"></i>
         </a>
-        <a v-if="item.orderstateid==0 && orderStateId!=8" @click="goDelete(item)" class="text-center orderBtn cancleBtn"
+        <a v-if="item.orderstateid<4000 && orderStateId!=8" @click="goDelete(item)" class="text-center orderBtn cancleBtn"
         >
           <!--{{$t('message.Cancel')}}-->
           <i class="iconfont icon-empty_fill red" style="color: rgba(221, 75, 57,.5)"></i>
@@ -76,6 +76,7 @@
         }
         // 获取对应id的详情
         this.$store.dispatch('new_detail', payload)
+        this.$store.commit('SET_ORDER_INFO', item)
         this.$emit('getsp');
         this.$router.push({path: '/orderdetail'});
       },

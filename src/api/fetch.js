@@ -14,7 +14,7 @@ export default function fetch (options) {
       baseURL: SERVER_BASE_URL,
       // baseURL: 'PT/',
       //设置请求超时设置
-      timeout: 20000,
+      // timeout: 20000,
       //设置请求时的header
       headers: {},
       // `transformResponse` 在传递给 then/catch 前，允许修改响应数据

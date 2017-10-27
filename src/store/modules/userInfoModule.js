@@ -10,7 +10,8 @@ const state = {//状态
   lang: '',
   accountState: '',
   accountInfo:'',
-  isCompany: true // 判断当前用户是个人还是公司
+  isCompany: true ,// 判断当前用户是个人还是公司
+  customerNotificationList:[]
 }
 
 const mutations = {//状态只能通过此改变
@@ -38,6 +39,9 @@ const mutations = {//状态只能通过此改变
   },
   ['SET_ACCOUNT_INFO'](state, payload){
     state.accountInfo = payload
+  },
+  ['C_NOTIFICATION_LIST'](state, payload){
+    state.customerNotificationList = payload
   },
 }
 const actions = {
@@ -76,7 +80,21 @@ const actions = {
       }
 
     })
-  }
+  },
+  /**
+   * 获取消息
+   * */
+  getCustomerNotification :({commit,state},payload)=> {
+    api.get_notification_list().then(res => {
+      if (res.code == ERR_OK) {
+        // this.customerNotificationList = res.customerNotificationList
+        commit('C_NOTIFICATION_LIST',res.customerNotificationList)
+      } else {
+        alert(`获取消息`+res.msg)
+      }
+    })
+  },
+
   /**
    * 检查账号信息是否完整，是否在审核中 state=4 信息不完整 state=7 审核中 state=8 拒绝
    * @param commit
