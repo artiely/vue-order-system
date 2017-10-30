@@ -1,45 +1,44 @@
 <template>
   <div class="login">
     <div class="page-content">
-      <div class="wrapper" style="text-align: left;background:#fff;">
+      <mt-header fixed title="FWONE">
+        <mt-button icon="back" slot="left" @click="back"></mt-button>
+      </mt-header>
+      <div class="wrapper" style="text-align: left;background:#fff;padding-top: 40px">
         <div>
           <div>
-            <mu-text-field label="姓名" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mt-radio
-              title="性别"
-              v-model="form.sex"
-              :options="[{label:'男',value:'1'},{label:'女',value:'0'}]">
-            </mt-radio>
-
-            <mu-text-field label="手机号" @blur="checkPhone" v-model="form.phone" :errorText="error.phone" labelFloat/>
-            <div class="help">手机号为登录账号</div>
+            <mu-text-field :hintText="$t('message.Name')"  class="require" v-model="form.userName" />
+            <mu-text-field :hintText="$t('message.Phone_number')"  class="require" @blur="checkPhone" v-model="form.phone"  />
+            <div class="help">手机号可作为登录账号</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div style="text-align: left">
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" type="text" :errorText="error.code"
-                             name="code" labelFloat
+              <mu-text-field :hintText="$t('message.Msg_code')"  class="require" v-model="form.code" type="text"
+                             name="code"
                              style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+              <span class="countBtn"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
-                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+                    class="countBtn">
                 {{count}}s {{$t('message.resend')}}
               </span>
             </div>
-            <mu-text-field label="密码" v-model="form.pwd" type="password" :errorText="error.pwd" name="pwd" labelFloat
+            <mu-text-field :hintText="$t('message.Password')"  class="require" v-model="form.pwd" type="password"  name="pwd"
                            fullWidth/>
-            <mu-text-field label="确认密码" v-model="form.pwd2" type="password" :errorText="error.pwd2" name="pwd2"
-                           labelFloat
-                           fullWidth/>
+            <mu-text-field :hintText="$t('message.repeat_password')"  class="require" v-model="form.pwd2" type="password"  name="pwd2" fullWidth/>
           </div>
         </div>
-        <div style="height: 40px;"></div>
-        <button class="Button--primary Button--blue" @click="handleSubmit">提交</button>
+        <span class="form-group__message" v-if="!$v.form.pwd.minLength">密码长度不够.</span>
+        <span class="form-group__message" v-if="$v.form.pwd.minLength&&!$v.form.pwd2.sameAs">密码不一致.</span>
+        <span class="form-group__message" v-if="!$v.form.phone.minLength||!$v.form.phone.maxLength||!$v.form.phone.minLength||!$v.form.phone.maxLength">手机号格式错误.</span>
+        <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
       </div>
     </div>
   </div>
 </template>
 <script>
   import { GetQueryString } from '@/utils'
+  import { validationMixin } from 'vuelidate'
+  import { required, minLength, maxLength, sameAs, email,requiredUnless ,alpha}from 'vuelidate/lib/validators'
   export default {
     name: 'login',
     data () {
@@ -47,87 +46,33 @@
         count: 60,
         form: {
           userName: '',
-          sex: '1',
           phone: '',
           code: '',
           pwd: '',
           pwd2: '',
-          x:0
         },
-        fail: true,
       }
     },
-    computed: {
-      error(){
-        return {
-          userName: '',
-          phone: '',
-          code: '',
-          pwd: '',
-          pwd2: ''
-        }
-      }
-    },
-    watch: {
+    validations: {
       form: {
-        handler(val){
-
-              if (val.userName == '') {
-                this.error.userName = '必填项'
-                return
-              } else {
-                this.error.userName = ''
-              }
-              let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-              if (val.phone == '') {
-                this.error.phone = '必填项'
-                return
-              } else if (!re3.test(val.phone)) {
-                this.error.phone = '格式错误'
-                return
-              } else if (val.hasPhone) {
-                this.error.phone = '手机号已被注册'
-                return
-              } else {
-                this.error.phone = ''
-              }
-              if (val.code == '') {  // 以下填写了手机号才是必填项
-                this.error.code = '必填项'
-                return
-              } else {
-                this.error.code = ''
-              }
-
-              if (val.pwd == '') {
-                this.error.pwd = '必填项'
-                return
-              } else if (val.pwd.length < 6) {
-                this.error.pwd = '至少6位'
-                return
-              } else {
-                this.error.pwd = ''
-              }
-              if (val.pwd2 == '') {
-                this.error.pwd2 = '必填项'
-                return
-              } else if (val.pwd2 != val.pwd) {
-                this.error.pwd2 = '密码不一致'
-                return
-              } else {
-                this.error.pwd2 = ''
-              }
-
-          console.log(Object.values(this.error))
-          Object.values(this.error).map(item => {
-            if (item === '') {
-              this.fail = false
-            } else {
-              this.fail = true
-            }
-          })
-
+        userName: {
+          required,
         },
-        deep: true
+        phone:{
+          required,
+          minLength:minLength(11),
+          maxLength:maxLength(11),
+        },
+        code:{
+          required,
+        },
+        pwd: {
+          required,
+          minLength: minLength(6),
+        },
+        pwd2: {
+          sameAs: sameAs('pwd'),
+        }
       }
     },
     methods: {
@@ -135,13 +80,12 @@
         this.$router.back()
       },
       handleSubmit () {
-        if (this.fail) {
-          alert('请完善信息')
+        if (this.$v.form.$invalid) {
+          alert('请检查填写是否完整或有误')
           return
         } else {
           let data = {
             personName: this.form.userName,
-            personSex: this.form.sex,
             telephone: this.form.phone,
             code: this.form.code,
             companyId: GetQueryString('companyId') || '',
@@ -165,7 +109,6 @@
         }
       },
       getMsgCode () {
-//        console.log('biu....')
           if (this.form.phone.length != 11)return
           let data = {
             telephone: this.form.phone,
@@ -193,7 +136,6 @@
       },
       checkPhone () { // 判断手机是否被注册
         this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
-//          console.log(res)
           if (res.code === 0) {
             if (res.state == '0') {
               this.form.hasPhone = true
