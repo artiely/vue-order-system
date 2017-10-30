@@ -1,30 +1,31 @@
 <template>
   <div class="login">
     <div class="page-content">
-      <div class="wrapper" style="text-align: left;background:#fff;">
+      <mt-header fixed title="FWONE">
+        <mt-button icon="back" slot="left" @click="back"></mt-button>
+      </mt-header>
+      <div class="wrapper" style="text-align: left;background:#fff;padding-top: 40px">
         <div v-if="editData.accountType==2">
           <div>
-            <mu-text-field :label="$t('message.Company_name')" v-model="form.company" :errorText="error.company"
-                           labelFloat/>
+            <mu-text-field :hintText="$t('message.Company_name')" class="require" v-model="form2.company"
+                           />
             <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :label="$t('message.Mark')" v-model="form.mark" :errorText="error.mark" labelFloat/>
+            <mu-text-field :hintText="$t('message.Mark')" v-model="form2.mark" class="require" />
             <div class="help">{{$t('message.Mark_help')}}</div>
-            <mu-text-field :label="$t('message.Company_id_num')" v-model="form.companyIdNum"
-                           :errorText="error.companyIdNum" labelFloat/>
+            <mu-text-field :hintText="$t('message.Company_id_num')" v-model="form2.companyIdNum"
+                           />
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
-            <mu-text-field :label="$t('message.AdminName')" v-model="form.userName" :errorText="error.userName"
-                           labelFloat/>
-            <mu-text-field :label="$t('message.Admin_id_num')" v-model="form.idCard" :errorText="error.idCard"
-                           labelFloat/>
-            <mu-text-field :label="$t('message.Admin_phone_num')" v-model="form.phone"
-                           :errorText="error.phone" labelFloat/>
+            <mu-text-field :hintText="$t('message.AdminName')" class="require" v-model="form2.userName"
+                           />
+            <mu-text-field :hintText="$t('message.Admin_phone_num')" class="require" v-model="form2.phone"
+                            />
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+              <mu-text-field :hintText="$t('message.Msg_code')" class="require" v-model="form2.code"
                              style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+              <span class="countBtn"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
-                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+                    class="countBtn">
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
@@ -32,27 +33,27 @@
         </div>
         <div v-if="editData.accountType==1">
           <div>
-            <mu-text-field :label="$t('message.Name')" v-model="form.userName" :errorText="error.userName" labelFloat/>
-            <mt-radio
-              :title="$t('message.Gender')"
-              v-model="form.sex"
-              :options="[{label:this.$t('message.Male'),value:'1'},{label:this.$t('message.Female'),value:'0'}]">
-            </mt-radio>
-
-            <mu-text-field :label="$t('message.Phone_number')" v-model="form.phone" :errorText="error.phone"
-                           labelFloat/>
+            <mu-text-field :hintText="$t('message.Name')" class="require" v-model="form1.userName"  />
+            <mu-text-field :hintText="$t('message.Phone_number')" class="require" v-model="form1.phone"
+                           />
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <div>
-              <mu-text-field :label="$t('message.Msg_code')" v-model="form.code" :errorText="error.code" labelFloat
+              <mu-text-field :hintText="$t('message.Msg_code')" class="require" v-model="form1.code"
                              style="width: 60%"/>
-              <span style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;"
+              <span class="countBtn"
                     @click="getMsgCode" v-if="count==60">{{$t('message.click')}}</span>
               <span v-if="count!=60"
-                    style="display: inline-block;width: 30%;text-align: center;padding: 10px 0;background:#eee;">
+                    class="countBtn">
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
           </div>
+        </div>
+
+        <div >
+          <span class="form-group__message" v-if="!$v.form2.companyIdNum.minLength">营业执照号格式不正确.</span>
+          <span class="form-group__message" v-if="!$v.form2.mark.alpha">英文简称只支持英文字母.</span>
+          <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form1.phone.maxLength">手机号格式错误.</span>
         </div>
         <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
       </div>
@@ -62,18 +63,25 @@
 </template>
 <script>
   import { GetQueryString } from '@/utils'
+  import { validationMixin } from 'vuelidate'
+  import { required, minLength, maxLength, sameAs, email,requiredUnless ,alpha}from 'vuelidate/lib/validators'
   export default {
     name: 'info',
     data () {
       return {
         form: {
           typeId: '2', // 2 企业 1 个人
+        },
+        form1:{
+          userName: '',
+          phone: '',
+          code: ''
+        },
+        form2:{
           company: '',
           mark: '',
           companyIdNum: '', // 营业执照号
           userName: '',
-          idCard: '',
-          sex: '1',
           phone: '',
           code: ''
         },
@@ -82,134 +90,51 @@
         fail: true,
       }
     },
-    computed: {
-      error(){
-        if (this.form.typeId == '2') {
-          return {
-            company: '',
-            mark: '',
-            companyIdNum: '',
-            userName: '',
-            idCard: '',
-            phone: '',
-            code: ''
-          }
-
-        } else {
-
-          return {
-            userName: '',
-            phone: '',
-            code: ''
-          }
-
-        }
-      }
-    },
-    watch: {
-      form: {
-        handler(val){
-          if (this.form.typeId == '2') {
-            if (val.company == '') {
-              this.error.company = this.$t('message.Required_fields')
-            } else {
-              this.error.company = ''
-            }
-            let re = /^[a-z]+$/i
-            if (val.mark == '') {
-              this.error.mark = this.$t('message.Required_fields')
-
-            } else if (!re.test(val.mark)) {
-              this.error.mark = this.$t('message.Letter_only')
-
-            } else {
-              this.error.mark = ''
-            }
-
-            if (val.companyIdNum == '') {
-              this.error.companyIdNum = this.$t('message.Required_fields')
-
-            } else if (val.companyIdNum.toString().length !== 15 && val.companyIdNum.toString().length !== 18) {
-              this.error.companyIdNum = this.$t('message.Incorrect_format')
-
-            } else {
-              this.error.companyIdNum = ''
-            }
-            if (val.userName == '') {
-              this.error.userName = this.$t('message.Required_fields')
-
-            } else {
-              this.error.userName = ''
-            }
-            let re2 = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}\w{1}$/
-            if (val.idCard == '') {
-              this.error.idCard = this.$t('message.Required_fields')
-
-            } else if (!re2.test(val.idCard)) {
-              this.error.idCard = this.$t('message.Incorrect_format')
-
-            } else {
-              this.error.idCard = ''
-            }
-
-            let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-            if (val.phone == '') {
-              this.error.phone = this.$t('message.Required_fields')
-
-            } else if (!re3.test(val.phone)) {
-              this.error.phone = this.$t('message.Incorrect_format')
-
-            } else {
-              this.error.phone = ''
-            }
-
-            if (val.code == '') {
-              this.error.code = this.$t('message.Required_fields')
-
-            } else {
-              this.error.code = ''
-            }
-
-          } else {
-
-            if (val.userName == '') {
-              this.error.userName = '必填项'
-            } else {
-              this.error.userName = ''
-            }
-
-            let re3 = /^[1][3,4,5,7,8][0-9]{9}$/
-            if (val.phone == '') {
-              this.error.phone = ''
-            } else if (!re3.test(val.phone)) {
-              this.error.phone = this.$t('message.Incorrect_format')
-            } else {
-              this.error.phone = ''
-            }
-            if (val.phone.length == 11 && val.code == '') {  // 以下填写了手机号才是必填项
-              this.error.code = this.$t('message.Required_fields')
-            } else {
-              this.error.code = ''
-            }
-          }
-          Object.values(this.error).map(item => {
-            if (item === '') {
-              this.fail = false
-            } else {
-              this.fail = true
-            }
-          })
+    validations: {
+      form1: {
+        userName: {
+          required,
         },
-        deep: true
+        phone:{
+          required,
+          minLength:minLength(11),
+          maxLength:maxLength(11),
+        },
+        code:{
+          required,
+        },
       },
+      form2: {
+        company: {
+          required,
+        },
+        companyIdNum:{
+          minLength:minLength(15)
+        },
+        mark:{
+          required,
+          alpha
+        },
+        userName: {
+          required,
+        },
+        phone:{
+          required,
+          minLength:minLength(11),
+          maxLength:maxLength(11),
+        },
+        code:{
+          required,
+        },
+      }
     },
     methods: {
       back(){
         this.$router.back()
       },
       handleSubmit () {
-        if (this.fail) {
-          alert('请完善信息')
+        if (this.$v.form.$invalid) {
+          alert('请检查填写是否完整或有误')
           return
         } else {
           // 如果是修改 提交参数略有不同
@@ -217,14 +142,12 @@
           if (this.form.typeId === '2') { // 企业
             eData = {
               account_type: this.form.typeId,
-              company_name: this.form.company,
-              comp_eng_short_name: this.form.mark,
-              business_license_number: this.form.companyIdNum,
-              personName: this.form.userName,
-              personSex: this.form.idCard.substring(16, 1) % 2 ? '1' : '0',
-              idCard: this.form.idCard,
-              telephone: this.form.phone,
-              code: this.form.code,
+              company_name: this.form2.company,
+              comp_eng_short_name: this.form2.mark,
+              business_license_number: this.form2.companyIdNum,
+              personName: this.form2.userName,
+              telephone: this.form2.phone,
+              code: this.form2.code,
               email: this.editData.email,
               personId: this.editData.personId,
               rowChangeLogId: this.editData.rowChangeLogId,
@@ -234,10 +157,9 @@
           } else {
             eData = {
               account_type: this.form.typeId,
-              personName: this.form.userName,
-              personSex: this.form.sex,
-              telephone: this.form.phone,
-              code: this.form.code,
+              personName: this.form1.userName,
+              telephone: this.form1.phone,
+              code: this.form1.code,
               email: this.editData.email,
               personId: this.editData.personId,
               rowChangeLogId: this.editData.rowChangeLogId,
@@ -300,18 +222,16 @@
           if (res.code === 0) {
             let data = res.registeInfo[0]
             this.editData = data
-            let {typeId, company, mark, companyIdNum, userName, idCard, sex, phone, code} = {
+            let {typeId, company, mark, companyIdNum, userName, phone, code} = {
               typeId: data.accountType,
               company: data.companyName,
               mark: data.compEngShortName,
               companyIdNum: data.businessLicenseNumber,
               userName: data.personName,
-              idCard: data.idCard,
-              sex: data.personSex === '男' ? '1' : '0',
               phone: data.telephone,
               code: ''
             }
-            this.form = {typeId, company, mark, companyIdNum, userName, idCard, sex, phone, code}
+            this.form = {typeId, company, mark, companyIdNum, userName, phone, code}
           }
         })
       },

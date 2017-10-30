@@ -21,48 +21,62 @@
               <!-- slides -->
               <swiper-slide>
                 <div class="item" :class="status >= 0 ?'fw1':'fw0'">
+                  <i class="iconfont icon-service_fill"></i><br>
+                  {{$t('message.anorder')}}
+                  <!--下单-->
+                </div>
+              </swiper-slide>
+              <swiper-slide>
+                <div class="item" :class="status >= 1 ?'fw1':'fw0'">
+                  <i class="iconfont icon-shake"></i><br>
+                  {{$t('message.progressing')}}
+                  <!--受理中-->
+                </div>
+              </swiper-slide>
+              <swiper-slide>
+                <div class="item" :class="status >= 2 ?'fw1':'fw0'">
                   <i class="iconfont icon-marketing_fill"></i><br>
                   {{$t('message.Accept')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="status >= 1 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 3 ?'fw1':'fw0'">
                   <i class="iconfont icon-time_fill"></i><br>
                   {{$t('message.Depart')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="status >= 2 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 4 ?'fw1':'fw0'">
                   <i class="iconfont icon-emoji_fill"></i><br>
                   {{$t('message.Arrive')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="status >= 3 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 5 ?'fw1':'fw0'">
                   <i class="iconfont icon-brush_fill"></i><br>
                   {{$t('message.Sign')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="status >= 4 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 6 ?'fw1':'fw0'">
                   <i class="iconfont icon-financial_fill"></i><br>
                   {{$t('message.Confirm_price')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="status >= 5 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 7 ?'fw1':'fw0'">
                   <i class="iconfont icon-coupons_fill"></i><br>
                   {{$t('message.Invoice')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="status >= 6 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 8 ?'fw1':'fw0'">
                   <i class="iconfont icon-transaction_fill"></i><br>
                   {{$t('message.Payment')}}
                 </div>
               </swiper-slide>
               <swiper-slide>
-                <div class="item" :class="status >= 7 ?'fw1':'fw0'">
+                <div class="item" :class="status >= 9 ?'fw1':'fw0'">
                   <i class="iconfont icon-task_fill"></i><br>
                   {{$t('message.Complete')}}
                 </div>
@@ -174,9 +188,10 @@
         </scroller>
         <div class="footerBar">
           <!--{{detailData.payway}},{{orderInfo.auditStatusMin}},{{orderInfo.fwoneCheckState}}-->
+          <!--item.payway==1  && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30 &&item.orderstateid>=7750&& (item.receiveStateMin<65 || !item.receiveStateMin)-->
           <div class="pull-right pay-button" @click="toPay(orderNum)"
-               v-if="detailData.payway==1 && orderInfo.auditStatusMin ==11000 && orderInfo.fwoneCheckState!=20 && orderInfo.fwoneCheckState!=30"
-          >支付
+               v-if="detailData.payway==1 && orderInfo.auditStatusMin ==11000 && orderInfo.fwoneCheckState!=20 && orderInfo.fwoneCheckState!=30&&orderInfo.orderstateid>=7750&& (orderInfo.receiveStateMin<65 || !orderInfo.receiveStateMin)"
+          >{{$t('message.Pay')}}
           </div>
           <button size="small" class="footerBtn" v-if="status>=0 && status<2 && show_reminder" @click="reminder">
             {{$t('message.Reminder')}}
@@ -184,7 +199,6 @@
           <button size="small" class="footerBtn" v-if="status<8 && status>=3" @click="toushuVisible=!toushuVisible">
             {{$t('message.complaint')}}
           </button>
-
           <!--<button size="small" class="footerBtn" v-if="status>=5">发票</button>-->
         </div>
         <!--评价-->
@@ -469,7 +483,7 @@
         }
         this.$api.rating_sub_order(data).then(res => {
           if (res.code === ERR_OK) {
-            this.$toast('评论成功')
+            this.$toast(this.$t('message.Success'))
             this._ratingHistory()
           } else {
             alert(res.msg)

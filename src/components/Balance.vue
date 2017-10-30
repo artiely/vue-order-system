@@ -1,7 +1,7 @@
 <template>
   <div class="balance">
     <mt-header :title="$t('message.Balance')" fixed style="z-index: 9;">
-      <mt-button icon="back" @click="back" slot="left">返回</mt-button>
+      <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <scroller
       style="background:#fafafa;"
@@ -36,8 +36,8 @@
             <div>{{item.partyAName}}</div>
             <div class="textover">{{item.invoiceContent}}</div>
             <div class="invoiceAmount">{{item.invoiceAmount}}({{item.currencyName}})</div>
-            <div class="rq_text">开票日期：{{item.invoiceDate}} </div>
-            <div class="rq_text">收款日期：{{item.contractReceiveDate}} </div>
+            <div class="rq_text">{{$t('message.invoice_date')}}：{{item.invoiceDate}} </div>
+            <div class="rq_text">{{$t('message.Collection_date')}}：{{item.contractReceiveDate}} </div>
           </div>
         </div>
         <div class="mxItem" v-for="(item,index) in mxData" v-if="mxShow[1]" :key="item.id"
@@ -47,8 +47,8 @@
             <div>{{item.partyAName}}</div>
             <div class="textover">{{item.invoiceContent}}</div>
             <div class="invoiceAmount">{{item.invoiceAmount}}({{item.currencyName}})</div>
-            <div class="rq_text">开票日期：{{item.invoiceDate}} </div>
-            <div class="rq_text">收款日期：{{item.receiveDate}} </div>
+            <div class="rq_text">{{$t('message.invoice_date')}}：{{item.invoiceDate}} </div>
+            <div class="rq_text">{{$t('message.Collection_date')}}：{{item.receiveDate}} </div>
           </div>
         </div>
       </div>
@@ -66,7 +66,7 @@
 
             <div><span v-cut-time="item.detailStartDate"></span>~<span v-cut-time="item.detailFinishDate"></span> <span>({{item.dealType}})</span>
             </div>
-            <div class="textover">备注:{{item.detailName}}</div>
+            <div class="textover">{{$t('message.remark')}}:{{item.detailName}}</div>
           </div>
         </div>
         <div v-if="detail.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
