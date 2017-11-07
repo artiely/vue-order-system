@@ -43,12 +43,13 @@
       class="page-content"
       :on-refresh="onRefresh"
       ref="myScroller"
+      :snapping="true"
       :on-infinite="onInfinite"
       :refreshText="$t('message.Pull_to_refresh')"
       :noDataText="$t('message.No_more_data')"
     >
       <div v-if="orderinfo.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
-      <order-item :item="item" :orderStateId="query.orderStateId" v-for="(item,index) in orderinfo" :key="index"
+      <order-item :item="item" :orderStateId="query.orderStateId" v-for="(item,index) in orderinfo" :index="index" :key="index"
                   v-on:getsp="getScrollPosition"
                   v-on:refresh="onRefresh"></order-item>
     </scroller>

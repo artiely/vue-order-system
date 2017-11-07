@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" style="background: white">
     <div class="page-content">
       <div class="wrapper">
         <mt-navbar v-model="selected">
@@ -9,7 +9,7 @@
         </mt-navbar>
         <div style="background:#fff;text-align: left">
           <!-- 邮箱-->
-          <div v-if="selected==1">
+          <div v-if="selected==1" class="form-content">
             <mu-text-field :hintText="$t('message.Email')" v-model="form.email" type="email"
                            name="email" class="require"
                            fullWidth @input="checkEmail"/>
@@ -23,7 +23,7 @@
           </div>
           <!-- 邮箱/-->
           <!--手机号-->
-          <div v-if="selected==2">
+          <div v-if="selected==2" class="form-content">
             <mu-text-field :hintText="$t('message.Phone_number')" v-model="form2.phone" type="number"
                            name="phone" class="require"
                            fullWidth/>
@@ -50,11 +50,11 @@
           <!--加入公司-->
 
           <!--加入公司/-->
-          <div v-if="selected==3">
-            <mu-text-field hintText="姓名" v-model="form3.personName" type="text"
+          <div v-if="selected==3" class="form-content">
+            <mu-text-field :hintText="$t('message.Name')" v-model="form3.personName" type="text"
                            name="personName" class="require"
                            fullWidth/>
-            <mu-text-field hintText="企业邀请码" v-model="form3.InvitationCode" type="text"
+            <mu-text-field :hintText="$t('message.InvitationCode')" v-model="form3.InvitationCode" type="text"
                            name="InvitationCode" class="require"
                            fullWidth/>
             <mu-text-field :hintText="$t('message.Phone_number')" v-model="form3.phone" type="number"
@@ -80,35 +80,34 @@
                            fullWidth/>
           </div>
           <!--错误信息-->
-          <div v-if="selected==1">
-            <span class="form-group__message" v-if="!$v.form.email.email">邮箱格式错误.</span>
-            <span class="form-group__message" v-if="!$v.form.email.check">邮箱已被使用.</span>
-            <span class="form-group__message" v-if="!$v.form.pwd.minLength">密码长度不够</span>
+          <div v-if="selected==1" class="form-tip">
+            <span class="form-group__message" v-if="!$v.form.email.email">{{$t('message.email_error')}}.</span>
+            <span class="form-group__message" v-if="!$v.form.email.check">{{$t('message.email_used')}}.</span>
+            <span class="form-group__message" v-if="!$v.form.pwd.minLength">{{$t('message.password_error')}}</span>
             <span class="form-group__message"
-                  v-if="$v.form.pwd.minLength&&!$v.form.pwd2.sameAs&&this.form.pwd2.length>0">密码不一致</span>
+                  v-if="$v.form.pwd.minLength&&!$v.form.pwd2.sameAs&&this.form.pwd2.length>0">{{$t('message.Entered_differ')}}</span>
           </div>
-          <div v-if="selected==2">
-            <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form2.phone.maxLength">号码不合法.</span>
-            <span class="form-group__message" v-if="!$v.form2.phone.isUnique">号码已被使用.</span>
-            <span class="form-group__message" v-if="!$v.form2.pwd.minLength">密码长度不够</span>
+          <div v-if="selected==2" class="form-tip">
+            <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form2.phone.maxLength">{{$t('message.phone_error')}}.</span>
+            <span class="form-group__message" v-if="!$v.form2.phone.isUnique">{{$t('message.phone_used')}}.</span>
+            <span class="form-group__message" v-if="!$v.form2.pwd.minLength">{{$t('message.password_error')}}</span>
             <span class="form-group__message"
-                  v-if="$v.form2.pwd.minLength&&!$v.form2.pwd2.sameAs&&this.form2.pwd2.length>0">密码不一致</span>
+                  v-if="$v.form2.pwd.minLength&&!$v.form2.pwd2.sameAs&&this.form2.pwd2.length>0">{{$t('message.Entered_differ')}}</span>
 
           </div>
-          <div v-if="selected==3">
-            <span class="form-group__message" v-if="!$v.form3.phone.minLength||!$v.form3.phone.maxLength">号码不合法.</span>
-            <span class="form-group__message" v-if="!$v.form3.pwd.minLength">密码长度不够</span>
+          <div v-if="selected==3" class="form-tip">
+            <span class="form-group__message" v-if="!$v.form3.phone.minLength||!$v.form3.phone.maxLength">{{$t('message.phone_error')}}.</span>
+            <span class="form-group__message" v-if="!$v.form3.pwd.minLength">{{$t('message.password_error')}}</span>
             <span class="form-group__message"
-                  v-if="$v.form3.pwd.minLength&&!$v.form3.pwd2.sameAs&&this.form3.pwd2.length>0">密码不一致</span>
+                  v-if="$v.form3.pwd.minLength&&!$v.form3.pwd2.sameAs&&this.form3.pwd2.length>0">{{$t('message.Entered_differ')}}</span>
           </div>
-          <!--<pre>{{ $v.form }}</pre>-->
-          <!--{{$v.form.$invalid}}-->
-          <!--{{selected}}-->
           <!--错误信息/-->
+          <div class="btn-block-wrapper">
           <button class="Button--primary Button--blue" @click="register">{{$t('message.signup')}}</button>
-          <p style="padding: 20px">
+          </div>
+          <div style="padding: 0 20px;font-size: 12px">
             <router-link to="login">{{$t('message.Back')}}</router-link>
-          </p>
+          </div>
         </div>
       </div>
     </div>
@@ -280,21 +279,21 @@
             if (!this.$v.form.$invalid) {
               this.checkEmail(this.form.email, () => {this._postInfo()})
             } else {
-              alert('请检查填写是否完整或有误')
+              alert(this.$t('message.check_fields'))
             }
 
           } else if (this.selected == '2') { // 手机号
             if (!this.$v.form2.$invalid) {
               this._postInfoByMobile()
             } else {
-              alert('请检查填写是否完整或有误')
+              alert(this.$t('message.check_fields'))
             }
 
           } else {// 加入公司
             if (!this.$v.form3.$invalid) {
               this._joinCompany()
             } else {
-              alert('请检查填写是否完整或有误')
+              alert(this.$t('message.check_fields'))
             }
           }
       },
@@ -425,6 +424,7 @@
     background: linear-gradient(90deg, #15b982, #01d18b);
     -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, .16);
     box-shadow: 0 3px 6px rgba(0, 0, 0, .16);
+    border-radius: 2px;
   }
 
   .help.is-danger {

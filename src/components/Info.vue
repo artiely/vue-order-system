@@ -1,12 +1,12 @@
 <template>
-  <div class="login">
+  <div class="login" style="background: white">
     <div class="page-content">
-      <mt-header fixed title="FWONE">
+      <mt-header fixed :title="$t('message.Personal_information')">
         <mt-button icon="back" slot="left" @click="back"></mt-button>
       </mt-header>
       <div class="wrapper" style="text-align: left;background:#fff;padding-top: 40px">
         <div v-if="editData.accountType==2">
-          <div>
+          <div class="form-content">
             <mu-text-field :hintText="$t('message.Company_name')" class="require" v-model="form2.company"
                            />
             <div class="help">{{$t('message.Company_name_help')}}</div>
@@ -32,7 +32,7 @@
           </div>
         </div>
         <div v-if="editData.accountType==1">
-          <div>
+          <div class="form-content">
             <mu-text-field :hintText="$t('message.Name')" class="require" v-model="form1.userName"  />
             <mu-text-field :hintText="$t('message.Phone_number')" class="require" v-model="form1.phone"
                            />
@@ -51,11 +51,13 @@
         </div>
 
         <div >
-          <span class="form-group__message" v-if="!$v.form2.companyIdNum.minLength">营业执照号格式不正确.</span>
-          <span class="form-group__message" v-if="!$v.form2.mark.alpha">英文简称只支持英文字母.</span>
-          <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form1.phone.maxLength">手机号格式错误.</span>
+          <span class="form-group__message" v-if="!$v.form2.companyIdNum.minLength">{{$t('message.company_id_error')}}.</span>
+          <span class="form-group__message" v-if="!$v.form2.mark.alpha">{{$t('message.mark_error')}}.</span>
+          <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form1.phone.maxLength">{{$t('message.phone_error')}}.</span>
         </div>
-        <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
+        <div class="btn-block-wrapper">
+          <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
+        </div>
       </div>
     </div>
 
@@ -134,7 +136,7 @@
       },
       handleSubmit () {
         if (this.$v.form.$invalid) {
-          alert('请检查填写是否完整或有误')
+          alert(this.$t('message.check_fields'))
           return
         } else {
           // 如果是修改 提交参数略有不同
@@ -231,7 +233,9 @@
               phone: data.telephone,
               code: ''
             }
-            this.form = {typeId, company, mark, companyIdNum, userName, phone, code}
+            this.form = {typeId}
+            this.form1 = { userName, phone, code}
+            this.form2 = { company, mark, companyIdNum, userName, phone, code}
           }
         })
       },

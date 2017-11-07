@@ -22,10 +22,12 @@ const mutations = { //状态只能通过此改变
   ['GET_ORDER_NUMBER'](state, payload) {
     state.oid = payload.oid;
     state.callId = payload.id;
-    state.type=payload.type;
+    if(payload.type){
+      state.type=payload.type;
+      sessionStorage.type = payload.type;
+    }
     sessionStorage.oid = payload.oid;
     sessionStorage.id = payload.id;
-    sessionStorage.type = payload.type;
   },
   ['SET_ORDER_NUMBER'](state, payload){
     state.oid = payload;

@@ -2,7 +2,6 @@
   <div class="pay">
     <mt-header :title="$t('message.Submit_orders')" fixed style="z-index: 9;">
       <mt-button icon="back" @click="back" slot="left"></mt-button>
-
     </mt-header>
     <scroller class="page-content">
       <div v-if="isCharge!=1">
@@ -89,7 +88,7 @@
       </div>
       <div v-if="isCharge==1" class="card">
         群思科技有限公司预付款充值  ({{orderNo}})
-        <mu-text-field v-model="orderPrice" fullWidth label="充值金额（元）" hintText="请输入" type="number" labelFloat/>
+        <mu-text-field v-model="orderPrice" fullWidth :label="$t('message.pay_count')" :hintText="$t('message.please_enter')" type="number" labelFloat/>
         <br/>
       </div>
       <div class="card-box" style="margin-top: 10px">
@@ -153,7 +152,6 @@
             </tr>
           </table>
         </label>
-
         <div class="cell" @click="setInvoice">
           <div class="title">
             {{$t('message.Invoice')}}
@@ -168,8 +166,9 @@
         </div>
         <div class="cell" @click="showCoupons" v-if="couponsList.length>0&&isCharge!=1">
           <div class="title">
-            使用优惠券
-            <span class="value" v-if="couponId!=''">已为您优惠{{choiceCoupon[0].amount}}元</span>
+            {{$t('message.use_coupon')}}
+            <!--已为您优惠{{choiceCoupon[0].amount}}元-->
+            <span class="value" v-if="couponId!=''"> {{$t('message.Offer_rmb',{msg:choiceCoupon[0].amount})}}</span>
             <i class="iconfont icon-enter"></i>
           </div>
         </div>
@@ -211,7 +210,7 @@
 
           <div @click="showInvoiceHistory" v-if="invoice.invoiceType!=0&&invoiceList.length>0" class="yellowbg"
                style=";border-radius: 22px;font-size: 12px;display: inline-block;margin: 4px auto;padding: 8px 14px">
-            您有历史开票记录，点击选择
+            {{$t('message.history_select')}}
           </div>
           <div style="margin-top: 10px">
             <mt-field type="text" :placeholder="$t('message.Company_name')" v-model="invoice.partAName"

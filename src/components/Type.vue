@@ -327,7 +327,7 @@
               }
               this._postData(data)
             }else{
-              alert('请检查填写是否完整或有误')
+              alert(this.$t('message.check_fields'))
             }
           }else{// 企业
             if (!this.$v.mobile2.$invalid) {
@@ -344,7 +344,7 @@
               }
               this._postData(data)
             }else{
-              alert('请检查填写是否完整或有误')
+              alert(this.$t('message.check_fields'))
             }
           }
 
@@ -369,7 +369,7 @@
                 }
                 this._postData(data)
               }else{
-                alert('请检查填写是否完整或有误')
+                alert(this.$t('message.check_fields'))
               }
             }else{
               if(!this.$v.email2.$invalid){
@@ -388,7 +388,7 @@
                 }
                 this._postData(data)
               }else{
-                alert('请检查填写是否完整或有误')
+                alert(this.$t('message.check_fields'))
               }
 
             }
@@ -414,7 +414,7 @@
                 }
                 this._postData(data)
               }else{
-                alert('请检查填写是否完整或有误')
+                alert(this.$t('message.check_fields'))
               }
 
             }else{ // 企业
@@ -435,7 +435,7 @@
                 }
                 this._postData(data)
               }else{
-                alert('请检查填写是否完整或有误')
+                alert(this.$t('message.check_fields'))
               }
             }
         }

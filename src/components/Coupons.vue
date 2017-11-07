@@ -1,6 +1,6 @@
 <template>
   <div class="coupons">
-    <mt-header fixed title="我的优惠券">
+    <mt-header fixed :title="$t('message.My_coupons')">
       <mt-button icon="back" slot="left" @click="back"></mt-button>
     </mt-header>
     <scroller style="padding-top: 40px"
@@ -9,8 +9,8 @@
               :refreshText="$t('message.Pull_to_refresh')"
               :noDataText="$t('message.No_more_data')">
       <mt-navbar v-model="selected">
-        <mt-tab-item id="0">可使用</mt-tab-item>
-        <mt-tab-item id="1">已使用/已过期</mt-tab-item>
+        <mt-tab-item id="0">{{$t('message.Enable')}}</mt-tab-item>
+        <mt-tab-item id="1">{{$t('message.Disable')}}</mt-tab-item>
       </mt-navbar>
 
       <div v-for="item in DataList" class="coupons-item redbg " :class="selected==1?'expire':''"
@@ -26,18 +26,19 @@
             <table style="width: 100%" cellspacing="0" border="0" cellpadding="0">
               <tr>
                 <td rowspan="2">￥<span style="font-size: 40px">{{item.amount}}</span></td>
-                <td style="text-align: right"><div>优惠券</div></td>
+                <td style="text-align: right"><div>{{$t('message.Coupon')}}</div></td>
               </tr>
               <tr>
-                <td style="text-align: right"><div style="font-size: 10px"> 不可叠加</div></td>
+                <td style="text-align: right"><div style="font-size: 10px"> {{$t('message.Not_superimposed_use')}}</div></td>
               </tr>
             </table>
-            <div style="font-size: 10px">请于{{item.expEndDate}}前使用</div>
+            <!--请于{{item.expEndDate}}前使用 -->
+            <div style="font-size: 10px">{{$t('message.use_it_before',{msg:item.expEndDate})}}</div>
           </div>
           <div style="width: 80px;border-left: 1px dashed #fff;padding: 8px;font-size: 20px;line-height: 58px;">
-            <span v-if="item.state==0&&selected!=1">可使用</span>
-            <span v-if="item.state==1">已使用</span>
-            <span v-if="item.state==0&&selected==1">已过期</span>
+            <span v-if="item.state==0&&selected!=1">{{$t('message.Enable')}}</span>
+            <span v-if="item.state==1">{{$t('message.Disable')}}</span>
+            <span v-if="item.state==0&&selected==1">{{$t('message.Expired')}}</span>
           </div>
         </div>
       </div>

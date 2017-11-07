@@ -29,7 +29,7 @@
     "vue-i18n": "^7.0.3",
     "vue-region-picker": "^3.0.1",
     "vue-router": "^2.3.1",
-    "vue-scroller": "^2.2.3",
+    "vue-scroller": "^2.2.4",
     "vue-select": "github:sagalbot/vue-select",
     "vue-slider-component": "^2.3.5",
     "vue-star-rating": "^1.4.0",
