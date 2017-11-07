@@ -8,8 +8,8 @@
         <div>
           <div>
             <mu-text-field :hintText="$t('message.Name')"  class="require" v-model="form.userName" />
-            <mu-text-field :hintText="$t('message.Phone_number')"  class="require" @blur="checkPhone" v-model="form.phone"  />
-            <div class="help">手机号可作为登录账号</div>
+            <mu-text-field :hintText="$t('message.Phone_number')"  class="require"  v-model="form.phone"  />
+            <div class="help">{{$t('message.phone_can_login')}}</div>
             <!--只有微信注册手机号才可以为登录账号-->
             <div style="text-align: left">
               <mu-text-field :hintText="$t('message.Msg_code')"  class="require" v-model="form.code" type="text"
@@ -27,9 +27,9 @@
             <mu-text-field :hintText="$t('message.repeat_password')"  class="require" v-model="form.pwd2" type="password"  name="pwd2" fullWidth/>
           </div>
         </div>
-        <span class="form-group__message" v-if="!$v.form.pwd.minLength">密码长度不够.</span>
-        <span class="form-group__message" v-if="$v.form.pwd.minLength&&!$v.form.pwd2.sameAs">密码不一致.</span>
-        <span class="form-group__message" v-if="!$v.form.phone.minLength||!$v.form.phone.maxLength||!$v.form.phone.minLength||!$v.form.phone.maxLength">手机号格式错误.</span>
+        <span class="form-group__message" v-if="!$v.form.pwd.minLength">{{$t('message.password_error')}}.</span>
+        <span class="form-group__message" v-if="$v.form.pwd.minLength&&!$v.form.pwd2.sameAs">{{$t('message.Entered_differ')}}.</span>
+        <span class="form-group__message" v-if="!$v.form.phone.minLength||!$v.form.phone.maxLength||!$v.form.phone.minLength||!$v.form.phone.maxLength">{{$t('message.phone_error')}}.</span>
         <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
       </div>
     </div>
@@ -81,7 +81,7 @@
       },
       handleSubmit () {
         if (this.$v.form.$invalid) {
-          alert('请检查填写是否完整或有误')
+          alert(this.$t('message.check_fields'))
           return
         } else {
           let data = {
@@ -134,7 +134,7 @@
           }
         })
       },
-      checkPhone () { // 判断手机是否被注册
+   /*   checkPhone () { // 判断手机是否被注册
         this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
           if (res.code === 0) {
             if (res.state == '0') {
@@ -148,7 +148,7 @@
             alert(JSON.stringify(res))
           }
         })
-      }
+      }*/
     },
     created () {
 

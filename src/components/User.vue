@@ -110,9 +110,10 @@
           <i class="iconfont icon-enter"></i>
         </div>
       </div>
-
-      <div style="height: 100px;"></div>
-
+      <mt-button type="danger" @click="loginOut" size="small"
+           style="width: 95%;margin-top: 10px">{{$t('message.Logout')}}
+      </mt-button>
+      <div style="height: 80px;"></div>
     </scroller>
 
     <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left"
@@ -126,18 +127,15 @@
     <mt-popup
       v-model="switchVisible"
       position="left"
-      style="width: 70%;height: 100%">
+      style="width: 60%;height: 100%">
       <div v-if="accountList.length>0">
         <div class="bluebg" style="color: #fff;padding: 6px">{{$t('message.Switchable_account')}}</div>
-        <div class="greenbg account-btn" :class="{yellowbg:item.id==userId}" v-for="item in accountList"
+        <div :class="['account-btn',item.id==userId?'bluebg':'btn-white']" v-for="item in accountList"
              @click="changeAccount(item)">
-          {{item.userName}}
+          <i v-if="item.id==userId" class="iconfont icon-mine"></i> {{item.userName}}
         </div>
       </div>
       <div v-else class="bluebg" style="color: #fff;padding: 6px">{{$t('message.No_switch_account')}}</div>
-      <div type="danger" @click="loginOut" size="large"
-           style="width: 95%;margin: 40px auto;border-radius: 22px;padding: 8px" class="redbg">{{$t('message.Logout')}}
-      </div>
     </mt-popup>
     <!--账号切换/-->
   </div>

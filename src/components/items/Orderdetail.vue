@@ -5,18 +5,10 @@
         <mt-header :title="$t('message.Detail')" fixed style="z-index: 9;">
           <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
         </mt-header>
-        <scroller class="page-content" style="background:#fafafa;">
-          <div class="shadow-box content">
-            <div style="padding: 8px">
-              <div> {{$t('message.NO')}}：<span id="oid">{{orderNum}}</span>
-                <span class="state-label" v-if="status==8">{{$t('message.Complete')}}</span>
-                <div v-if="priceRemark" v-html="priceRemark">123</div>
-              </div>
-
-            </div>
-          </div>
+        <scroller class="page-content">
           <div class="shadow-box">
-            <div class="titlebox yellowbg">{{$t('message.Order_status')}}</div>
+            <div class="titlebox"><i class="iconfont icon-label"></i> {{$t('message.Order_status')}}</div>
+            <div style="margin: 10px">
             <swiper :options="swiperOption" ref="mySwiper" class="step-box">
               <!-- slides -->
               <swiper-slide>
@@ -82,25 +74,46 @@
                 </div>
               </swiper-slide>
             </swiper>
+            </div>
+            <hr>
+            <table class="callDetails">
+              <tr>
+                <td>{{$t('message.Order_status')}}</td><td style="color:#26a2ff" v-html="status!=-1?statusLabel[status]:$t('message.Cancelled')"></td>
+              </tr>
+              <tr>
+                <td>{{$t('message.NO')}}</td><td>{{orderNum}}</td>
+              </tr>
+              <tr v-if="score">
+                <td>{{$t('message.Rate')}}</td>
+                <td><span v-for="n in score/2"><i class="iconfont icon-collection_fill text-yellow"></i></span> </td>
+              </tr>
+              <tr v-if="priceRemark">
+                <td>{{$t('message.baojia')}}</td><td><div v-if="priceRemark" v-html="priceRemark">123</div></td>
+              </tr>
+            </table>
+            <mt-button size="small" style="width:95%;background: #ffbd17" type="danger" @click="toPay(orderNum)"
+                 v-if="detailData.payway==1 && orderInfo.auditStatusMin ==11000 && orderInfo.fwoneCheckState!=20 && orderInfo.fwoneCheckState!=30&&orderInfo.orderstateid>=7750&& (orderInfo.receiveStateMin<65 || !orderInfo.receiveStateMin)"
+            >{{$t('message.Pay')}}
+            </mt-button>
           </div>
           <div class="shadow-box">
-            <div class="titlebox yellowbg">{{$t('message.Service_detail')}}</div>
-            <div v-for="(item,index) in detailData.callDetails" :key="index">
+            <div class="titlebox"><i class="iconfont icon-other"></i> {{$t('message.Service_detail')}}</div>
+            <div v-for="(item,index) in detailData.callDetails" :key="index" class="box-content">
               <table v-for="(subitem,i) in item " :key="i" class="callDetails" style="width: 100%">
-                <tr>
-                  <td colspan="2" style="width: 100%"><label>{{subitem.serviceName}}</label> <span class="label greenbg"
-                                                                                                   style="float: right"
-                                                                                                   v-if="subitem.price">{{subitem.price}} <span
+                <tr v-if="i==0">
+                  <td colspan="2" style="width: 100%;line-height: 18px">
+                    <span style="color:#2c3e50">{{subitem.serviceName}}</span> <span class="text-red" style="float: right" v-if="subitem.price">{{'¥ ' +subitem.price}} <span
                     v-if="detailData.workFlow.serviceType">({{detailData.workFlow.serviceType}})</span></span>
                   </td>
                 </tr>
+                <hr v-if="i==0 && subitem.serviceName">
                 <tr>
                   <td width="66">{{$t('message.User')}}</td>
                   <td>{{subitem.yh}}</td>
                 </tr>
                 <tr>
                   <td width="66">{{$t('message.Engineer')}}</td>
-                  <td><a>{{subitem.engineername}}</a></td>
+                  <td>{{subitem.engineername}}</td>
                 </tr>
                 <tr>
                   <td width="66">{{$t('message.Duration')}}</td>
@@ -109,13 +122,13 @@
                 <tr>
                   <td width="66">{{$t('message.Fault_description')}}</td>
                   <td>
-                    <div class="word-wrap">{{subitem.faultDesc}}</div>
+                    <div class="word-wrap"  v-html='subitem.faultDesc.replace(/\r\n/g,"<br>")'></div>
                   </td>
                 </tr>
                 <tr>
                   <td width="66">{{$t('message.Solving_steps')}}</td>
                   <td>
-                    <div class="word-wrap">{{subitem.faultSolve}}</div>
+                    <div class="word-wrap" v-html='subitem.faultSolve.replace(/\r\n/g,"<br>")'></div>
                   </td>
                 </tr>
                 <tr>
@@ -126,41 +139,43 @@
                     </button>
                   </td>
                 </tr>
+                <hr v-if="i!=item.length-1">
               </table>
             </div>
           </div>
-          <div class="shadow-box">
-            <div class="titlebox yellowbg">{{$t('message.Engineer_information')}}</div>
+          <div class="shadow-box"  v-if="detailData.engineers&&detailData.engineers[0]!=null">
+            <div class="titlebox"><i class="iconfont icon-businesscard"></i> {{$t('message.Engineer_information')}}</div>
+            <div style="padding: 5px">
             <table v-for="(item,key) in detailData.engineers" :key="key" class="engineer-info">
               <tr>
                 <td rowspan="3">
                   <div class="en-icon" style="line-height: 100px;">
-                    <img :src="'image/download?imgName='+item.photoPath" alt=""
+                    <img :src="'image/download?imgName='+ ((item&&item.photoPath)?item.photoPath:'')" alt=""
                          style="width: 100%;height: 100%;object-fit: cover">
-                    <span v-if="!item.photoPath">{{$t('message.No_found')}}</span>
+                    <span v-if="!item">{{$t('message.No_found')}}</span>
                   </div>
                 </td>
-                <td>{{$t('message.Name')}}：</td>
+                <td class="text-gray" style="width:80px">{{$t('message.Name')}}</td>
                 <td>{{item.engineername}}</td>
               </tr>
               <tr>
-                <td>{{$t('message.Postion')}}：</td>
+                <td class="text-gray">{{$t('message.Postion')}}</td>
                 <td>{{item.post}}</td>
               </tr>
               <tr>
-                <td>{{$t('message.Service_years')}}：</td>
+                <td class="text-gray">{{$t('message.Service_years')}}</td>
                 <td><span class="null" v-if="!item.entrytime">{{$t('message.No_found')}}</span>
-                  <div v-if="item.entrytime">{{item.entrytime}}</div>
+                  <div v-if="item.entrytime">{{item.entrytime.substr(0,10)}}</div>
                 </td>
               </tr>
               <tr>
-                <td style="vertical-align: top">{{$t('message.Self_evaluation')}}</td>
+                <td style="vertical-align: top" class="text-gray">{{$t('message.Self_evaluation')}}</td>
                 <td colspan="2"><span class="null" v-if="!item.evaluation">{{$t('message.No_found')}}</span>
-                  <div v-if="item.evaluation" style="text-align: left">{{item.evaluation}}</div>
+                  <div v-if="item.evaluation" style="text-align: left" v-html='item.evaluation.replace(/\r\n/g,"<br>")'></div>
                 </td>
               </tr>
               <tr>
-                <td style="vertical-align: top">{{$t('message.Skills')}}</td>
+                <td style="vertical-align: top" class="text-gray">{{$t('message.Skills')}}</td>
                 <td colspan="2"><span class="null"
                                       v-if="!item.skills||item.skills.length==0">{{$t('message.No_found')}}</span>
                   <div style="text-align: left">
@@ -171,36 +186,28 @@
                 </td>
               </tr>
               <tr>
-                <td style="vertical-align: top">{{$t('message.Language')}}</td>
+                <td style="vertical-align: top" class="text-gray">{{$t('message.Language')}}</td>
                 <td colspan="2"><span class="null"
                                       v-if="!item.languages||item.languages.length==0">{{$t('message.No_found')}}</span>
                   <div style="text-align: left">
                     <mt-badge size="small" v-if="item.languages" v-for="(language,index) in item.languages" :key="index"
                               style="font-size: 10px;margin-bottom: 5px;margin-right: 5px">
-                      {{language.language + language.certificate}}
+                      {{language.language}} -  {{language.certificate}}
                     </mt-badge>
                   </div>
                 </td>
               </tr>
             </table>
+            </div>
           </div>
+          <mt-button size="small" style="width:95%" type="primary" v-if="status>=0 && status<2 && show_reminder" @click="reminder">
+            {{$t('message.Reminder')}}
+          </mt-button>
+          <mt-button size="small" style="width:95%" type="default" v-if="status<8 && status>=3" @click="toushuVisible=!toushuVisible">
+            {{$t('message.complaint')}}
+          </mt-button>
           <div style="height: 80px"></div>
         </scroller>
-        <div class="footerBar">
-          <!--{{detailData.payway}},{{orderInfo.auditStatusMin}},{{orderInfo.fwoneCheckState}}-->
-          <!--item.payway==1  && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30 &&item.orderstateid>=7750&& (item.receiveStateMin<65 || !item.receiveStateMin)-->
-          <div class="pull-right pay-button" @click="toPay(orderNum)"
-               v-if="detailData.payway==1 && orderInfo.auditStatusMin ==11000 && orderInfo.fwoneCheckState!=20 && orderInfo.fwoneCheckState!=30&&orderInfo.orderstateid>=7750&& (orderInfo.receiveStateMin<65 || !orderInfo.receiveStateMin)"
-          >{{$t('message.Pay')}}
-          </div>
-          <button size="small" class="footerBtn" v-if="status>=0 && status<2 && show_reminder" @click="reminder">
-            {{$t('message.Reminder')}}
-          </button>
-          <button size="small" class="footerBtn" v-if="status<8 && status>=3" @click="toushuVisible=!toushuVisible">
-            {{$t('message.complaint')}}
-          </button>
-          <!--<button size="small" class="footerBtn" v-if="status>=5">发票</button>-->
-        </div>
         <!--评价-->
         <mt-popup
           v-model="pingjiaVisible"
@@ -210,14 +217,14 @@
             </mt-button>
           </mt-header>
           <scroller style="padding-top:40px">
-            <table style="text-align: left">
+            <table class="table-rating">
               <tr>
-                <td width="50">{{$t('message.Service_center')}}：</td>
+                <td>{{$t('message.Service_center')}}：</td>
                 <td>
                   <div class="rating">
                     <star-rating :star-size="30" v-model="ratingToService" :show-rating="false"
                                  :inline="true"></star-rating>
-                    <span v-if="ratingToService==0" class="text ">{{$t('message.Unvalued')}}</span>
+                    <span v-if="ratingToService==0" class="text text-gray">{{$t('message.Unvalued')}}</span>
                     <span v-if="ratingToService==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
                     <span v-if="ratingToService==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
                     <span v-if="ratingToService==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
@@ -227,12 +234,12 @@
                 </td>
               </tr>
               <tr>
-                <td width="50"> {{$t('message.Engineer')}}：</td>
+                <td> {{$t('message.Engineer')}}：</td>
                 <td>
                   <div class="rating">
                     <star-rating :star-size="30" v-model="ratingToEngineer" :show-rating="false"
                                  :inline="true"></star-rating>
-                    <span v-if="ratingToEngineer==0" class="text ">{{$t('message.Unvalued')}}</span>
+                    <span v-if="ratingToEngineer==0" class="text text-gray">{{$t('message.Unvalued')}}</span>
                     <span v-if="ratingToEngineer==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
                     <span v-if="ratingToEngineer==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
                     <span v-if="ratingToEngineer==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
@@ -242,12 +249,12 @@
                 </td>
               </tr>
               <tr>
-                <td width="50"> {{$t('message.Overall')}}：</td>
+                <td> {{$t('message.Overall')}}：</td>
                 <td>
                   <div class="rating">
                     <star-rating :star-size="30" v-model="ratingToAll" :show-rating="false"
                                  :inline="true"></star-rating>
-                    <span v-if="ratingToAll==0" class="text ">{{$t('message.Unvalued')}}</span>
+                    <span v-if="ratingToAll==0" class="text text-gray">{{$t('message.Unvalued')}}</span>
                     <span v-if="ratingToAll==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
                     <span v-if="ratingToAll==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
                     <span v-if="ratingToAll==3" class="text bluebg">{{$t('message.Ordinary')}}</span>
@@ -262,14 +269,14 @@
             <small v-if="evaluate_num!=0" class="pull-right" style="color: #888">
               {{$t('message.Publish_tip', {Num: evaluate_num})}}
             </small>
-            <mt-button type="primary" size="large" :disabled="evaluate_num!=0" @click.native="RatingSubOrder">
+            <mt-button type="primary" size="small" :disabled="evaluate_num!=0" @click.native="RatingSubOrder" style="width:95%">
               {{$t('message.Publish')}}
             </mt-button>
             <div v-if="ratingHistoryList.length>0">
-              <h3 style="padding: 20px 0 0 0;margin: 0">历史评论：</h3>
+              <h3 style="padding: 0px 0 0 10px;text-align: left">历史评价</h3>
               <mt-cell v-for="(item,index) in ratingHistoryList" :key="index">
                 <div slot="title" style="text-align: left;font-size: 12px">
-                  <p>满意度：
+                  <p><span class="text-gray">满意度：</span>
                     <span v-if="item.score==0" class="text ">{{$t('message.Unvalued')}}</span>
                     <span v-if="item.score==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
                     <span v-if="item.score==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
@@ -277,7 +284,7 @@
                     <span v-if="item.score==4" class="text bluebg">{{$t('message.Satisfied')}}</span>
                     <span v-if="item.score==5" class="text greenbg">{{$t('message.Very_satisfied')}}</span>
                   </p>
-                  <p style="font-size: 10px;text-align: left;color: #999;line-height: 1.2;">{{item.comments}}</p>
+                  <p style="text-align: left;color: #999;line-height: 1.2;">{{item.comments}}</p>
                 </div>
               </mt-cell>
             </div>
@@ -294,7 +301,7 @@
           <mt-header :title="$t('message.complaint')" fixed style="z-index: 9;">
             <mt-button icon="back" @click="toushuVisible=!toushuVisible" slot="left">{{$t('message.Back')}}</mt-button>
           </mt-header>
-          <scroller style="padding-top: 40px;text-align: left">
+          <div style="padding-top: 40px;text-align: left">
             <mt-radio
               :title="$t('message.Cause_complaint')"
               v-model="reasonId"
@@ -313,7 +320,7 @@
               {{$t('message.Submit')}}
             </mt-button>
             <div style="height: 80px;"></div>
-          </scroller>
+          </div>
         </mt-popup>
         <!--投诉/-->
       </div>
@@ -343,6 +350,7 @@
           onTransitionStart(){
           },
         },
+        score:0,
         some: '',
         pingjiaVisible: false,
         callDetailId: '',// 提交评价子单的id
@@ -393,13 +401,25 @@
         ],
         departmentIds: ['3'],
         timeout: '',
-        priceRemark: ''
+        priceRemark: '',
+        statusLabel:[this.$t('message.anorder'),this.$t('message.progressing'),this.$t('message.Accept'),this.$t('message.Depart'),this.$t('message.Arrive'),this.$t('message.Sign'),this.$t('message.Confirm_price'),this.$t('message.Invoice'),this.$t('message.Payment'),this.$t('message.Complete')]
       }
     },
     watch: {
+      'pingjiaVisible':{
+        handler(val){
+          if (!val){
+            this.ratingHistoryList=[];
+            this.ratingToEngineer=0;
+            this.ratingToService=0;
+            this.ratingToAll=0;
+            this.evaluate="";
+          }
+        }
+      },
       'status': {
         handler(val){
-          this.$refs.mySwiper.swiper.slideTo(val > 3 ? 7 : 0)
+          this.$refs.mySwiper.swiper.slideTo(val)
         }
       },
       'ratingToService': {
@@ -458,7 +478,8 @@
       getSubOrder() {
         this.$api.get_sub_order({callId: this.state.callId.toString()}).then(res => {
           if (res.code == ERR_OK) {
-            this.subList = res.callDetailList
+            this.subList = res.callDetailList;
+            this.score= res.minScore;
           } else {
             alert(res.msg)
           }
@@ -482,6 +503,7 @@
           data.seatsScore = this.ratingToEngineer
         }
         this.$api.rating_sub_order(data).then(res => {
+          this.evaluate="";
           if (res.code === ERR_OK) {
             this.$toast(this.$t('message.Success'))
             this._ratingHistory()
@@ -558,6 +580,17 @@
       this.getSubOrder()
       this.show_reminder = true
       this.getPriceRemark()
+      //页面刷新重新赋值
+    /*  this.$store.dispatch('new_detail', {
+        oid: sessionStorage.getItem('oid'),
+        id: sessionStorage.getItem('id'),
+        type: sessionStorage.getItem('type')
+      })
+      var item = sessionStorage.getItem('orderInfo')
+      if (item !== 'null' || item !== 'undefined') {
+        this.$store.commit('SET_ORDER_INFO', JSON.parse(item))
+      }*/
+
     },
     deactivated(){
       clearTimeout(this.timeout)
@@ -614,10 +647,12 @@
 
   .callDetails tr {
     display: flex;
+    line-height: 14px;
   }
 
-  .callDetails {
-    border-bottom: 2px solid #26a2ff;
+  .callDetails tr td:nth-child(1) {
+    width:66px;
+    color:#999
   }
 
   .null {
@@ -625,11 +660,12 @@
   }
 
   .titlebox {
+    text-align: left;
+    color: #2c3e50;
     padding: 8px;
-    display: block;
     width: 100%;
-    position: relative;
-    box-shadow: 0 2px 10px -3px rgba(0, 0, 0, .1);
+    font-size: 13px;
+    box-shadow: 0 2px 5px -3px rgba(67, 67, 67, 0.1);
   }
 
   .page-content {
@@ -651,10 +687,12 @@
   }
 
   .shadow-box {
-    width: 98%;
-    margin: 10px auto;
+    width: 100%;
+    margin: 0 0 10px;
+    padding:0 0 10px;
     box-shadow: 0 0 0px rgba(0, 0, 0, .1);
     background: #fff;
+    border:1px solid #e6e6e6;
   }
 
   .callDetails tr td:nth-of-type(1) {
@@ -673,9 +711,9 @@
   }
 
   .fw0 {
-    color: #666;
+    color: #999;
     &:after {
-      border-bottom: 1px dashed #666;
+      border-bottom: 1px dashed #999;
     }
   }
 
@@ -703,7 +741,7 @@
   }
 
   .content {
-    width: 98%;
+    width: 100%;
     margin: 10px auto;
     box-shadow: 0 1px 8px rgba(0, 0, 0, .1);
     text-align: left;
@@ -717,7 +755,7 @@
 
   .item {
     min-width: 70px;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .footerBar {
@@ -735,13 +773,13 @@
     margin-right: 5px;
     margin-left: 5px;
     float: right;
-    border-radius: 0;
+    font-size: 12px;
     color: #999;
     outline: none;
     background: #fff;
-    border-radius: 14px;
+    border-radius: 4px;
     padding: 2px 10px;
-    border: 1px solid #666;
+    border: 1px solid #878787;
   }
 
   .swiper-slide {
@@ -765,7 +803,33 @@
     font-weight: 700;
   }
 
-  .engineer-info td:nth-child(1) {
+  .engineer-info td {
+    text-align: left;
+    padding-left:5px ;
+    line-height: 20px;
   }
+  .text-gray{
+    color: #999;
+  }
+
+  .text-red{
+    color:#e4393c
+  }
+  .text-yellow{
+    color:#ffbd17
+  }
+
+  .table-rating{
+    text-align: left;
+    font-size: 12px;
+    color: #7d7d7d;
+  }
+  .table-rating tr td{
+    padding-left:10px;
+  }
+
+
+
+  hr{height:1px;border:none;border-top:1px dotted #ededed;margin:5px 10px}
 
 </style>

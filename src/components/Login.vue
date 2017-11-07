@@ -10,22 +10,21 @@
             <div class="errorMeg" v-if="error">{{errorMsg}}</div>
             <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model="username">
             <input type="password" :placeholder="$t('message.Account_password')" v-model="password">
-            <button id="login-button" @click="login" style="border-radius: 0">{{$t('message.Login')}}</button>
+            <button id="login-button" @click="login" style="border-radius: 2px;font-size:16px">{{$t('message.Login')}}</button>
           </div>
           <div style="height: 30px;width: 100%"></div>
           <div class="footer-btn clearfix"><span @click="forget_password" class="pull-left"
-                                                 style="padding-right: 50px"> {{$t('message.forget_password')}}</span> <span
-            class="pull-right" style="padding-left: 50px" @click="toRegister">{{$t('message.signup')}}</span></div>
+                                                 style="padding-right: 50px;font-size: 12px"> {{$t('message.forget_password')}}</span>
+            <span
+              class="pull-right" style="padding-left: 50px;font-size: 12px" @click="toRegister">{{$t('message.signup')}}</span></div>
           <div style="text-align: left;width: 100%;margin:0 auto ;padding: 20px 0">
-            <select style="padding: 8px;outline: none;background:rgba(255,255,255,.9);border: none;" v-model="lang">
+            <select style="padding: 8px;outline: none;background:rgba(255,255,255,.9);border: none;border-radius: 2px" v-model="lang">
               <option value="EN">English</option>
               <option value="CN">中文简体</option>
               <option value="TN">中文繁体</option>
             </select>
           </div>
         </div>
-
-
         <ul class="bg-bubbles">
           <li></li>
           <li></li>
@@ -75,11 +74,16 @@
           this.$i18n.locale = 'CN'
           window.localStorage.setItem('lang', 'CN')
         }
-        this.$store.commit('SET_LANG',val)
+        this.$store.commit('SET_LANG', val)
       }
     },
     methods: {
       login(){
+        if (this.username == '' || this.password == '') {
+          this.error = true
+          this.errorMsg = this.$t('message.name_password_empty')
+          return
+        }
         let data = "username=" + this.username + "&password=" + this.password + "&captcha=" + this.captcha + "&loginNum=1";
         this.$api.login(data).then((res) => {
           if (res.code == ERR_OK) { // 登录成功
@@ -162,7 +166,7 @@
     color: #fff;
     margin: 10px auto;
     padding: 8px 0;
-    border-radius: 0;
+    border-radius: 2px;
   }
 
   * {
@@ -251,7 +255,7 @@
     padding: 8px 15px;
     color: #26a2ff;
     border-radius: 3px;
-    width:100%;
+    width: 100%;
     cursor: pointer;
     font-size: 18px;
     transition-duration: 0.25s;

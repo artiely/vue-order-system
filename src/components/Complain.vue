@@ -26,7 +26,7 @@
         <mt-tab-container-item id="1" class="container">
           <div v-if="dataList1.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
           <div class="cell" v-for="(item,index) in dataList1" :key="item.callId">
-            <div class="cellTit" @click="showOrderDetail({id:item.callId,oid:item.orderNumber})">
+            <div class="cellTit" @click="showOrderDetail(item)">
               <div class="oNum">{{item.orderNumber}}</div>
               <div class="pull-left"><i class="iconfont icon-enter"></i></div>
             </div>
@@ -60,7 +60,7 @@
         <mt-tab-container-item id="2" class="container">
           <div v-if="dataList2.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
           <div class="cell" v-for="(item,index) in dataList2" :key="item.callId">
-            <div class="cellTit" @click="showOrderDetail({id:item.callId,oid:item.orderNumber})">
+            <div class="cellTit" @click="showOrderDetail(item)">
               <div class="oNum">{{item.orderNumber}}</div>
               <div class="pull-left"><i class="iconfont icon-enter"></i></div>
             </div>
@@ -94,7 +94,8 @@
         <mt-tab-container-item id="3" class="container">
           <div v-if="dataList3.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
           <div class="cell" v-for="(item,index) in dataList3" :key="item.callId">
-            <div class="cellTit" @click="showOrderDetail({id:item.callId,oid:item.orderNumber})">
+            <!--{{item}}-->
+            <div class="cellTit" @click="showOrderDetail(item)">
               <div class="oNum">{{item.orderNumber}}</div>
               <div class="pull-left"><i class="iconfont icon-enter"></i></div>
             </div>
@@ -132,7 +133,7 @@
         <mt-button icon="back" @click="showComplainDetail" slot="left">{{$t('message.Back')}}</mt-button>
       </mt-header>
       <scroller class="detail-content">
-        <div> <span class="label">{{$t('message.Cause_complaint')}}-</span>
+        <div><span class="label">{{$t('message.Cause_complaint')}}-</span>
           <span v-if="detailData.contentId">
             <span v-if="detailData.contentId==1">{{$t('message.Response_not_timely')}}</span>
             <span v-if="detailData.contentId==2">{{$t('message.Engineer_issues')}}</span>
@@ -142,15 +143,17 @@
           </span>
         </div>
         <div class="ts-tit">{{$t('message.Complaints')}}</div>
-        <div><span class="label">{{$t('message.Complainant')}}：</span> {{detailData.createPersonname}} @{{detailData.createCompanyShortName}}</div>
+        <div><span class="label">{{$t('message.Complainant')}}：</span>
+          {{detailData.createPersonname}} @{{detailData.createCompanyShortName}}
+        </div>
         <div><span class="label">{{$t('message.Create_time')}}：</span>{{detailData.createDate}}</div>
         <div><span class="label">{{$t('message.NO')}}：</span>{{detailData.orderNumber}}</div>
         <div><span class="label">{{$t('message.Complaints_department')}}：</span>
-          <span v-if="complainTargetObj[0]==1">{{$t('message.Enginner')}}</span>
+          <span v-if="complainTargetObj[0]==1">{{$t('message.Engineer')}}</span>
           <span v-if="complainTargetObj[1]==1">{{$t('message.Service_center')}}</span>
           <span v-if="complainTargetObj[2]==1">{{$t('message.Other')}}</span>
         </div>
-        <div> <span class="label">{{ $t('message.Complains_details') }}：</span>
+        <div><span class="label">{{ $t('message.Complains_details') }}：</span>
           <div v-html="detailData.complainDesc"></div>
         </div>
         <div class="ts-tit">{{$t('message.Result')}}</div>
@@ -158,7 +161,7 @@
           {{$t('message.Complaint_wait')}}
         </div>
         <div v-if="selected>1">
-          <div> <span class="label">{{$t('message.Received_by')}}：</span>{{detailData.processPersonname}}</div>
+          <div><span class="label">{{$t('message.Received_by')}}：</span>{{detailData.processPersonname}}</div>
           <div><span class="label">{{$t('message.Process_time')}}：</span>{{detailData.processDate}}</div>
           <div><span class="label">{{$t('message.Reply')}}：</span>
             <div v-html="detailData.processNotes"></div>
@@ -181,7 +184,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import {Toast} from 'mint-ui';
+  import { Toast } from 'mint-ui';
 
   export default {
     name: 'balance',
@@ -209,8 +212,15 @@
       back() {
         this.$router.back()
       },
-      showOrderDetail(parames){
-        this.$store.dispatch('get_order_number', {id: parames.id, oid: parames.oid})
+      showOrderDetail(item){
+        let payload = {
+          id: item.callId,
+          oid: item.orderNumber,
+          type: item.busniesstypeid
+        }
+        // 获取对应id的详情
+        this.$store.dispatch('new_detail', payload)
+        this.$store.commit('SET_ORDER_INFO', item)
         this.$router.push({path: '/orderdetail'})
       },
       showComplainDetail(index){
@@ -229,7 +239,7 @@
         }
       },
       onRefresh(done){
-        this._init(() => done(true))
+        this._initData(() => done(true))
       },
       onInfinite(done){
         if (this.selected == 1) {
@@ -279,7 +289,7 @@
           this.count = res
         })
       },
-      _init(cb){
+      _initData(cb){
         this.get_complain({page: 1, limit: 10, status: this.state1}, cb)
         this.get_complain({page: 1, limit: 10, status: this.state2}, cb)
         this.get_complain({page: 1, limit: 10, status: this.state3}, cb)
@@ -297,7 +307,7 @@
             this.$api.update_complain_rating(data).then(res => {
               if (res.code == ERR_OK) {
                 Toast(r.msg)
-                this._init()
+                this._initData()
               } else {
                 alert(res.msg)
               }
@@ -307,7 +317,7 @@
       }
     },
     created(){
-      this._init()
+      this._initData()
     },
     mounted(){
 
@@ -317,9 +327,10 @@
 
 </script>
 <style scoped>
-  span.label{
+  span.label {
     color: #999;
   }
+
   .ts-tit {
     padding: 6px 0;
     background: #fafafa;

@@ -3,12 +3,13 @@
     <mt-header :title="$t('message.Address')" fixed style="z-index: 9;">
       <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
-    <scroller class="page-content">
+    <div class="page-content">
+      <div v-if="!serviceAddress||serviceAddress.length==0" class="noData" style="text-align: center"><i class="iconfont icon-zanwushuju"></i><div style="color: #999;font-size: 14px">{{$t('message.No_more_data')}}</div></div>
       <mt-cell-swipe v-for="(item,index) in serviceAddress" :key="index" :id="item.companyId" class="cell-swipe"
                      :right="[
         {
           content: deleteIcon,
-          style: {background: 'red', color: '#fff'},
+          style: {background: '#ff3b2f', color: '#fff'},
           handler: () => deleteAddress(item.companyId)
         }
       ]"
@@ -17,7 +18,7 @@
           <table>
             <tr v-if="isCompany">
               <td><span class="top-icon"><i class="iconfont icon-homepage_fill"></i></span></td>
-              <td><span style="color: #3F536E;font-size: 16px;">{{item.companyName}}</span></td>
+              <td><span style="color: #3F536E;font-size: 14px;">{{item.companyName}}</span></td>
             </tr>
             <tr>
               <td><span class="top-icon"><i class="iconfont icon-coordinates_fill"></i></span></td>
@@ -27,53 +28,60 @@
         </div>
       </mt-cell-swipe>
 
-      <div style="height: 90px;"></div>
-    </scroller>
+      <div style="height: 39px;"></div>
+    </div>
     <mt-popup v-model="addVisible" position="right" :closeOnClickModal="false" :modal="false"
               style="width: 100%;height: 100%">
       <mt-header :title="$t('message.Add')" style="z-index: 9;">
         <mt-button icon="back" @click="showAddM" slot="left">{{$t('message.Back')}}</mt-button>
       </mt-header>
       <div v-if="showEditAddress">
-        <mt-popup v-model="addressVisible" position="bottom" style="width: 100%">
-          <div class="page-picker-wrapper">
-            <mt-picker :slots="addressSlots" v-if="addressSlots" class="picker" @change="onAddressChange"
-                       :visible-item-count="5"></mt-picker>
-          </div>
-        </mt-popup>
-        <mt-popup v-model="streetVisible" popup="popup-fade" position="bottom" style="width: 100%">
-          <div class="page-picker-wrapper">
-            <mt-picker :slots="streetSlots" v-if="streetSlots" ref="picker" class="picker" @change="onStreetChange"
-                       :visible-item-count="5"></mt-picker>
-          </div>
-        </mt-popup>
-        <div>
-          <mt-field label="" v-if="isCompany" :state="companyName.length>0?'success':'error'" v-model="companyName"
-                    :placeholder="$t('message.Company')"></mt-field>
-          <div @click="showAddress" class="cell-ad">{{ $t('message.Area')}}:{{ addressProvince }} {{ addressCity }} {{addressXian}}</div>
+        <mt-field :label="$t('message.Company')" v-if="isCompany" :state="companyName.length>0?'success':'error'"
+                  v-model="companyName"
+                  :placeholder="$t('message.Company_name')" class="bg-img-bottom"></mt-field>
+        <div @click="showAddress" class="cell-ad bg-img-bottom "><span class="cell-ad-title">{{ $t('message.Area')}}</span>{{ addressProvince }} {{ addressCity }}
+          {{addressXian}}
+          <i class="iconfont icon-enter pull-right" ></i>
         </div>
-        <div @click="showStreet" class="cell-ad" v-if="noStreet">{{ $t('message.Street')}}：{{addressStreet}}</div>
-
-        <mt-field type="textarea" :placeholder="$t('message.Detailed_address')" id="" cols="4" rows="3"
+        <div @click="showStreet" class="cell-ad">
+          <span class="cell-ad-title">{{ $t('message.Street')}}</span>
+          {{noStreet?addressStreet:"暂无可选街道"}}
+          <i class="iconfont icon-enter pull-right" ></i></div>
+        <mt-field :label="$t('message.Detailed_address')" type="textarea" :placeholder="$t('message.Detailed_address')"
+                  id="" cols="4" rows="3" class="bg-img-bottom" style="margin-bottom: 10px"
                   v-model="desMore"></mt-field>
         <!--公司-->
-        <mt-button v-if="isCompany" size="large" type="danger" class="redbg" style="width:95%;margin: 20px auto;border-radius: 22px"
+        <mt-button v-if="isCompany" size="small" type="danger" class="" style="width:95%;"
                    :disabled="desMore.length<2||companyName.length==0" @click="saveAddress">{{$t('message.Save')}}
         </mt-button>
         <!--公司/-->
         <!--个人-->
-        <mt-button v-else size="large" type="danger" class="redbg" style="width:95%;margin: 20px auto;border-radius: 22px"
+        <mt-button v-else size="small" type="danger" style="width:95%;"
                    :disabled="desMore.length<2" @click="saveAddress">{{$t('message.Save')}}
         </mt-button>
         <!--个人/-->
       </div>
     </mt-popup>
-    <div class="addAddressBtn " @click="showAddM">{{ $t('message.Add')}}</div>
+    <mt-popup v-model="addressVisible" position="bottom" style="width: 100%;">
+      <div class="page-picker-wrapper">
+        <div style="padding:10px;color:#999">请选择所在区域</div>
+        <mt-picker :slots="addressSlots" v-if="addressSlots" class="picker" @change="onAddressChange"
+                   :visible-item-count="5"></mt-picker>
+      </div>
+    </mt-popup>
+    <mt-popup v-model="streetVisible" popup="popup-fade" position="bottom" style="width: 100%">
+      <div class="page-picker-wrapper">
+        <mt-picker :slots="streetSlots" v-if="streetSlots" ref="picker" class="picker" @change="onStreetChange"
+                   :visible-item-count="5"></mt-picker>
+      </div>
+    </mt-popup>
+    <div class="addAddressBtn " @click="showAddM">{{ $t('message.Add')}} <span class="pull-right"><i
+      class="iconfont icon-addition"></i></span></div>
   </div>
 </template>
 <script>
   import s from '../../statics/mobile/json/address4.json'
-  import { MessageBox } from 'mint-ui';
+  import {MessageBox} from 'mint-ui';
   export default {
     name: 'address',
     data () {
@@ -110,7 +118,7 @@
         streetSlots: [
           {
             flex: 1,
-            values: [],
+            values: [''],
             className: 'slot1',
             textAlign: 'center'
           }
@@ -171,7 +179,8 @@
         this.addressVisible = true
       },
       showStreet(){
-        this.streetVisible = true
+        if (this.noStreet)
+          this.streetVisible = true
       },
       showAddM(){
         this.addVisible = !this.addVisible;
@@ -288,27 +297,10 @@
     font-size: 18px;
   }
 
-  .mint-cell-wrapper {
-    background: #ede020;
-    background: -webkit-linear-gradient(315deg, #ede020 0, #f6cd10 34%, #ffba00 100%);
-    background: -o-linear-gradient(315deg, #ede020 0, #f6cd10 34%, #ffba00 100%);
-    background: linear-gradient(135deg, #ede020 0, #f6cd10 34%, #ffba00 100%);
-  }
-
-  .cell-swipe {
-    /*background: #fff;*/
-    margin-top: 10px;
-
-  }
-
   .addressBox {
     padding-top: 8px;
     width: 100%;
     flex: 1
-  }
-
-  .mint-cell-wrapper {
-    text-align: left;
   }
 
   .addressBtnGroup button {
@@ -322,17 +314,23 @@
   }
 
   .addAddressBtn {
+    height: 40px;
+    line-height: 20px;
+    font-size: 14px !important;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    color: #fff;
+    color: #333;
     padding: 10px;
     text-align: center;
-    background: #fd3fb3;
-    background: -webkit-linear-gradient(45deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
-    background: -o-linear-gradient(45deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
-    background: linear-gradient(45deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
+    background: #fff;
+    border: 1px solid #ededed
+  }
+
+  .addAddressBtn .iconfont {
+    font-size: 26px;
+    color: #999
   }
 
   .page-content {
@@ -351,14 +349,32 @@
     font-size: 15px;
 
   }
+  .cell-ad .iconfont{
+    color:#999;
+  }
+  .cell-ad-title{
+    width: 105px;display:inline-block;
+    text-align: right;
+    padding-right:35px;
+    color:#999
+  }
+  a{
+    color:#999!important;
+  }
 
   textarea {
     font-size: 15px;
     margin-top: 10px;
   }
 
-  .page-picker-wrapper {
-    margin-top: 40px;
+  .cell-swipe {
+    border-bottom: 1px solid #ededed;
   }
-
+  .bg-img-bottom{
+    background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 50%, transparent 50%);
+    background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 50%, transparent 50%);
+    background-size: 120% 1px;
+    background-repeat: no-repeat;
+    background-position: 10px bottom;
+  }
 </style>

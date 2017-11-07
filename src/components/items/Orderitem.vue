@@ -1,69 +1,79 @@
 <template>
   <div style="width: 100%">
-  <table class="order-item" style="width: 100%">
-    <tr class="item-header">
-      <td colspan="3">
-        <div class="flex-box">
-          <div class="company-tit" v-if="isCompany">{{item.companyname}}</div>
-          <!-- payway 等于1 并且是在支付状态下的单就显示支付按钮 -->
-          <!--item.orderstateid>=7750 && (item.receiveStateMin<65 || !item.receiveStateMin)  && item.payway==1 && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30" -->
-          <div v-if="item.payway==1  && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30 &&item.orderstateid>=7750&& (item.receiveStateMin<65 || !item.receiveStateMin)" class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}</div>
-        </div>
-      </td>
-    </tr>
-    <tr class="item-body">
-      <td rowspan="4" width="65" class="text-center" style="border-right: 1px dashed #eee;color:#26a2ff;font-size: 12px">
-        <span v-if="item.busniesstypeid==5"><i class="iconfont icon-coordinates_fill"></i><br>{{$t('message.On_site')}} </span>
-        <span v-if="item.busniesstypeid==2"><i
-          class="iconfont icon-computer_fill"></i><br>{{$t('message.Remote_desktop')}} </span>
-        <span v-if="item.busniesstypeid==1"><i
-          class="iconfont icon-customerservice_fill"></i><br>{{$t('message.Telephone')}} </span>
-      </td>
-      <td class="text-left" ><span v-if="item.description.length!=0">{{item.description[0].yh}} </span></td>
-      <td rowspan="4" width="15">
-        <a v-if="item.orderstateid>0" @click="goDetail(item)" class="text-center orderBtn"
-        >
-          <!--{{$t('message.Detail')}}-->
-          <i class="iconfont icon-enter"></i>
-        </a>
-        <a v-if="item.orderstateid<4000 && orderStateId!=8" @click="goDelete(item)" class="text-center orderBtn cancleBtn"
-        >
-          <!--{{$t('message.Cancel')}}-->
-          <i class="iconfont icon-empty_fill red" style="color: rgba(221, 75, 57,.5)"></i>
-        </a>
-      </td>
-    </tr>
-    <tr class="item-body nopadding">
-      <!--<td class="text-left" style="font-size: 12px"> {{item.reporttime}}</td>-->
-    </tr>
-    <tr class="item-body nopadding">
-      <td class="text-left" style="font-size: 12px">{{$t('message.NO')}}:{{item.ordernumber}} </td>
-    </tr>
-    <tr class="item-body ">
-      <td class="text-left"> <div  v-if="item.description">
-        <span style="color: #888;font-size: 11px" class="textover3" v-for="desc in item.description" v-if="item.description.length>0">{{desc.faultDescription}} </span>
-        </div></td>
-    </tr>
-    <tr class="item-body nopadding item-header">
-      <td colspan="3" class="text-left" style="font-size: 10px;padding:9px 5px 7px 5px"> {{item.repairpersonname}} <span class="text-gray">报修于</span> {{item.reporttime}}<span class="yh pull-right" @click="showReservationTime">预约时间</span></td>
-    </tr>
-  </table>
+    <table class="order-item" style="width: 100%">
+      <tr class="item-header">
+        <td colspan="3" style="border-bottom: 1px solid #ededed">
+          <span class="text-gray"> {{$t('message.NO')}} : </span>{{item.ordernumber}}
+          <a v-if="item.orderstateid<4000 && orderStateId!=8" @click="goDelete(item)"
+             class="text-center orderBtn cancleBtn pull-right">
+            <i class="iconfont icon-empty_fill text-gray" style="color: rgba(221, 75, 57,.5)"></i>
+          </a>
+        </td>
+      </tr>
+      <tr class="item-header">
+        <td colspan="3">
+          <div class="flex-box">
+            <div class="company-tit" v-if="isCompany"><i class="iconfont icon-homepage text-gray"></i> {{item.companyname}} </div>
+            <!-- payway 等于1 并且是在支付状态下的单就显示支付按钮 -->
+            <!--item.orderstateid>=7750 && (item.receiveStateMin<65 || !item.receiveStateMin)  && item.payway==1 && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30" -->
+            <div
+              v-if="item.payway==1  && item.auditStatusMin ==11000 && item.fwoneCheckState!=20 && item.fwoneCheckState!=30 &&item.orderstateid>=7750&& (item.receiveStateMin<65 || !item.receiveStateMin)"
+              class="pay-btn" @click="toPay(item.ordernumber)">{{$t('message.Pay')}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr class="item-body">
+        <td width="65" class="text-center"
+            style="border-right: 1px dashed #eee;color:#26a2ff;font-size: 12px">
+          <span v-if="item.busniesstypeid==5"><i class="iconfont icon-coordinates_fill"></i><br>{{$t('message.On_site')}} </span>
+          <span v-if="item.busniesstypeid==2"><i
+            class="iconfont icon-computer_fill"></i><br>{{$t('message.Remote_desktop')}} </span>
+          <span v-if="item.busniesstypeid==1"><i
+            class="iconfont icon-customerservice_fill"></i><br>{{$t('message.Telephone')}} </span>
+        </td>
+        <td class="text-left" @click="goDetail(item)"><span style="color: #333;font-size: 12px" class="textover3" v-for="desc in item.description"
+                     v-if="item.description.length>0"><div class="user-tit" v-if="desc.yh "><i class="iconfont icon-mine" style="font-size:14px;padding:0;color:#999"></i> {{desc.yh}}</div>{{desc.faultDescription}} </span></td>
+        <!--<td rowspan="4" width="15">
+          <a v-if="item.orderstateid>0" @click="goDetail(item)" class="text-center orderBtn"
+          >
+            &lt;!&ndash;{{$t('message.Detail')}}&ndash;&gt;
+            <i class="iconfont icon-enter"></i>
+          </a>
+          <a v-if="item.orderstateid<4000 && orderStateId!=8" @click="goDelete(item)"
+             class="text-center orderBtn cancleBtn">
+            &lt;!&ndash;{{$t('message.Cancel')}}&ndash;&gt;
+            <i class="iconfont icon-empty_fill red" style="color: rgba(221, 75, 57,.5)"></i>
+          </a>
+        </td>-->
+      </tr>
+      <tr class="item-body nopadding">
+        <!--<td class="text-left" style="font-size: 12px"> {{item.reporttime}}</td>-->
+      </tr>
+      <tr class="item-body nopadding item-header">
+        <td colspan="3" class="text-left" style="font-size: 10px;padding:9px 5px 7px 5px">
+          {{item.repairpersonname}} <span class="text-gray">报修于</span> {{item.reporttime}}<span class="yh pull-right"
+                                                                                                @click="showReservationTime">预约时间</span>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import {MessageBox} from 'mint-ui';
-  import {mapState} from 'vuex';
-  import {Toast} from 'mint-ui';
+  import { MessageBox } from 'mint-ui';
+  import { mapState } from 'vuex';
+  import { Toast } from 'mint-ui';
   export default {
     name: 'order-item',
     props: {
       item: {},
-      orderStateId:''
+      orderStateId: '',
+      index: ''
     },
     data() {
       return {}
     },
-    computed:{
+    computed: {
       isCompany(){
         return this.$store.state.userInfo.isCompany
       }
@@ -84,9 +94,10 @@
       goDelete(item) {
         let data = {
           id: item.id,
-          fwoneCheckState: 20
+          fwoneCheckState: 20,
+          ordernumber: item.ordernumber
         };
-        MessageBox.confirm('确定执行此操作?').then(action => {
+        MessageBox.confirm('确定要取消此次服务?').then(action => {
           this.$api.delete_order_updata(data).then(res => {
             if (res.code == ERR_OK) {
               Toast('取消成功');
@@ -97,24 +108,24 @@
       },
       toPay(oid){
         this.$store.commit('SET_ORDER_NUMBER', oid)
-        this.$router.push({name:'pay',params:{oid:oid}})
+        this.$router.push({name: 'pay', params: {oid: oid}})
       },
       showReservationTime(){
         var html = "";
-        this.item.reservationtime.forEach(function(val,index){
-          var d1 = new Date(val.reservationDate.substr(0,10));
-          var a = ['星期日', '星期一','星期二','星期三','星期四','星期五','星期六'];
-          html+=val.reservationDate.substr(0,10) +' '+
-            val.startTime+'-'+ val.endTime+" "+a[d1.getDay()]+'<br>'
+        this.item.reservationtime.forEach(function (val, index) {
+          var d1 = new Date(val.reservationDate.substr(0, 10));
+          var a = [this.$t('message.Sun'),this.$t('message.Mon'), this.$t('message.Tues'), this.$t('message.Wed'), this.$t('message.Thur'), this.$t('message.Fri'), this.$t('message.Sat')];
+          html += val.reservationDate.substr(0, 10) + ' ' +
+            val.startTime + '-' + val.endTime + " " + a[d1.getDay()] + '<br>'
         })
-        MessageBox.alert(html, "预约时间");
+        MessageBox.alert(html, this.$t('message.yuyueshijian'));
       }
     },
 
   }
 </script>
 <style scoped>
-  .pay-btn{
+  .pay-btn {
     float: right;
     background: #ffbd17;
     color: #fff;
@@ -122,11 +133,22 @@
     border-radius: 2px;
     margin-top: -4px;
   }
-  .company-tit{
+
+  .company-tit {
     width: 200px;
     float: left;
-    overflow: hidden;white-space: nowrap;text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color:#666
   }
+
+  .user-tit {
+    width: 200px;
+    text-overflow: ellipsis;
+    color:#666
+  }
+
   .orderBtn {
     display: block;
     color: #26a2ff;
@@ -172,16 +194,12 @@
     border-color: #d5402b;
   }
 
-  .item-header {
-    background: #fafafa;
-  }
-
   .ion-ios-location {
     margin-right: 4px;
   }
 
   .item-header td {
-    padding: 5px 2px;
+    padding: 7px 2px;
     text-align: left;
     text-indent: 4px;
     font-size: 13px;
@@ -195,7 +213,7 @@
     padding: 5px;
     padding-right: 0;
     display: table-cell;
-    vertical-align: middle;
+    vertical-align: top;
     font-size: 13px;
   }
 
@@ -203,14 +221,16 @@
     padding: 0 5px;
     padding-right: 0;
   }
+
   .text-gray{
-    color:lightgrey;
+    color: #999;
   }
-  .yh{
-    border:1px solid lightgrey;
+
+  .yh {
+    border: 1px solid lightgrey;
     border-radius: 3px;
-    padding:2px 3px 1px 1px;
-    color:lightgrey;
-    font-size:8px!important;
+    padding: 2px 3px 1px 1px;
+    color: lightgrey;
+    font-size: 8px !important;
   }
 </style>

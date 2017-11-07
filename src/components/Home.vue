@@ -138,9 +138,9 @@
         this.$api.GET_MSG().then(r => {
           if (r.code == 0) {
             if (r.msg && r.msg.perm) {
-              Toast(r.msg.content);
+//              Toast(r.msg.content);
             } else {
-              Toast(r.msg.content);
+//              Toast(r.msg.content);
             }
 //            this.getCustomerNotification()
             this.$store.dispatch('getCustomerNotification')

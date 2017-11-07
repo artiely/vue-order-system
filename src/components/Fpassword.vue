@@ -1,9 +1,9 @@
 <template>
-  <div class="login">
+  <div class="login" style="background: white">
     <div class="page-content">
       <div class="wrapper">
         <div style="padding: 10px;text-align: center">找回密码</div>
-        <div style="background:#fff;text-align: left" v-if="step1">
+        <div style="background:#fff;text-align: left" v-if="step1" class="form-content">
           <!--手机号-->
           <div>
             <mu-text-field :hintText="$t('message.Phone_number')" v-model="form.phone" type="number"
@@ -23,11 +23,11 @@
             </div>
           </div>
           <!--手机号/-->
-          <small v-if="error" style="font-size: 8px;color: #f44336;">{{errorMsg}}</small>
-          <button class="Button--primary Button--blue" @click="check">{{$t('message.Submit')}}</button>
-          <p style="padding: 20px">
+          <small v-if="error" style="font-size: 10px;color: #f44336">{{errorMsg}}</small>
+          <button class="Button--primary Button--blue" @click="check" style="margin-top: 5px">{{$t('message.Submit')}}</button>
+          <div class="return">
             <router-link to="login">{{$t('message.Back')}}</router-link>
-          </p>
+          </div>
         </div>
         <!--step2-->
         <div v-if="step2">

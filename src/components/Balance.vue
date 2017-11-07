@@ -9,6 +9,8 @@
       :on-refresh="onRefresh"
       ref="myScroller"
       :on-infinite="onInfinite"
+      :refreshText="$t('message.Pull_to_refresh')"
+      :noDataText="$t('message.No_more_data')"
     >
       <div class="balanceBox">
         <div v-if="total.length>0" class="balanceNum" v-for="item in total">{{item.balance}}<span
@@ -20,7 +22,7 @@
 
       <div class="col">
         <div class="col1">
-          <router-link tag="div" class="balanceBtm" to="record">{{$t('message.record')}}</router-link>
+          <router-link tag="div" class="balanceBtm" to="record">{{$t('message.record')}}<i class="iconfont icon-enter pull-right"></i> </router-link>
         </div>
       </div>
       <div class="mxBox">
@@ -219,10 +221,8 @@
       }
     },
     created(){
-      this.getMxPaid(function () {
-      });
-      this.getMxUnPaid(function () {
-      })
+      this.getMxPaid();
+      this.getMxUnPaid()
 
     },
     activated(){
@@ -334,7 +334,7 @@
   .tit {
     width: 25%;
     padding: 10px;
-    text-align: left;
+    text-align: center;
     cursor: pointer;
   }
 

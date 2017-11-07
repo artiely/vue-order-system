@@ -146,11 +146,12 @@ const get_order_detail = params => {
 }
 /**
  * 取消订单
- * @params  {id: 工单id, fwoneCheckState: 20 审核状态20 表示用户已删除}
+ * @params  {id: 工单id, fwoneCheckState: 20 审核状态20 表示用户已删除,ordernumber}
  */
 const delete_order_updata = params => {
   return fetch({
-    url: '/orderinfo/update',
+    // url: '/orderinfo/update',
+    url: '/orderinfo/cancel',
     method: 'post',
     data: params
   })
