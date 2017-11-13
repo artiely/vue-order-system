@@ -7,13 +7,6 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
-// const museUiThemePath = path.join(
-//   __dirname,
-//   'node_modules',
-//   'muse-ui',
-//   'src/styles/themes/variables/default.less'
-// )
-
 module.exports = {
   entry: {
     app: ["babel-polyfill", "./src/main.js"]
@@ -39,22 +32,6 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
-        // options: {
-        //   loaders: {
-        //     less: [
-        //       'vue-style-loader',
-        //       'css-loader',
-        //       {
-        //         loader: 'less-loader',
-        //         options: {
-        //           globalVars: {
-        //             museUiTheme: `${museUiThemePath}`,
-        //           }
-        //         }
-        //       }
-        //     ]
-        //   }
-        // }
       },
       {
         test: /\.js$/,

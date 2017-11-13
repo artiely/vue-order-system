@@ -6,23 +6,33 @@
     <scroller :on-refresh="onRefresh" ref="myScroller" class="page-content" :on-infinite="onInfinite"
               :refreshText="$t('message.Pull_to_refresh')"
               :noDataText="$t('message.No_more_data')">
-      <div style="background:#f8f8f8;">
+      <div style="margin-bottom: 10px;">
         <table class="order-item" v-for="(item,index) in orderList" :key="index"
                @click="showOrderDetail({id:item.callId,oid:item.orderNumber})">
-          <tr>
-            <td colspan="2"> <span class="label">{{$t('message.NO')}}：</span>{{item.orderNumber}}</td>
+          <tr class="border-bottom" style="line-height: 25px">
+            <td colspan="2"> <span class="label">{{$t('message.NO')}}</span>{{item.orderNumber}}</td>
           </tr>
           <tr>
-            <td> <span class="label">{{$t('message.Requestor')}}：</span></td>
+            <td> <span class="label">催单人</span></td>
+            <td>{{item.createPersonName}}</td>
+          </tr>
+          <tr>
+            <td> <span class="label"><!--{{$t('message.status')}}：-->受理状态</span></td>
+            <td>
+              <span v-if="item.processDate" class="bluebg span">已受理</span> <span v-else class="redbg span">待受理</span>
+            </td>
+          </tr>
+          <tr v-if="item.processName">
+            <td> <span class="label">受理人 </span></td>
             <td>{{item.processName}}</td>
           </tr>
-          <tr v-if="item.companyName">
-            <td> <span class="label">{{$t('message.Company')}}：</span></td>
-            <td>{{item.companyName}}</td>
+          <tr>
+            <td><span class="label">催单时间</span></td>
+            <td><span class="label">{{item.createDate}}</span></td>
           </tr>
           <tr>
-            <td><span class="label">{{$t('message.Appointment_time')}}：</span></td>
-            <td>{{item.processDate}}</td>
+            <td><span class="label">预约时间</span></td>
+            <td style="color:#26a2ff">{{item.reservationTimeEntity.reservationDate.substr(0,10)}} {{item.reservationTimeEntity.startTime}} - {{item.reservationTimeEntity.endTime}}</td>
           </tr>
         </table>
       </div>
@@ -87,13 +97,13 @@
     }
   }
 </script>
-<style scoped>
+<style scoped lang="less">
   span.label{
     color: #999;
   }
   .page-content {
     padding-top: 40px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .order-item {
@@ -103,13 +113,19 @@
     border-left: 2px solid #26a2ff;
     padding-left: 4px;
     padding-right: 4px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .1);
   }
 
   .order-item tr td:nth-of-type(1) {
     text-align: left;
+    width:70px;
+    .label{
+      width:70px;
+      display:inline-block
+    }
   }
 
   .order-item tr td:nth-of-type(2) {
-    text-align: right;
+    text-align: left;
   }
 </style>

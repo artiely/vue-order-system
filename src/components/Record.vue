@@ -1,6 +1,6 @@
 <template>
   <div class="record">
-    <mt-header title="" fixed style="z-index: 10;">
+    <mt-header title="预付款消费记录" fixed style="z-index: 10;">
       <mt-button icon="back" @click="back" slot="left">返回</mt-button>
     </mt-header>
     <mt-navbar v-model="selected" fixed style="top: 40px;">

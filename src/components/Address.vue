@@ -38,7 +38,7 @@
       <div v-if="showEditAddress">
         <mt-field :label="$t('message.Company')" v-if="isCompany" :state="companyName.length>0?'success':'error'"
                   v-model="companyName"
-                  :placeholder="$t('message.Company_name')" class="bg-img-bottom"></mt-field>
+                  :placeholder="$t('message.qingshuru')+$t('message.Company_name')" class="bg-img-bottom"></mt-field>
         <div @click="showAddress" class="cell-ad bg-img-bottom "><span class="cell-ad-title">{{ $t('message.Area')}}</span>{{ addressProvince }} {{ addressCity }}
           {{addressXian}}
           <i class="iconfont icon-enter pull-right" ></i>
@@ -47,8 +47,8 @@
           <span class="cell-ad-title">{{ $t('message.Street')}}</span>
           {{noStreet?addressStreet:"暂无可选街道"}}
           <i class="iconfont icon-enter pull-right" ></i></div>
-        <mt-field :label="$t('message.Detailed_address')" type="textarea" :placeholder="$t('message.Detailed_address')"
-                  id="" cols="4" rows="3" class="bg-img-bottom" style="margin-bottom: 10px"
+        <mt-field :label="$t('message.Detailed_address')" type="textarea" :placeholder="$t('message.qingshuru')+$t('message.Detailed_address')"
+                  id="" cols="4" rows="3" class="bg-img-bottom mt-textarea" style="margin-bottom: 10px"
                   v-model="desMore"></mt-field>
         <!--公司-->
         <mt-button v-if="isCompany" size="small" type="danger" class="" style="width:95%;"
@@ -75,7 +75,7 @@
                    :visible-item-count="5"></mt-picker>
       </div>
     </mt-popup>
-    <div class="addAddressBtn " @click="showAddM">{{ $t('message.Add')}} <span class="pull-right"><i
+    <div class="addAddressBtn border-top" @click="showAddM">{{ $t('message.Add')}} <span class="pull-right"><i
       class="iconfont icon-addition"></i></span></div>
   </div>
 </template>
@@ -325,7 +325,6 @@
     padding: 10px;
     text-align: center;
     background: #fff;
-    border: 1px solid #ededed
   }
 
   .addAddressBtn .iconfont {
@@ -346,7 +345,7 @@
   .cell-ad {
     text-align: left;
     padding: 15px 10px;
-    font-size: 15px;
+    font-size: 14px;
 
   }
   .cell-ad .iconfont{
@@ -368,7 +367,11 @@
   }
 
   .cell-swipe {
-    border-bottom: 1px solid #ededed;
+    background-image: -webkit-linear-gradient(bottom, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-image: linear-gradient(0deg, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-size: 150% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
   }
   .bg-img-bottom{
     background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 50%, transparent 50%);

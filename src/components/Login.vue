@@ -5,7 +5,7 @@
         <div class="container">
           <div class="form" ref="form">
             <div style="margin-bottom: 10px">
-              <img src="../.././statics/mobile/img/logo.png" alt="" width="50%">
+              <img src="../.././statics/mobile/img/logo.png" alt="" width="150px">
             </div>
             <div class="errorMeg" v-if="error">{{errorMsg}}</div>
             <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model="username">

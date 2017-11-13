@@ -29,19 +29,6 @@
 
 
       <!--其他s-->
-      <div class="wrapper-box">
-        <mt-cell class="my-cell" :title="$t('message.Lunch_break')">
-          <mt-switch v-model="query.sfwx"></mt-switch>
-        </mt-cell>
-        <mt-cell class="my-cell" :title="$t('message.Working_day')">
-          <mt-switch v-model="query.sfgzr"></mt-switch>
-        </mt-cell>
-        <mt-cell class="my-cell" :title="$t('message.Engineer_Headcount')">
-          <select v-model="query.rysl" class="select">
-            <option :value="item" v-for="item in query.ryzs">{{item}}</option>
-          </select>
-        </mt-cell>
-      </div>
       <!--其他e-->
       <!--日期s-->
       <div class="wrapper-box">
@@ -50,7 +37,8 @@
             {{$t('message.Range_date')}}
           </span>
         </mt-cell>
-        <div class="dateWrap" style="border-bottom: 1px solid #e2e2e2">
+        <div class="dateWrap border-bottom">
+          <span class="title">请选择开始日期</span>
           <mu-date-picker
             class="dateItem"
             :hintText="$t('message.Start_date')"
@@ -60,6 +48,7 @@
             :okLabel="$t('message.Ok')"
             :cancelLabel="$t('message.Cancel')"
             :shouldDisableDate="disableWeekends"/>
+          <span class="title">请选择结束日期</span>
           <mu-date-picker
             class="dateItem"
             :hintText="$t('message.End_date')"
@@ -90,7 +79,7 @@
           :tooltipStyle="rangeTimeOption.tooltipStyle"
           :real-time="true"
         ></vue-slider>
-        <div style="height: 20px;border-bottom: 1px solid #e2e2e2"></div>
+        <div style="height: 20px" class="border-bottom"></div>
       </div>
       <!--时间e-->
       <div class="wrapper-box">
@@ -103,56 +92,65 @@
           <mt-field type="textarea" rows="2" :placeholder="$t('message.Please_describe')" v-model="faultDesc"></mt-field>
         </div>
       </div>
-      <div class="wrapper-box" style="background: red">
+      <div class="wrapper-box">
         <mt-cell class="my-cell title-box">
           <span slot="title" class="title">{{$t('message.Server_need')}}</span>
         </mt-cell>
         <div>
+          <mt-cell class="my-cell" :title="$t('message.Lunch_break')">
+            <mt-switch v-model="query.sfwx"></mt-switch>
+          </mt-cell>
+          <mt-cell class="my-cell" :title="$t('message.Working_day')">
+            <mt-switch v-model="query.sfgzr"></mt-switch>
+          </mt-cell>
+          <mt-cell class="my-cell" :title="$t('message.Engineer_Headcount')">
+            <select v-model="query.rysl" class="select">
+              <option :value="item" v-for="item in query.ryzs">{{item}}</option>
+            </select>
+          </mt-cell>
           <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model="identify"></mt-field>
         </div>
-      </div>
-      <div class="wrapper-box">
-        <mt-button type="primary" class="bluebg" style="border-radius: 22px" size="large" @click.native="getPriceMa"
-                   :disabled="checkValue==''||faultDesc==''">
-          {{$t('message.Cost_Estimation')}}
-        </mt-button>
       </div>
       <!--服务时间选择组件e-->
       <div class="flexBox">
         <mt-cell class="my-cell title-box"  v-show="trPriceList.length>0">
-          <span slot="title" class="title">{{$t('message.Can_time_list')}}</span>
+          <span slot="title" class="title">服务预约列表</span>
         </mt-cell>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
           <tr v-for="(item,index) in trPriceList" :key="index" :index="index" class="timeItem"
               v-if="trPriceList.length>0">
             <td>&nbsp;&nbsp;{{item.trDate}}</td>
-            <td><span class="label">￥{{item.unitPrice}}</span></td>
             <td @click="selectTime(index)">{{item.trTimeFrom}}</td>
             <td @click="selectTime(index)">{{item.trTimeTo}}</td>
-            <td @click="deleteDate(index)" class="del">{{$t('message.Delete')}}</td>
+            <td><span class="label">￥{{item.unitPrice}}</span></td>
+            <td @click="deleteDate(index)" class="del"><i class="iconfont icon-empty"></i> <!--{{$t('message.Delete')}}--></td>
           </tr>
         </table>
       </div>
       <div style="height: 10px;"></div>
-
+      <mt-tabbar  fixed style="z-index=99999999999999999999999999999">
       <div class="footerBar">
-        <div class="b_btn" style="z-index:7">
-          <mt-button class="an_order redbg" @click.native="anOrder" type="danger" style="border-radius: 0"
-                     :disabled="trPriceList.length==0">
-            {{$t('message.Confirm')}}
+        <div class="b_btn shadow-top" style="z-index:7;display: inline-block">
+          <mt-button  class="btn-white-flat"  size="large" @click.native="getPriceMa" style="width: 50%;float:left">
+            <i class="iconfont icon-jisuan"></i> {{$t('message.Cost_Estimation')}}
+          </mt-button>
+          <mt-button class="an_order" @click.native="anOrder" type="danger"
+                     :disabled="trPriceList.length==0" style="width: 50%;float:right;background:#ef4f4f ">
+            <i class="iconfont icon-task_fill"></i> {{$t('message.Confirm')}}
           </mt-button>
         </div>
       </div>
+      </mt-tabbar>
       <!--单个调整-->
-      <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 200px;font-size: 14px"
+      <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 150px;font-size: 14px;padding:10px"
                 v-if="popupVisibleSelectTime">
-        <div style="height: 30px;"></div>
+        <div class="title">服务时间编辑</div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
           <tr class="timeItem">
             <td>{{trPriceList[selectIndex].trDate}}</td>
-            <td><span class="label">￥{{trPriceList[selectIndex].unitPrice}}</span></td>
             <td>{{trPriceList[selectIndex].trTimeFrom}}</td>
             <td>{{trPriceList[selectIndex].trTimeTo}}</td>
+            <td><span class="label">￥{{trPriceList[selectIndex].unitPrice}}</span></td>
           </tr>
         </table>
         <div style="height: 50px;"></div>
@@ -178,6 +176,7 @@
   import moment from 'moment'
   import {Toast} from 'mint-ui';
   import vueSlider from 'vue-slider-component'
+  import { MessageBox } from 'mint-ui';
   export default {
     name: 'ma',
     components: {
@@ -297,7 +296,7 @@
             }
             this.serviceAddress = _temp
           } else {
-            alert(res.msg)
+            MessageBox.alert(res.msg,'')
           }
         }).catch(err => console.error(err))
 
@@ -327,6 +326,14 @@
         Toast(this.$t('message.Del_success'));
       },
       getPriceMa(){
+        if (this.checkValue=='') {
+          MessageBox.alert('请选择服务点', '');
+          return;
+        }
+        if (this.faultDesc=='') {
+          MessageBox.alert('请填写故障描述', '');
+          return;
+        }
         let data = {
           amonut: this.query.rysl,
           companyIds: [this.addressObj.id],
@@ -343,6 +350,11 @@
           if (res.code == ERR_OK) {
             this.trPriceList = res.trPriceList
           }
+          this.$nextTick(()=>{
+            setTimeout(()=>{
+              window.scrollTo(0,615)
+            },500)
+          })
         })
       },
       anOrder(){
@@ -372,10 +384,10 @@
         }
         this.$api.save_price_Ma(newData).then(res => {
           if (res.code == ERR_OK) {
-            alert(this.$t('message.Checkout_success'));
+            MessageBox.alert(this.$t('message.Checkout_success'));
             this.trPriceList = []
           } else {
-            alert(res.msg)
+            MessageBox.alert(res.msg)
           }
         }).catch(err => console.error(err))
       },
@@ -414,6 +426,7 @@
     border-radius: 16px;
     box-sizing: border-box;
     background: #fff;
+    outline:none;
   }
 
   .page-content {

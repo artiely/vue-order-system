@@ -22,8 +22,6 @@
             <div style="width: 100px"></div>
           </swiper-slide>
         </swiper>
-
-
         <swiper v-if="lang=='EN'" :options="swiperOption" ref="mySwiper" style="height: 40px;padding-right: 45px"
                 class="EN_swiper"
         >
@@ -43,59 +41,65 @@
       class="page-content"
       :on-refresh="onRefresh"
       ref="myScroller"
-      :snapping="true"
+      :snapping="false"
       :on-infinite="onInfinite"
       :refreshText="$t('message.Pull_to_refresh')"
       :noDataText="$t('message.No_more_data')"
     >
       <div v-if="orderinfo.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
-      <order-item :item="item" :orderStateId="query.orderStateId" v-for="(item,index) in orderinfo" :index="index" :key="index"
+      <order-item :item="item" :orderStateId="query.orderStateId" v-for="(item,index) in orderinfo" :index="index"
+                  :key="index"
                   v-on:getsp="getScrollPosition"
-                  v-on:refresh="onRefresh"></order-item>
+                  v-on:refresh="onRefreshAgain"></order-item>
     </scroller>
-    <mt-popup v-model="popupVisible" position="right" style="height: 100%;width: 280px;">
+    <mt-popup v-model="popupVisible" position="right" style="height: 100%;width: 280px;background: #f3f9fd">
       <scroller class="filter_scroller">
-        <div class="my-title">
+        <div class="title" style="margin-bottom:-10px">
           {{$t('message.Range_date')}}
         </div>
         <div style="text-align: left">
           <mt-radio
-            v-model="query.timeType"
+            v-model="query.timeType" title=""
             :options="[{label:this.$t('message.Report_time'),value:'0'},{label:this.$t('message.Appointment_time'),value:'1'}]">
           </mt-radio>
         </div>
-        <div class="">
-          <mt-button class="bt-margin date-range-btn" :class="{'active':rangeDateActive==item.id}"
+        <div class="border-bottom" style="background-color: white;">
+          <mt-button class="date-range-btn" :class="{'active':rangeDateActive==item.id}"
                      v-for="(item,index) in rangeDate"
                      size="small" type="primary" @click.native="choiceRangeDate(item)" :key="index">{{item.text}}
           </mt-button>
         </div>
-        <div class="my-title">
+        <div class="title">
           {{$t('message.Service_location')}}
         </div>
-        <select v-model="query.companyId" style="width: 100%;height: 30px" placeholder="点击选择">
-          <option :value="item.companyId" v-for="(item,index) in serviceAddress" :key="index">{{item.companyName}}
-          </option>
-        </select>
-        <div class="my-title" v-if="isCompany">
+        <div class="border-top select-wrapper">
+          <select v-model="query.companyId" class="select-search" placeholder="请选择服务点">
+            <option :value="item.companyId" v-for="(item,index) in serviceAddress" :key="index">{{item.companyName}}
+            </option>
+          </select>
+        </div>
+        <div class="title border-top" v-if="isCompany">
           {{$t('message.User')}}
         </div>
-        <select v-model="query.yh" style="width: 100%;height: 30px" placeholder="点击选择" v-if="isCompany">
-          <option :value="item.id" v-for="(item,index) in yhArr" :key="index">{{item.personName}}</option>
-        </select>
-        <div class="my-title">
+        <div class="border-top select-wrapper">
+          <select v-model="query.yh" class="select-search" placeholder="请选择用户"
+                  v-if="isCompany">
+            <option :value="item.id" v-for="(item,index) in yhArr" :key="index">{{item.personName}}</option>
+          </select>
+        </div>
+        <div class="title border-top">
           {{$t('message.Other')}}
         </div>
-        <mt-cell class="my-cell" :title="$t('message.Report_by_me')">
+        <mt-cell class="my-cell2" :title="$t('message.Report_by_me')">
           <mt-switch v-model="query.sfbx"></mt-switch>
         </mt-cell>
-        <mt-cell class="my-cell" :title="$t('message.Display_MA')">
+        <mt-cell class="my-cell2" :title="$t('message.Display_MA')">
           <mt-switch v-model="query.sfzc"></mt-switch>
         </mt-cell>
-        <mt-cell class="my-cell" :title="$t('message.Display_on_call')">
+        <mt-cell class="my-cell2" :title="$t('message.Display_on_call')">
           <mt-switch v-model="query.sfxc"></mt-switch>
         </mt-cell>
-        <div style="height: 60px;width: 100%"></div>
+        <div style="height: 60px;width: 100%" class="border-top"></div>
       </scroller>
       <div class="b_btn" @click="hiddenPop">
         <div style="width: 50%;float: left;background: #eee" @click="resetQuery">{{$t('message.Reset')}}</div>
@@ -103,21 +107,31 @@
         </div>
       </div>
     </mt-popup>
+    <mt-popup v-model="detailVisible" position="right" style="height: 100%;width: 100%">
+      <mt-header :title="$t('message.Detail')" fixed style="z-index: 99;">
+        <mt-button icon="back" @click.native="backList" slot="left">{{$t('message.Back')}}</mt-button>
+      </mt-header>
+      <order-detail v-if="orderinfo.length>0"></order-detail>
+    </mt-popup>
+
   </div>
 </template>
 <script type="text/javascript">
   import OrderItem from './items/Orderitem.vue'
-  import { Toast } from 'mint-ui'
+  import OrderDetail from './items/Orderdetail.vue'
+  import {Toast} from 'mint-ui'
   import moment from 'moment'
   export default {
     name: 'order',
     components: {
-      OrderItem
+      OrderItem,
+      OrderDetail
     },
     data() {
       return {
         orderinfo: [],
         totalPage: 1,
+//        detailVisible:false,
         popupVisible: false, //筛选的
         activeIndex: [0, 1, 2, 3, 4, 5, 7, 6], //选中的 //    :class="{'active':index==query.orderStateId-1}"
         query: {
@@ -211,7 +225,7 @@
           onTransitionStart(swiper) {
           }
         },
-        timer:null
+        timer: null
       }
     },
     watch: {
@@ -232,7 +246,11 @@
             this.query.page = 1
             this.getdata()
           }, 800)
-
+        }
+      },
+      'detailVisible': {
+        handler(val){
+          console.log('123', val)
         }
       }
     },
@@ -249,9 +267,20 @@
       },
       isCompany(){
         return this.$store.state.userInfo.isCompany
+      },
+      detailVisible: {
+        get () {
+          return this.$store.state.detail.detailVisiable
+        },
+        set (newValue) {
+          this.$store.state.detail.detailVisiable = newValue
+        }
       }
     },
     methods: {
+      backList () {
+        this.$store.commit('TOGGLE_DETAIL_SHOW')
+      },
       getdata(cb) {
         let params = {
           limit: this.query.limit,
@@ -313,6 +342,11 @@
           done(true)
         })
 
+      },
+      onRefreshAgain () {
+        this.query.page = 1
+        this.getdata(function () {
+        })
       },
       onInfinite(done) {
         this.query.page++
@@ -497,40 +531,60 @@
   }
 
   .CN_swiper {
-    .swiper-slide {
-      width: 15%;
 
-    }
+  .swiper-slide {
+    width: 15%;
+
+  }
+
   }
 
   .EN_swiper {
-    .swiper-slide {
-      /*width: 45%;*/
-      &:nth-child(1) {
-        width: 35%;
-      }
-      &:nth-child(2) {
-        width: 20%;
-      }
-      &:nth-child(3) {
-        width: 25%;
-      }
-      &:nth-child(4) {
-        width: 10%;
-      }
-      &:nth-child(5) {
-        width: 45%;
-      }
-      &:nth-child(6) {
-        width: 26%;
-      }
-      &:nth-child(7) {
-        width: 20%;
-      }
-      &:nth-child(8) {
-        width: 20%;
-      }
-    }
+
+  .swiper-slide {
+
+  /*width: 45%;*/
+  &
+  :nth-child(1) {
+    width: 35%;
+  }
+
+  &
+  :nth-child(2) {
+    width: 20%;
+  }
+
+  &
+  :nth-child(3) {
+    width: 25%;
+  }
+
+  &
+  :nth-child(4) {
+    width: 10%;
+  }
+
+  &
+  :nth-child(5) {
+    width: 45%;
+  }
+
+  &
+  :nth-child(6) {
+    width: 26%;
+  }
+
+  &
+  :nth-child(7) {
+    width: 20%;
+  }
+
+  &
+  :nth-child(8) {
+    width: 20%;
+  }
+
+  }
   }
 
   .bt-margin {
@@ -552,14 +606,11 @@
     padding: 0 10px
   }
 
-  .my-title {
-    height: 30px;
-    width: 100%;
-    line-height: 30px;
-    font-size: 13px;
-    margin-top: 6px;
-    text-indent: 8px;
-    background: #fafafa;
+  .title {
+    font-size: 10px;
+    color: #999;
+    text-align: left;
+    padding: 5px 0 5px 15px
   }
 
   .mint-header {
@@ -590,6 +641,8 @@
     border: 1px solid lightgrey;
     background: white;
     color: lightgrey;
+    padding: 0px 8px;
+    margin: 5px 5px 5px 0;
   }
 
   .mint-button.active {
@@ -597,4 +650,13 @@
     background: #26a2ff;
     color: white !important;
   }
+
+  .select-wrapper {
+    padding-top: 1px;
+    background-color: white
+  }
+  .mint-cell-title{
+    text-align:left!important;
+  }
+  .select-search{width: 82%;height: 30px;background: white;}
 </style>

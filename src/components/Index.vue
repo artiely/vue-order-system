@@ -13,11 +13,10 @@
           </swiper>
         </div>
         <div>
-          <div
-            style="color: #9e9e9e;margin: 10px auto ;width: 90%;border-radius: 10px;padding:4px 6px;background:#fff;">
+          <div class="intro-box">
             <p>{{$t('message.des')}}</p>
           </div>
-          <div style="color: #9e9e9e;margin: 10px auto ;width: 90%;border-radius: 10px;padding:4px 6px;background:#fff">
+          <div class="intro-box">
             <p>{{$t('message.title')}}</p>
           </div>
           <p style="font-size: 12px;color: #999"> ©2011-2017 <span >fwone.com</span > <span lang>版权所有</span><br>
@@ -39,7 +38,7 @@
         actions: [],
         banners: ['statics/mobile/img/a.jpg', 'statics/mobile/img/b.jpg', 'statics/mobile/img/c.jpg', 'statics/mobile/img/d.jpg'],
         swiperOption: {
-          autoplay: 2000,
+          autoplay: 8000,
           initialSlide: 1,
           loop: true,
           pagination: '.swiper-pagination',
@@ -153,5 +152,9 @@
 
   .swiper-slide img {
     width: 100%;
+  }
+  .intro-box{
+    color: #9e9e9e;margin: 10px auto ;width: 90%;border-radius: 10px;padding:1px 15px;background:#fff;text-align: left;
+    font-size: 15px;
   }
 </style>

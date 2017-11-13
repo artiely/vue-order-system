@@ -6,9 +6,9 @@
           <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
         </mt-header>
         <scroller class="page-content">
-          <div class="shadow-box">
-            <div class="titlebox"><i class="iconfont icon-label"></i> {{$t('message.Order_status')}}</div>
-            <div style="margin: 10px">
+          <div class="shadow-box border-bottom">
+            <div class="titlebox border-top"><i class="iconfont icon-label"></i> {{$t('message.Order_status')}}</div>
+            <div style="padding: 15px 10px 0 10px" class="border-top-pad">
             <swiper :options="swiperOption" ref="mySwiper" class="step-box">
               <!-- slides -->
               <swiper-slide>
@@ -88,7 +88,7 @@
                 <td><span v-for="n in score/2"><i class="iconfont icon-collection_fill text-yellow"></i></span> </td>
               </tr>
               <tr v-if="priceRemark">
-                <td>{{$t('message.baojia')}}</td><td><div v-if="priceRemark" v-html="priceRemark">123</div></td>
+                <td>{{$t('message.baojia')}}</td><td><div v-if="priceRemark" v-html="priceRemark"></div></td>
               </tr>
             </table>
             <mt-button size="small" style="width:95%;background: #ffbd17" type="danger" @click="toPay(orderNum)"
@@ -96,12 +96,12 @@
             >{{$t('message.Pay')}}
             </mt-button>
           </div>
-          <div class="shadow-box">
-            <div class="titlebox"><i class="iconfont icon-other"></i> {{$t('message.Service_detail')}}</div>
-            <div v-for="(item,index) in detailData.callDetails" :key="index" class="box-content">
-              <table v-for="(subitem,i) in item " :key="i" class="callDetails" style="width: 100%">
-                <tr v-if="i==0">
-                  <td colspan="2" style="width: 100%;line-height: 18px">
+          <div class="shadow-box border-bottom">
+            <div class="titlebox border-top"><i class="iconfont icon-other"></i> {{$t('message.Service_detail')}}</div>
+            <div v-for="(item,index) in detailData.callDetails" :key="index" class="box-content border-top-pad">
+              <table v-for="(subitem,i) in item " :key="i" class="callDetails" style="width: 100%;padding-top:5px">
+                <tr v-if="i==0 && subitem.serviceName">
+                  <td colspan="2" style="width: 100%;line-height: 20px;height:30px">
                     <span style="color:#2c3e50">{{subitem.serviceName}}</span> <span class="text-red" style="float: right" v-if="subitem.price">{{'¥ ' +subitem.price}} <span
                     v-if="detailData.workFlow.serviceType">({{detailData.workFlow.serviceType}})</span></span>
                   </td>
@@ -143,9 +143,9 @@
               </table>
             </div>
           </div>
-          <div class="shadow-box"  v-if="detailData.engineers&&detailData.engineers[0]!=null">
-            <div class="titlebox"><i class="iconfont icon-businesscard"></i> {{$t('message.Engineer_information')}}</div>
-            <div style="padding: 5px">
+          <div class="shadow-box border-bottom"  v-if="detailData.engineers&&detailData.engineers[0]!=null">
+            <div class="titlebox border-top"><i class="iconfont icon-businesscard"></i> {{$t('message.Engineer_information')}}</div>
+            <div style="padding: 5px" class="border-top-pad">
             <table v-for="(item,key) in detailData.engineers" :key="key" class="engineer-info">
               <tr>
                 <td rowspan="3">
@@ -155,7 +155,7 @@
                     <span v-if="!item">{{$t('message.No_found')}}</span>
                   </div>
                 </td>
-                <td class="text-gray" style="width:80px">{{$t('message.Name')}}</td>
+                <td class="text-gray" style="width:70px">{{$t('message.Name')}}</td>
                 <td>{{item.engineername}}</td>
               </tr>
               <tr>
@@ -203,7 +203,7 @@
           <mt-button size="small" style="width:95%" type="primary" v-if="status>=0 && status<2 && show_reminder" @click="reminder">
             {{$t('message.Reminder')}}
           </mt-button>
-          <mt-button size="small" style="width:95%" type="default" v-if="status<8 && status>=3" @click="toushuVisible=!toushuVisible">
+          <mt-button size="small" style="width:95%" type="default" v-if="status<8 && status>=3" @click="toushuVisible=!toushuVisible;complainTxt='';">
             {{$t('message.complaint')}}
           </mt-button>
           <div style="height: 80px"></div>
@@ -211,7 +211,7 @@
         <!--评价-->
         <mt-popup
           v-model="pingjiaVisible"
-          position="top" style="width: 100%;height: 100%;">
+          position="right" style="width: 100%;height: 100%;" :modal=false>
           <mt-header :title="$t('message.Service_level')" fixed style="z-index: 9;">
             <mt-button icon="back" @click="pingjiaVisible=!pingjiaVisible" slot="left">{{$t('message.Back')}}
             </mt-button>
@@ -295,13 +295,16 @@
         <!--投诉-->
         <mt-popup
           v-model="toushuVisible"
-          position="top"
-          style="width: 100%;height: 100%"
+          position="right"
+          style="width: 100%;height: 100%" :modal=false
         >
           <mt-header :title="$t('message.complaint')" fixed style="z-index: 9;">
             <mt-button icon="back" @click="toushuVisible=!toushuVisible" slot="left">{{$t('message.Back')}}</mt-button>
           </mt-header>
           <div style="padding-top: 40px;text-align: left">
+            <div class="mint-radiolist-title">{{$t('message.Complaints_suggestions')}}</div>
+            <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3" title="尼玛"
+                      v-model="complainTxt"></mt-field>
             <mt-radio
               :title="$t('message.Cause_complaint')"
               v-model="reasonId"
@@ -314,12 +317,11 @@
               align="left"
               :options="department">
             </mt-checklist>
-            <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3"
-                      v-model="complainTxt"></mt-field>
-            <mt-button type="primary" size="large" :disabled="complainTxt.length==0" @click.native="toComplain">
+            <div style="text-align:center;padding-top: 10px">
+            <mt-button type="primary" size="small" style="width: 95%" :disabled="complainTxt.length==0" @click.native="toComplain">
               {{$t('message.Submit')}}
             </mt-button>
-            <div style="height: 80px;"></div>
+            </div>
           </div>
         </mt-popup>
         <!--投诉/-->
@@ -432,6 +434,13 @@
           this.ratingToAll = Math.ceil((val + this.ratingToService) / 2)
         }
       },
+      'state.detailVisiable':{
+        handler(val){
+          if(val){
+            this.getPriceRemark()
+          }
+        }
+      }
     },
     computed: mapState({
       state: state => state.detail,
@@ -466,8 +475,13 @@
 
       },
       getPriceRemark(){
+        console.log('执行报价')
         this.$api.GET_PRICE_REMARK({callId: this.state.callId.toString()}).then(res => {
-          this.priceRemark = res.remarkTrPrice
+          if(res.code==0){
+            this.priceRemark = res.remarkTrPrice
+          }else{
+            alert(JSON.stringify(res))
+          }
         })
       },
       pingjia(id)  {
@@ -571,7 +585,9 @@
         type: sessionStorage.getItem('type')
       })
       var item = sessionStorage.getItem('orderInfo')
-      if (item !== 'null' || item !== 'undefined') {
+      console.log('999999999',item)
+      if (item !== 'null') {
+        console.log('weinull buzou')
         this.$store.commit('SET_ORDER_INFO', JSON.parse(item))
       }
 
@@ -579,6 +595,7 @@
     activated(){
       this.getSubOrder()
       this.show_reminder = true
+      this.priceRemark = ''
       this.getPriceRemark()
       //页面刷新重新赋值
     /*  this.$store.dispatch('new_detail', {
@@ -625,26 +642,12 @@
   }
 
   .orderdetail {
-    font-size: 12px !important
+    font-size: 12px !important;
   }
 
   .rating {
     float: left
   }
-
-  .text {
-    border-radius: 10px;
-    padding: 2px 4px;
-  }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.3s
-  }
-
-  .fade-enter, .fade-leave-active {
-    opacity: 0;
-  }
-
   .callDetails tr {
     display: flex;
     line-height: 14px;
@@ -665,12 +668,12 @@
     padding: 8px;
     width: 100%;
     font-size: 13px;
-    box-shadow: 0 2px 5px -3px rgba(67, 67, 67, 0.1);
   }
 
   .page-content {
     padding-top: 40px;
     padding-bottom: 40px;
+    background-color: #f3f9fd!important;
   }
 
   .en-icon {
@@ -692,7 +695,6 @@
     padding:0 0 10px;
     box-shadow: 0 0 0px rgba(0, 0, 0, .1);
     background: #fff;
-    border:1px solid #e6e6e6;
   }
 
   .callDetails tr td:nth-of-type(1) {
@@ -826,6 +828,9 @@
   }
   .table-rating tr td{
     padding-left:10px;
+  }
+  .mint-cell{
+    min-height:10px!important;
   }
 
 
