@@ -1,5 +1,5 @@
 <template>
-  <div class="oncall">
+  <div class="oncall" style="height: 100%">
     <mt-header :title="$t('message.Timely_assistance')" fixed>
       <mt-button icon="back" @click.native='back()' slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
@@ -34,13 +34,15 @@
                     :on-tab-click="index => promotionIndex = index" @click.native="showmodal"></button-bar>
       </div>
       <!--服务日期快捷选择按钮e-->
-      <div v-if="popupVisibleTime" class="wrapper-box">
+      <div v-if="popupVisibleTime" class="wrapper-box border-bottom">
         <mt-cell class="title-box">
           <span class="title" slot="title">{{$t('message.Range_date')}}</span>
         </mt-cell>
         <div class="dateWrap">
+          <span class="title">请选择开始日期</span>
           <mu-date-picker class="dateItem" :hintText="$t('message.Start_date')" :minDate="minDate" v-model="startDate"
                           :underlineShow="false" :okLabel="$t('message.Ok')" :cancelLabel="$t('message.Cancel')"/>
+          <span class="title">请选择结束日期</span>
           <mu-date-picker class="dateItem" :hintText="$t('message.End_date')" :shouldDisableDate="shouldDisableDate"
                           :minDate="startDate"
                           v-model="endDate" :underlineShow="false" :okLabel="$t('message.Ok')"
@@ -64,7 +66,7 @@
                       :formatter="rangeTimeOption.formatter"
                       :tooltipStyle="rangeTimeOption.tooltipStyle"
           ></vue-slider>
-          <div style="height: 20px;border-bottom: 1px solid #d9d9d9"></div>
+          <div style="height: 20px" class="border-bottom"></div>
         </div>
       </div>
       <!--服务时间选择组件e-->
@@ -79,7 +81,7 @@
               <td><span class="label">{{item.weekday}}</span></td>
               <td @click="selectTime(index)">{{item.sTime}}</td>
               <td @click="selectTime(index)">{{item.eTime}}</td>
-              <td @click="deleteDate(index)" class="del">{{$t('message.Delete')}}</td>
+              <td @click="deleteDate(index)" class="del"><i class="iconfont icon-empty"></i> <!--{{$t('message.Delete')}}--></td>
             </tr>
           </table>
         </div>
@@ -100,8 +102,8 @@
       <div class="wrapper-box">
         <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model="identify"></mt-field>
       </div>
-      <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 200px;font-size: 14px">
-        <div style="height: 30px;"></div>
+      <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 160px;padding:10px">
+        <div class="title">可上门时间编辑</div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0" v-if="timeMap.length>0&&selectIndex>=0">
           <tr class="timeItem">
             <td>{{timeMap[selectIndex].date}}</td>
@@ -128,29 +130,31 @@
       <mt-cell :title="$t('message.Price_curve')" v-if="addressObj.id&&addressObj.address">
         <mt-switch v-model="popupVisiblechart"></mt-switch>
       </mt-cell>
-      <div v-if="popupVisiblechart">
-        <div class="echarts" v-show="showchart" style="width: 100%;height: 300px;font-size: 14px">
+      <div v-if="popupVisiblechart" class="border-bottom">
+        <div class="echarts" v-show="showchart" style="width: 100%;height: 300px;">
           <canvas id="c1" style="width:95%;height:218px;margin:0 auto;display: block"></canvas>
         </div>
-        <div class="flexbox" v-show="!showchart">
-          {{$t('message.In_service')}}
+        <div style="padding:0 10px 10px;color:#999" v-show="!showchart">
+          <i class="iconfont icon-message"></i> {{$t('message.In_service')}}
         </div>
       </div>
       </div>
     </div>
-
-    <div class="footerBar">
-      <div class="b_btn">
-        <mt-button class="an_order" @click="anOrder" type="danger" :disabled="addressObj.id==null || faultDesc==''||timeMap==''">
-          {{$t('message.Confirm')}}
-        </mt-button>
+    <mt-tabbar  fixed style="z-index=99999999999999999999999999999">
+      <div class="footerBar" style="position:fixed;top:100vh;left:0">
+        <div class="b_btn  shadow-top">
+          <mt-button class="an_order" @click="anOrder" type="danger"  :disabled="addressObj.id==null || faultDesc==''||timeMap==''">
+            <i class="iconfont icon-task"></i> {{$t('message.Confirm')}}
+          </mt-button>
+        </div>
       </div>
-    </div>
+    </mt-tabbar>
   </div>
 </template>
 <script type="text/javascript">
   import vueSlider from 'vue-slider-component'
   import { Toast } from 'mint-ui'
+  import { MessageBox } from 'mint-ui';
   import moment from 'moment'
   import GM from 'g2-mobile'
   export default {
@@ -392,7 +396,7 @@
             }
             cb && cb()
           } else {
-            alert(JSON.stringify(`获取服务点`, JSON.stringify(res)))
+            MessageBox.alert(JSON.stringify(`获取服务点`, JSON.stringify(res)))
           }
         })
       },
@@ -664,10 +668,10 @@
         }
         this.$api.save_price_oncall(data).then(res => {
           if (res.code == ERR_OK) {
-            alert('预约成功')
+            MessageBox.alert('预约成功')
             this.faultDesc = '' // 清空描述让button disabled
           } else {
-            alert(`预约` + res.msg)
+            MessageBox.alert(`预约` + res.msg)
           }
         }).catch(err => console.error(err))
       },
@@ -676,7 +680,7 @@
           if (res.code == 0) {
             this.customerEmployeeId = res.personId
           } else {
-            alert(JSON.stringify(`获取用户` + res))
+            MessageBox.alert(JSON.stringify(`获取用户` + res))
           }
         })
         this.$api.CHECK_BIND_MOBILE().then(res => {
@@ -687,7 +691,7 @@
               this.noBindMobile = false
             }
           } else {
-            alert(JSON.stringify(`绑定手机` + res))
+            MessageBox.alert(JSON.stringify(`绑定手机` + res))
           }
         })
       },
@@ -702,7 +706,7 @@
             }
             cb && cb()
           } else {
-            alert(`获取账号类型出错` + JSON.stringify(res))
+            MessageBox.alert(`获取账号类型出错` + JSON.stringify(res))
           }
         })
       },
@@ -767,6 +771,9 @@
     flex: 1;
     text-indent: 6px;;
     width: 50%;
+  }
+  .mu-text-field-input{
+    text-align: center;
   }
 
   .page-content {

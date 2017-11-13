@@ -47,7 +47,7 @@
           <mu-text-field :hintText="$t('message.repeat_password')" v-model="form.repwd2" type="password"
                          name="phone" class="require"
                          fullWidth/>
-          <small v-if="error" style="font-size: 8px;color: #f44336;">{{errorMsg}}</small>
+          <small v-if="error" style="font-size: 10px;color: #f44336;">{{errorMsg}}</small>
           <button class="Button--primary Button--blue" @click="repassword">{{$t('message.Submit')}}</button>
 
         </div>
@@ -111,7 +111,15 @@
       check(){
         if (this.form.phone.length != 11) {
           this.error = true;
-          this.errorMsg = '请检查是否填写准确'
+          if (this.form.phone.length == 0)
+            this.errorMsg = "请输入手机号"
+          else
+            this.errorMsg = this.$t('message.phone_error')
+          return;
+        }
+        else if (this.form.code.length ==0) {
+          this.error = true;
+          this.errorMsg = "请输入手机验证码"
           return;
         }
         this.$api.CHECK_TEL_CODE({telephone: this.form.phone, code: this.form.code}).then(res => {

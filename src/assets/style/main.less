@@ -35,7 +35,7 @@
 .RouterView {
   position: absolute;
   width: 100%;
-  transition: all 0.28s ease-out;
+  transition: all 0.28s ease-in;
   top: 0;
   height: 100vh;
 }
@@ -134,8 +134,8 @@ a {
 .an_order {
   width: 100%;
   float: right;
-  background: #ea5a49;
-  color: #fff;
+  font-size: 16px;
+  border-radius: 0;
 }
 
 .gray {
@@ -359,10 +359,11 @@ body {
 
 .timeItem td .label {
   color: #fff;
-  background: #1ab394;
-  border-radius: 10px;
+  background: rgb(38, 162, 255);
+  border-radius: 4px;
   font-size: 13px;
-  padding: 2px 4px;
+  padding: 3px 7px;
+  line-height: 7px;
 }
 
 .timeItem td.del {
@@ -372,10 +373,14 @@ body {
 }
 
 .timeItem {
-  box-shadow: 0 0 10px rgba(100, 100, 100, .1);
   margin-top: -2px;
   overflow: hidden;
   background: #fff;
+  background-image: -webkit-linear-gradient(bottom, #d9d9d9, #d9d9d9 30%, transparent 50%);
+  background-image: linear-gradient(0deg, #d9d9d9, #d9d9d9 30%, transparent 50%);
+  background-size: 100%-6 1px;
+  background-repeat: no-repeat;
+  background-position: bottom;
 }
 
 .coupons-item {
@@ -483,4 +488,15 @@ body {
 .return{
   font-size: 12px;
   padding:10px 0
+}
+.dateWrap .title{
+  padding: 12px 0 0 10px;
+}
+.btn-white-flat{
+  background:rgb(238, 238, 238);
+  font-size: 16px;
+  border-radius: 0px;
+}
+.shadow-top{
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.36);
 }

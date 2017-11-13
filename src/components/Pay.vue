@@ -23,7 +23,7 @@
             <div class="card">
               <table class="card_t">
                 <tr>
-                  <td rowspan="2" width="20"><i class="iconfont icon-shielding_fill"></i></td>
+                  <td rowspan="2" width="20" style="vertical-align: top"><i class="iconfont icon-shielding_fill"></i></td>
                   <td>
                     <!-- 故障描述-->
                     <div class="tit-t">{{$t('message.Fault_description')}}</div>
@@ -42,7 +42,7 @@
             <div class="card">
               <table class="card_t">
                 <tr>
-                  <td rowspan="2" width="20"><i class="iconfont icon-decoration_fill"></i></td>
+                  <td rowspan="2" width="20" style="vertical-align: top"><i class="iconfont icon-decoration_fill"></i></td>
                   <td>
                     <!--处理过程-->
                     <div class="tit-t">{{$t('message.Solving_steps')}}</div>

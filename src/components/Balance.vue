@@ -19,12 +19,9 @@
         <div v-if="total.length==0" class="balanceNum">0.00<span class="balanceTxt">{{$t('message.Overall_balance')}}</span></div>
         <div class="btn yellowbg" @click="pay" style="width: 60%;margin: 6px auto;padding: 6px;border-radius: 22px">{{$t('message.Recharge')}}</div>
       </div>
-
-      <div class="col">
-        <div class="col1">
-          <router-link tag="div" class="balanceBtm" to="record">{{$t('message.record')}}<i class="iconfont icon-enter pull-right"></i> </router-link>
+        <div class="col1 border-bottom">
+          <router-link tag="div" class="balanceBtm" to="record">预付款消费{{$t('message.record')}}<i class="iconfont icon-enter text-gray pull-right"></i> </router-link>
         </div>
-      </div>
       <div class="mxBox">
         <div class="mxTit">
           <div class="tit" v-for="(item ,index) in mxTit" :class="{active:mxShow[index]}" @click="mxPay(index)"
@@ -56,27 +53,30 @@
       </div>
 
     </scroller>
-    <mt-popup v-model="payDetail" position="top" style="width: 100%;height: 300px;font-size: 14px">
+    <div v-show="isBackShow" class="backTop" @click="backTop"><i class="iconfont icon-huidaodingbu1"></i></div>
+    <mt-popup v-model="payDetail" position="right" class="payDetail">
+      <mt-header title="费用明细" fixed style="z-index: 9;color: #333;background: white;box-shadow:0px 1px 1px #c9c9c9;">
+        <mt-button  @click="payDetail=false" icon="back" slot="left"></mt-button>
+      </mt-header>
       <scroller :on-infinite="onInfiniteByDetail">
+        <div style="height:40px"></div>
         <div class="col-d" v-for="(item,index) in detail" :key="index">
           <div class="col1-d">
             <div>{{item.price}} </div>
             <div><span>{{item.currencyName}}</span></div>
           </div>
           <div class="col4-d">
-            <div class="textover">{{item.companyName}}</div>
+            <div><i class="iconfont icon-lvshi"></i> <span class="btn-label-blue" v-if="item.dealType">{{item.dealType}}</span> {{item.detailName}}</div>
+            <div class="textover"><i class="iconfont iconfont icon-homepage"></i> {{item.companyName}}</div>
 
-            <div><span v-cut-time="item.detailStartDate"></span>~<span v-cut-time="item.detailFinishDate"></span> <span>({{item.dealType}})</span>
+            <div><i class="iconfont iconfont icon-time"></i> <span v-html="item.detailStartDate.substr(0,10)"></span>~<span v-html="item.detailFinishDate.substr(0,10)"></span>
             </div>
-            <div class="textover">{{$t('message.remark')}}:{{item.detailName}}</div>
           </div>
         </div>
-        <div v-if="detail.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
+        <div v-if="detail.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i><br>暂无明细</div>
 
       </scroller>
     </mt-popup>
-    <div v-show="isBackShow" class="backTop" @click="backTop"><i class="iconfont icon-huidaodingbu1"></i></div>
-
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -278,6 +278,9 @@
     flex: 1;
     font-size: 12px;
   }
+  .col4-d div{
+    line-height: 20px;
+  }
 
   .content {
     padding-top: 15px;
@@ -302,6 +305,21 @@
     border-bottom: dashed 1px #eee;
     overflow: hidden;
     text-align: left;
+  }
+  .payDetail{
+    width: 100%;height: 100%;font-size: 14px
+  }
+  .payDetail .iconfont{
+    color: #999;
+    font-size: 13px;
+  }
+  .btn-label-blue{
+    border:1px solid #26a2ff;
+    color:#26a2ff;
+    background: white;
+    border-radius: 2px;
+    font-size: 12px;
+    padding:1px
   }
 
   .line {
@@ -333,15 +351,15 @@
 
   .tit {
     width: 25%;
-    padding: 10px;
+    padding: 8px 0 5px;
+    margin:0 10px;
     text-align: center;
     cursor: pointer;
   }
 
   .tit.active {
     color: #26a2ff;
-    background: rgba(38, 162, 255, .1);
-
+    border-bottom: 3px solid #26a2ff ;
   }
 
   .mxBox {
@@ -362,6 +380,7 @@
 
   .col1 {
     flex: 1;
+    background: white;
   }
 
   .balanceTop {
@@ -372,9 +391,7 @@
   }
 
   .balanceBtm {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    line-height: 1;
+    line-height: 40px;
     color: #333;
     font-size: 14px;
   }
@@ -397,5 +414,13 @@
     text-align: center;
     font-weight: bold;
     color: #fff;
+  }
+  .icon-zanwushuju{
+    font-size: 80px!important;
+    color: #e1e1e1!important;
+  }
+  .noData{
+    color: #999999;
+    font-size: 13px;
   }
 </style>

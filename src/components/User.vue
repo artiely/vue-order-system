@@ -113,7 +113,7 @@
       <mt-button type="danger" @click="loginOut" size="small"
            style="width: 95%;margin-top: 10px">{{$t('message.Logout')}}
       </mt-button>
-      <div style="height: 80px;"></div>
+      <div style="height: 140px;"></div>
     </scroller>
 
     <mt-popup v-model="notificationListVisible" position="bottom" style="width: 100%;height:200px;text-align: left"
@@ -129,7 +129,7 @@
       position="left"
       style="width: 60%;height: 100%">
       <div v-if="accountList.length>0">
-        <div class="bluebg" style="color: #fff;padding: 6px">{{$t('message.Switchable_account')}}</div>
+        <div style="padding: 10px;color:#999"><i class="iconfont icon-qiehuan"></i> {{$t('message.Switchable_account')}}</div>
         <div :class="['account-btn',item.id==userId?'bluebg':'btn-white']" v-for="item in accountList"
              @click="changeAccount(item)">
           <i v-if="item.id==userId" class="iconfont icon-mine"></i> {{item.userName}}
@@ -181,7 +181,7 @@
       loginOut(){
         this.$store.commit('LOGOUT')
         this.$api.LOGOUT()
-        this.$router.push({path: '/shop', name: 'shop'});
+//        this.$router.push({path: '/shop', name: 'shop'});
         this.settingVisible = false
       },
       showUserInfo(){
@@ -307,7 +307,11 @@
     height: 46px;
     line-height: 46px;
     background: #fff;
-    margin-bottom: 1px;
+    background-image: -webkit-linear-gradient(bottom, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-image: linear-gradient(0deg, #e5e5e5, #e7e7e7 30%, transparent 50%);
+    background-size: calc(100%-6) 1px;
+    background-repeat: no-repeat;
+    background-position: 10px bottom;
     .left-icon {
       width: 30px;
       text-align: left;
@@ -327,7 +331,7 @@
         height: 18px;
         min-width: 18px;
         text-align: center;
-        line-height: 1;
+        line-height: 15px;
         padding: 2px;
         background: #fd3fb3;
         background: -webkit-linear-gradient(315deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
@@ -335,6 +339,7 @@
         background: linear-gradient(135deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
         color: #fff;
         border-radius: 50%;
+        font-size: 11px;
       }
     }
     .right-icon {

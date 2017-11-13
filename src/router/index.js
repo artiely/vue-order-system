@@ -31,146 +31,229 @@ if (window.sessionStorage.getItem('person')) {
 }
 
 // const Order = resolve => {
-//   let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+//   let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
 //   require(['@/components/Order'], (component) => {
 //     resolve(component)
 //     instance.close();
 //   })
 // }
 // const User = resolve => {
-//   let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+//   let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
 //   require(['@/components/User'], (component) => {
 //     resolve(component)
 //     instance.close();
 //   })
 // }
 const Ma = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Ma'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })}
 
 const Oncall = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Oncall'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 const Balance = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Balance'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 const Complain = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Complain'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 const Address = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Address'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 const Urge = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
   require(['@/components/Urge'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // Indicator.close();
   })
 }
 const Orderdetail = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
   require(['@/components/items/Orderdetail'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
   })
 }
 
 const Pay = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Pay'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Register = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Register'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Type = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Type'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Join = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Join'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Reject = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Reject'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Info = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Info'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Payok = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Payok'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Record = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Record'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Coupons = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Coupons'], (component) => {
+    // Indicator.close();
     resolve(component)
-    instance.close();
+    // instance.close();
   })
 }
 
 const Fpassword = resolve => {
-  let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading-m icon-rock'});
+  // Indicator.open({
+  //   text: '载入中...',
+  //   spinnerType: 'fading-circle'
+  // });
+  // let instance = Toast({duration:-1,message:'载入中...',iconClass:'iconfont icon-loading2 icon-rock'});
   require(['@/components/Fpassword'], (component) => {
     resolve(component)
-    instance.close();
+    // Indicator.close();
+    // instance.close();
   })
 }
 

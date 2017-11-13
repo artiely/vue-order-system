@@ -51,9 +51,9 @@
         </div>
 
         <div >
-          <span class="form-group__message" v-if="!$v.form2.companyIdNum.minLength">{{$t('message.company_id_error')}}.</span>
+          <span class="form-group__message" v-if="!$v.form2.companyIdNum.minLength||!$v.form2.companyIdNum.maxLength">{{$t('message.company_id_error')}}.</span>
           <span class="form-group__message" v-if="!$v.form2.mark.alpha">{{$t('message.mark_error')}}.</span>
-          <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form1.phone.maxLength">{{$t('message.phone_error')}}.</span>
+          <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form2.phone.maxLength">{{$t('message.phone_error')}}.</span>
         </div>
         <div class="btn-block-wrapper">
           <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
@@ -111,7 +111,8 @@
           required,
         },
         companyIdNum:{
-          minLength:minLength(15)
+          minLength:minLength(15),
+          maxLength:maxLength(20),
         },
         mark:{
           required,
@@ -135,7 +136,48 @@
         this.$router.back()
       },
       handleSubmit () {
-        if (this.$v.form.$invalid) {
+        if(this.form.typeId === '2'){
+          if(this.$v.form2.$invalid){
+            alert(this.$t('message.check_fields'))
+            return
+          }else{
+            // 如果是修改 提交参数略有不同
+            let eData = {
+              account_type: this.form.typeId,
+              company_name: this.form2.company,
+              comp_eng_short_name: this.form2.mark,
+              business_license_number: this.form2.companyIdNum,
+              personName: this.form2.userName,
+              telephone: this.form2.phone,
+              code: this.form2.code,
+              email: this.editData.email,
+              personId: this.editData.personId,
+              rowChangeLogId: this.editData.rowChangeLogId,
+              sysUserId: this.editData.sysUserId,
+              companyID: this.editData.companyID
+            }
+            this.__postData (eData)
+          }
+        }else{
+          if (this.$v.form1.$invalid) {
+            alert(this.$t('message.check_fields'))
+            return
+          }else{
+            let eData = {
+              account_type: this.form.typeId,
+              personName: this.form1.userName,
+              telephone: this.form1.phone,
+              code: this.form1.code,
+              email: this.editData.email,
+              personId: this.editData.personId,
+              rowChangeLogId: this.editData.rowChangeLogId,
+              sysUserId: this.editData.sysUserId,
+              companyID: this.editData.companyID
+            }
+          }
+          this.__postData (eData)
+        }
+        /*if (this.$v.form.$invalid) {
           alert(this.$t('message.check_fields'))
           return
         } else {
@@ -191,12 +233,35 @@
             }
           })
 
-        }
+        }*/
+      },
+      __postData (eData) {
+        this.$api.UPDATE_REGISTER_INFO(Object.assign({}, eData)).then(res => {
+          if (res.code === 0) {
+            if (res.state != '1') { // 验证码错误或过期
+              alert(res.info)
+              return false
+            } else {
+              let url = window.location.href
+              if (window.location.search === '') {
+                url = window.location.href
+              } else {
+                url = url.split(window.location.search)[0]
+              }
+              url = url.replace('info', 'user')
+              this.$toast(this.$t('message.Reset_success'))
+              window.location.href = url
+            }
+
+          } else {
+            alert(JSON.stringify(res))
+          }
+        })
       },
       getMsgCode () {
-        if (this.form.phone.length != 11)return
+        if (this.form2.phone.length != 11)return
         let data = {
-          telephone: this.form.phone,
+          telephone: this.form2.phone,
           type: 0
         }
         let s = setInterval(() => {
