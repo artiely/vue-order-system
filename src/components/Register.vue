@@ -11,13 +11,13 @@
           <!-- 邮箱-->
           <div v-if="selected==1" class="form-content">
             <mu-text-field :hintText="$t('message.Email')" v-model="form.email" type="email"
-                           name="email" class="require"
-                           fullWidth @input="checkEmail"/>
+                           name="email" class="require" @focus="focus" @blur="blur"
+                           fullWidth/>
             <mu-text-field :hintText="$t('message.password')" v-model="form.pwd" type="password"
                            name="pwd" class="require"
                            fullWidth/>
             <mu-text-field :hintText="$t('message.repeat_password')" v-model="form.pwd2" type="password"
-                            name="pwd2"
+                           name="pwd2"
                            class="require"
                            fullWidth/>
           </div>
@@ -42,7 +42,8 @@
             <mu-text-field :hintText="$t('message.password')" v-model="form2.pwd" type="password"
                            name="pwd" class="require"
                            fullWidth/>
-            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form2.pwd2" type="password" class="require"
+            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form2.pwd2" type="password"
+                           class="require"
                            name="pwd2"
                            fullWidth/>
           </div>
@@ -59,7 +60,7 @@
                            fullWidth/>
             <mu-text-field :hintText="$t('message.Phone_number')" v-model="form3.phone" type="number"
                            name="phone" class="require"
-                           fullWidth />
+                           fullWidth/>
             <div>
               <mu-text-field :hintText="$t('message.Msg_code')" v-model="form3.code" type="text"
                              name="code" class="require"
@@ -103,7 +104,7 @@
           </div>
           <!--错误信息/-->
           <div class="btn-block-wrapper">
-          <button class="Button--primary Button--blue" @click="register">{{$t('message.signup')}}</button>
+            <button class="Button--primary Button--blue" @click="register">{{$t('message.signup')}}</button>
           </div>
           <div style="padding: 0 20px;font-size: 12px">
             <router-link to="login">{{$t('message.Back')}}</router-link>
@@ -114,13 +115,16 @@
   </div>
 </template>
 <script>
-  import { GetQueryString } from '@/utils'
-  import { validationMixin } from 'vuelidate'
-  import { required, minLength, maxLength, sameAs, email }from 'vuelidate/lib/validators'
+  import {GetQueryString} from '@/utils'
+  import {validationMixin} from 'vuelidate'
+  import {required, minLength, maxLength, sameAs, email} from 'vuelidate/lib/validators'
+
+  import { MessageBox } from 'mint-ui';
   export default {
     name: 'login',
-    data () {
+    data() {
       return {
+        cck: false,
         selected: '1',
         count: 60,
         form: {
@@ -149,8 +153,8 @@
         email: {
           required,
           email,
-          check(value){
-            if (value.indexOf('@') <= 0) {
+          check(value) {
+            if (!this.cck) {
               return true
             }
             return new Promise((resolve, reject) => {
@@ -162,7 +166,7 @@
                     resolve(true)
                   }
                 } else {
-                  alert(JSON.stringify(res))
+                  MessageBox.alert(JSON.stringify(res))
                 }
               })
             })
@@ -181,7 +185,7 @@
           required,
           minLength: minLength(11),
           maxLength: maxLength(11),
-          isUnique (value) {
+          isUnique(value) {
             // 长度不为11暂且就认为不是合法的手机号
             if (value.toString().length !== 11) return true
             return new Promise((resolve, reject) => {
@@ -194,7 +198,7 @@
                     resolve(true)
                   }
                 } else {
-                  alert(JSON.stringify(res))
+                  MessageBox.alert(JSON.stringify(res))
                 }
               })
 
@@ -238,20 +242,26 @@
     },
 
     methods: {
-      back(){
+      back() {
         this.$router.back()
       },
-      checkEmail (val, cb) {
+      focus() {
+        this.cck = false
+      },
+      blur() {
+        this.cck = true
+      },
+      checkEmail(val, cb) {
         console.log('邮箱', val)
-        if (val.indexOf('@') <= 0) {
+        if (val.indexOf('@') <= 0 ) {
           return
         }
         this.$api.CHECK_EMAIL({email: this.form.email}).then(res => {
           if (res.code === 0) {
             if (res.state === '-1') {
-             //
+              //
             } else {
-             //
+              //
             }
             cb && cb()
           } else {
@@ -259,17 +269,17 @@
           }
         })
       },
-      checkPhone (val) {
-        if (val.length < 10)return
+      checkPhone(val) {
+        if (val.length < 10) return
         this.$api.CHECK_PHONE({telephone: this.form.phone}).then(res => {
           if (res.code === 0) {
             if (res.state == '0') {
               //
             } else {
-             //
+              //
             }
           } else {
-            alert(JSON.stringify(res))
+            MessageBox.alert(JSON.stringify(res))
           }
         })
       },
@@ -279,27 +289,27 @@
             if (!this.$v.form.$invalid) {
               this.checkEmail(this.form.email, () => {this._postInfo()})
             } else {
-              alert(this.$t('message.check_fields'))
+              MessageBox.alert(this.$t('message.check_fields'))
             }
 
           } else if (this.selected == '2') { // 手机号
             if (!this.$v.form2.$invalid) {
               this._postInfoByMobile()
             } else {
-              alert(this.$t('message.check_fields'))
+              MessageBox.alert(this.$t('message.check_fields'))
             }
 
           } else {// 加入公司
             if (!this.$v.form3.$invalid) {
               this._joinCompany()
             } else {
-              alert(this.$t('message.check_fields'))
+              MessageBox.alert(this.$t('message.check_fields'))
             }
           }
       },
-      getMsgCode (val) {
-       console.log(val)
-        if (val.length != 11)return
+      getMsgCode(val) {
+        console.log(val)
+        if (val.length != 11) return
         let data = {
           telephone: val,
           type: 1
@@ -318,14 +328,14 @@
             if (res.state === 1) {
               this.$toast('短信已发出，请查收')
             } else {
-              alert(JSON.stringify(res))
+              MessageBox.alert(JSON.stringify(res))
             }
           } else {
-            alert(JSON.stringify(res))
+            MessageBox.alert(JSON.stringify(res))
           }
         })
       },
-      _postInfo () {
+      _postInfo() {
         let url = window.location.href
         if (window.location.search === '') {
           var href = window.location.href.replace('&amp;', '&')
@@ -350,11 +360,11 @@
         }
         this.$api.REGISTER(data).then(res => {
           if (res.code === 0) {
-            alert(`激活信息已发送至${this.form.email},请注意查收并及时激活。`)
+            MessageBox.alert(`激活信息已发送至${this.form.email},请注意查收并及时激活。`)
           }
         })
       },
-      _postInfoByMobile () {
+      _postInfoByMobile() {
         let data = {
           telephone: this.form2.phone,
           code: this.form2.code,
@@ -367,14 +377,14 @@
             if (res.state === '1') { // 成功
               this.$router.push(`/type?table_id=${GetQueryString('table_name') || ''}&table_name=${GetQueryString('table_name') || ''}`)
             } else if (res.state == '2') { // 不正确
-              alert('验证码错误')
+              MessageBox.alert('验证码错误')
             } else if (res.state == '3') { // 过期
-              alert('验证码过期')
+              MessageBox.alert('验证码过期')
             }
           }
         })
       },
-      _joinCompany(){
+      _joinCompany() {
         let data = {
           inviteCode: this.form3.InvitationCode,
           code: this.form3.code,
@@ -385,18 +395,18 @@
         this.$api.CODE_JOIN_COMPANY(data).then(res => {
           if (res.code == 0) {
             if (res.state == 1) {
-              alert('保存成功')
+              MessageBox.alert('保存成功')
               this.router.push('login')
             } else {
-              alert(res.info)
+              MessageBox.alert(res.info)
             }
           } else {
-            alert(JSON.stringify(res))
+            MessageBox.alert(JSON.stringify(res))
           }
         })
       }
     },
-    mounted(){
+    mounted() {
 
     }
   }
@@ -411,8 +421,6 @@
   #app .mu-text-field .mu-text-field-content {
     padding-bottom: 1px !important;
   }
-
-
 
   .Button--primary.Button--blue {
     border: none;

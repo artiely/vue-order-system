@@ -8,7 +8,7 @@
         </div>
       </header>
       <header class="mint-header">
-        <swiper v-if="lang=='CN'"
+        <swiper v-if="lang=='CN'||lang=='TN'"
                 :options="swiperOption"
                 ref="mySwiper"
                 style="height: 40px;padding-right: 70px"
@@ -121,6 +121,7 @@
   import OrderDetail from './items/Orderdetail.vue'
   import {Toast} from 'mint-ui'
   import moment from 'moment'
+
   export default {
     name: 'order',
     components: {
@@ -249,7 +250,7 @@
         }
       },
       'detailVisible': {
-        handler(val){
+        handler(val) {
           console.log('123', val)
         }
       }
@@ -258,27 +259,27 @@
       swiper() {
         return this.$refs.mySwiper.swiper
       },
-      lang(){
+      lang() {
         if (this.$store.state.userInfo.lang) {
           return this.$store.state.userInfo.lang
         } else {
           return 'CN'
         }
       },
-      isCompany(){
+      isCompany() {
         return this.$store.state.userInfo.isCompany
       },
       detailVisible: {
-        get () {
+        get() {
           return this.$store.state.detail.detailVisiable
         },
-        set (newValue) {
+        set(newValue) {
           this.$store.state.detail.detailVisiable = newValue
         }
       }
     },
     methods: {
-      backList () {
+      backList() {
         this.$store.commit('TOGGLE_DETAIL_SHOW')
       },
       getdata(cb) {
@@ -343,7 +344,7 @@
         })
 
       },
-      onRefreshAgain () {
+      onRefreshAgain() {
         this.query.page = 1
         this.getdata(function () {
         })
@@ -481,7 +482,7 @@
     created() {
       this.getdata()
     },
-    activated(){
+    activated() {
       this.$store.dispatch('isCompany_action')
       var orderNum = this.$route.params.orderNum
       if (orderNum && orderNum > 0) {
@@ -515,7 +516,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
+<style scoped lang ="less">
   select {
     border: none;
     outline: none;
@@ -531,60 +532,47 @@
   }
 
   .CN_swiper {
-
-  .swiper-slide {
-    width: 15%;
-
-  }
-
+    .swiper-slide {
+      width: 15%;
+    }
   }
 
   .EN_swiper {
+    .swiper-slide {
+    /*width: 45%;*/
+      &:nth-child(1) {
+        width: 35%;
+      }
 
-  .swiper-slide {
+      &:nth-child(2) {
+        width: 20%;
+      }
 
-  /*width: 45%;*/
-  &
-  :nth-child(1) {
-    width: 35%;
-  }
+      &:nth-child(3) {
+        width: 25%;
+      }
 
-  &
-  :nth-child(2) {
-    width: 20%;
-  }
+      &:nth-child(4) {
+        width: 10%;
+      }
 
-  &
-  :nth-child(3) {
-    width: 25%;
-  }
+      &:nth-child(5) {
+        width: 45%;
+      }
 
-  &
-  :nth-child(4) {
-    width: 10%;
-  }
+      &:nth-child(6) {
+        width: 26%;
+      }
 
-  &
-  :nth-child(5) {
-    width: 45%;
-  }
+      &:nth-child(7) {
+        width: 20%;
+      }
 
-  &
-  :nth-child(6) {
-    width: 26%;
-  }
+      &:nth-child(8) {
+        width: 20%;
+      }
 
-  &
-  :nth-child(7) {
-    width: 20%;
-  }
-
-  &
-  :nth-child(8) {
-    width: 20%;
-  }
-
-  }
+    }
   }
 
   .bt-margin {
@@ -655,8 +643,14 @@
     padding-top: 1px;
     background-color: white
   }
-  .mint-cell-title{
-    text-align:left!important;
+
+  .mint-cell-title {
+    text-align: left !important;
   }
-  .select-search{width: 82%;height: 30px;background: white;}
+
+  .select-search {
+    width: 82%;
+    height: 30px;
+    background: white;
+  }
 </style>

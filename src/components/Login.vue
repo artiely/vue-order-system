@@ -10,20 +10,23 @@
             <div class="errorMeg" v-if="error">{{errorMsg}}</div>
             <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model="username">
             <input type="password" :placeholder="$t('message.Account_password')" v-model="password">
-            <button id="login-button" @click="login" style="border-radius: 2px;font-size:16px">{{$t('message.Login')}}</button>
+            <button class="login-button" @click="login">{{$t('message.Login')}}</button>
           </div>
           <div style="height: 30px;width: 100%"></div>
           <div class="footer-btn clearfix"><span @click="forget_password" class="pull-left"
                                                  style="padding-right: 50px;font-size: 12px"> {{$t('message.forget_password')}}</span>
             <span
-              class="pull-right" style="padding-left: 50px;font-size: 12px" @click="toRegister">{{$t('message.signup')}}</span></div>
+              class="pull-right" style="padding-left: 50px;font-size: 12px"
+              @click="toRegister">{{$t('message.signup')}}</span></div>
           <div style="text-align: left;width: 100%;margin:0 auto ;padding: 20px 0">
-            <select style="padding: 8px;outline: none;background:rgba(255,255,255,.9);border: none;border-radius: 2px" v-model="lang">
+            <select style="padding: 8px;outline: none;background:rgba(255,255,255,.9);border: none;border-radius: 2px"
+                    v-model="lang">
               <option value="EN">English</option>
               <option value="CN">中文简体</option>
               <option value="TN">中文繁体</option>
             </select>
           </div>
+          <div style="color:#fff;padding:30px;" @click="guestLogin">游客登录</div>
         </div>
         <ul class="bg-bubbles">
           <li></li>
@@ -42,10 +45,11 @@
   </div>
 </template>
 <script>
-  import { mapState } from 'vuex';
+  import {mapState} from 'vuex';
+
   export default {
     name: 'login',
-    data () {
+    data() {
       return {
         username: '',
         password: '',
@@ -78,7 +82,59 @@
       }
     },
     methods: {
-      login(){
+      guestLogin() {
+        let data = "username=lradmin666&password=123456&loginNum=1";
+        this.$api.login(data).then((res) => {
+          if (res.code == ERR_OK) { // 登录成功
+            this.error = false;
+            this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
+              if (r.code == ERR_OK) {
+                let userId = r.user.id;
+                let personId = r.user.personId;
+                this.$store.dispatch('login', {userId, personId});
+                let redirect = decodeURIComponent(this.$route.query.redirect || '/');
+                this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+                  if (res.code === 0) {
+                    if (res.state == 4) { // 不完善
+                      this.$router.push('/type?state=4')
+                    } else if (res.state == 7) {
+                      this.$router.push('/reject?state=7')
+                      return
+                    } else if (res.state == 8) {
+                      this.$router.push('/reject?state=8')
+                      return
+                    } else {
+                      this.$api.IS_GUEST().then(response => {
+                        if (response.state == '1') {// 游客
+                          this.$store.commit('IS_GUEST', true)
+                        } else {
+                          this.$store.commit('IS_GUEST', false)
+                        }
+                        if (!this.$api.initWeiXinOpenId(data, redirect)) {
+                          this.$router.push({ // 跳到对应页面
+                            path: redirect
+                          });
+                        }
+                      })
+
+                    }
+                  } else {
+                    alert(JSON.stringify(res))
+                  }
+                })
+
+              } else {
+                this.error = true;
+                this.errorMsg = '连接失败'
+              }
+            })
+          } else {
+            this.error = true;
+            this.errorMsg = res.msg
+          }
+        }).catch(err => console.error(err))
+      },
+      login() {
         if (this.username == '' || this.password == '') {
           this.error = true
           this.errorMsg = this.$t('message.name_password_empty')
@@ -105,11 +161,18 @@
                       this.$router.push('/reject?state=8')
                       return
                     } else {
-                      if (!this.$api.initWeiXinOpenId(data, redirect)) {
-                        this.$router.push({ // 跳到对应页面
-                          path: redirect
-                        });
-                      }
+                      this.$api.IS_GUEST().then(response => {
+                        if (response.state == '1') {// 游客
+                          this.$store.commit('IS_GUEST', true)
+                        } else {
+                          this.$store.commit('IS_GUEST', false)
+                        }
+                        if (!this.$api.initWeiXinOpenId(data, redirect)) {
+                          this.$router.push({ // 跳到对应页面
+                            path: redirect
+                          });
+                        }
+                      })
                     }
                   } else {
                     alert(JSON.stringify(res))
@@ -127,20 +190,20 @@
           }
         }).catch(err => console.error(err))
       },
-      back(){
+      back() {
         this.$router.back()
       },
-      toRegister () {
+      toRegister() {
         this.$router.push('/register')
       },
-      forget_password(){
+      forget_password() {
         this.$router.push('/f_password')
       }
     },
-    mounted(){
+    mounted() {
 
     },
-    activated(){
+    activated() {
       console.log('SERVER_BASE_URL', SERVER_BASE_URL)
       let lang = window.localStorage.getItem('lang')
       if (lang && (lang !== 'null' || lang !== 'undefined')) {
@@ -150,6 +213,17 @@
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less" type="text/less">
+  .login-button {
+    border-radius: 2px !important;
+    font-size: 16px !important;
+    background-color: white;
+  }
+
+  .login-button:active {
+    background: rgb(231, 231, 231);
+    color: #2698f4;
+  }
+
   .footer-btn {
     width: 100%;
     margin: 0 auto;

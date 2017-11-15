@@ -4,7 +4,10 @@
       <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <div class="page-content">
-      <div v-if="!serviceAddress||serviceAddress.length==0" class="noData" style="text-align: center"><i class="iconfont icon-zanwushuju"></i><div style="color: #999;font-size: 14px">{{$t('message.No_more_data')}}</div></div>
+      <div v-if="!serviceAddress||serviceAddress.length==0" class="noData" style="text-align: center"><i
+        class="iconfont icon-zanwushuju"></i>
+        <div style="color: #999;font-size: 14px">{{$t('message.No_more_data')}}</div>
+      </div>
       <mt-cell-swipe v-for="(item,index) in serviceAddress" :key="index" :id="item.companyId" class="cell-swipe"
                      :right="[
         {
@@ -39,15 +42,17 @@
         <mt-field :label="$t('message.Company')" v-if="isCompany" :state="companyName.length>0?'success':'error'"
                   v-model="companyName"
                   :placeholder="$t('message.qingshuru')+$t('message.Company_name')" class="bg-img-bottom"></mt-field>
-        <div @click="showAddress" class="cell-ad bg-img-bottom "><span class="cell-ad-title">{{ $t('message.Area')}}</span>{{ addressProvince }} {{ addressCity }}
+        <div @click="showAddress" class="cell-ad bg-img-bottom "><span
+          class="cell-ad-title">{{ $t('message.Area')}}</span>{{ addressProvince }} {{ addressCity }}
           {{addressXian}}
-          <i class="iconfont icon-enter pull-right" ></i>
+          <i class="iconfont icon-enter pull-right"></i>
         </div>
         <div @click="showStreet" class="cell-ad">
           <span class="cell-ad-title">{{ $t('message.Street')}}</span>
           {{noStreet?addressStreet:"暂无可选街道"}}
-          <i class="iconfont icon-enter pull-right" ></i></div>
-        <mt-field :label="$t('message.Detailed_address')" type="textarea" :placeholder="$t('message.qingshuru')+$t('message.Detailed_address')"
+          <i class="iconfont icon-enter pull-right"></i></div>
+        <mt-field :label="$t('message.Detailed_address')" type="textarea"
+                  :placeholder="$t('message.qingshuru')+$t('message.Detailed_address')"
                   id="" cols="4" rows="3" class="bg-img-bottom mt-textarea" style="margin-bottom: 10px"
                   v-model="desMore"></mt-field>
         <!--公司-->
@@ -65,16 +70,20 @@
     <mt-popup v-model="addressVisible" position="bottom" style="width: 100%;">
       <div class="page-picker-wrapper">
         <div style="padding:10px;color:#999">请选择所在区域</div>
-        <mt-picker :slots="addressSlots" v-if="addressSlots" class="picker" @change="onAddressChange"
-                   :visible-item-count="5"></mt-picker>
+        <!--<mt-picker :slots="addressSlots" v-if="addressSlots" class="picker" @change="onAddressChange"-->
+        <!--:visible-item-count="5"></mt-picker>-->
+        <picker v-model="visible" :data-items="items" @change="onValuesChange">
+          <div class="top-content" slot="top-content">Top of the content.</div>
+          <div class="bottom-content" slot="bottom-content">Bottom of the content.</div>
+        </picker>
       </div>
     </mt-popup>
-    <mt-popup v-model="streetVisible" popup="popup-fade" position="bottom" style="width: 100%">
+   <!-- <mt-popup v-model="streetVisible" popup="popup-fade" position="bottom" style="width: 100%">
       <div class="page-picker-wrapper">
         <mt-picker :slots="streetSlots" v-if="streetSlots" ref="picker" class="picker" @change="onStreetChange"
                    :visible-item-count="5"></mt-picker>
       </div>
-    </mt-popup>
+    </mt-popup>-->
     <div class="addAddressBtn border-top" @click="showAddM">{{ $t('message.Add')}} <span class="pull-right"><i
       class="iconfont icon-addition"></i></span></div>
   </div>
@@ -82,10 +91,33 @@
 <script>
   import s from '../../statics/mobile/json/address4.json'
   import {MessageBox} from 'mint-ui';
+  import picker from 'vue-3d-picker';
+
   export default {
     name: 'address',
-    data () {
+    components: {picker},
+    data() {
+      let sheng = Object.keys(s);
+      let shi = Object.keys(s[values[0]]);
+      let index = shi.indexOf(values[1])
+      let xian = s[values[0]][shi[index]];
+      this.xianObj = xian;
       return {
+        visible: true,
+        items: [
+          {
+          width: '20%',
+          values:  Object.keys(s)
+        },
+         /* {
+          width: '20%',
+          values: shi
+        },
+          {
+          width: '20%',
+          values:  Object.keys(xian)
+        }*/
+        ],
         companyName: '',
         deleteIcon: `<div style="display: block;height: 100%;padding:10px;display: flex; justify-content: center; flex-direction: column;"><i class="iconfont icon-close" style="font-size: 18px"></i></div>`,
         addressSlots: [
@@ -138,14 +170,17 @@
       }
     },
     computed: {
-      isCompany(){
+      isCompany() {
         return this.$store.state.userInfo.isCompany
       },
-      accountInfo(){
+      accountInfo() {
         return this.$store.state.userInfo.accountInfo
       }
     },
     methods: {
+      onValuesChange(result1, result2) {
+
+      },
       back() {
         this.$router.back()
       },
@@ -172,22 +207,17 @@
         picker.setSlotValues(2, Object.keys(xian));
       },
 
-      onStreetChange(picker, values){
+      onStreetChange(picker, values) {
         this.addressStreet = values[0]
       },
-      showAddress(){
-
+      showAddress() {
         this.addressVisible = true
       },
-      showStreet(){
+      showStreet() {
         if (this.noStreet)
           this.streetVisible = true
       },
-      showAddM(){
-        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
-          this.$store.commit('GUEST_TIP')
-          return
-        }
+      showAddM() {
         this.addVisible = !this.addVisible;
         this.showEditAddress = true
         setTimeout(() => {
@@ -198,7 +228,7 @@
       /**
        * 获取服务点数据
        */
-      getServiceAddress () {
+      getServiceAddress() {
         this.$api.get_service_address().then((res) => {
           if (res.code == ERR_OK) {
             this.serviceAddress = res.serviceAddress
@@ -212,8 +242,7 @@
       /**
        * 保存服务点地址
        */
-      saveAddress(){
-
+      saveAddress() {
         let _this = this;
         let _city = '上海市'
         if (this.addressCity == '市辖区') {
@@ -250,11 +279,7 @@
       /**
        * 删除服务点地址
        */
-      deleteAddress(id){
-        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
-          this.$store.commit('GUEST_TIP')
-          return
-        }
+      deleteAddress(id) {
         let data = {id: id};
         MessageBox({
           message: this.$t('message.Sure_delete'),
@@ -278,7 +303,7 @@
     },
     watch: {
       'addressXian': {
-        handler(val, oval){
+        handler(val, oval) {
           let street = this.xianObj[this.addressXian]
           this.streetSlots[0].values = street;
           if (street.length == 0) {
@@ -289,14 +314,14 @@
         }
       }
     },
-    created(){
+    created() {
     },
-    activated(){
+    activated() {
       this.getServiceAddress()
       this.$store.dispatch('isCompany_action')
       this.$store.dispatch('getAccountInfo')
     },
-    mounted(){
+    mounted() {
     }
   }
 </script>
@@ -358,17 +383,21 @@
     font-size: 14px;
 
   }
-  .cell-ad .iconfont{
-    color:#999;
+
+  .cell-ad .iconfont {
+    color: #999;
   }
-  .cell-ad-title{
-    width: 105px;display:inline-block;
+
+  .cell-ad-title {
+    width: 105px;
+    display: inline-block;
     text-align: right;
-    padding-right:35px;
-    color:#999
+    padding-right: 35px;
+    color: #999
   }
-  a{
-    color:#999!important;
+
+  a {
+    color: #999 !important;
   }
 
   textarea {
@@ -383,7 +412,8 @@
     background-repeat: no-repeat;
     background-position: bottom;
   }
-  .bg-img-bottom{
+
+  .bg-img-bottom {
     background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 50%, transparent 50%);
     background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 50%, transparent 50%);
     background-size: 120% 1px;

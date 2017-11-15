@@ -9,6 +9,7 @@ import User from '@/components/User'
 import store from '.././store/index'
 import i18n from '@/i18n'
 import {Toast} from 'mint-ui'
+
 Vue.use(Router)
 
 Router.prototype.goBack = function () {
@@ -54,7 +55,8 @@ const Ma = resolve => {
     // Indicator.close();
     resolve(component)
     // instance.close();
-  })}
+  })
+}
 
 const Oncall = resolve => {
   // Indicator.open({
@@ -398,7 +400,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   //url传过来的k缓存openId
   let openId = to.query.openId;
-  if(openId){
+  if (openId) {
     window.localStorage.setItem("openId", openId);
   }
   // 语言
@@ -413,9 +415,15 @@ router.beforeEach((to, from, next) => {
    * 路由切换前先给state赋值
    */
 
-  // let token = Cookies.get('token')
+    // let token = Cookies.get('token')
   let token = sessionStorage.getItem('token')
-  console.log('session-token',token)
+  console.log('session-token', token)
+console.log('******************',sessionStorage.getItem('isGuest'))
+  if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
+    store.commit('IS_GUEST', true)
+  }else{
+    store.commit('IS_GUEST', false)
+  }
 
   if (to.meta.requiresAuth) {
     if (token != null && token != undefined) {

@@ -5,10 +5,15 @@
     </mt-header>
     <scroller class="page-content">
       <div v-if="isCharge!=1">
-        <div class="card" style="margin-bottom: 10px">
-          {{productName}}
+        <div class="card"  style="margin-bottom: 10px" >
+          订单编号： {{orderNo}}
         </div>
+
+
         <div v-for="(list,index) in callDetails" v-if="callDetails.length>0">
+          <div class="card">
+            {{list[index].serviceName}}
+          </div>
           <div v-for="item in list">
             <div class="card">
               <div class="admin-type">
@@ -79,10 +84,10 @@
               <div class="line"></div>
               <div class="dot dot2"></div>
             </div>
-            <div class="card">
-              <div style="text-align: right;font-size: 14px">{{$t('message.Subtotal')}} <span
-                class="countStyle">￥{{item.price}}</span></div>
-            </div>
+          </div>
+          <div class="card">
+            <div style="text-align: right;font-size: 14px">{{$t('message.Subtotal')}} <span
+              class="countStyle">￥{{list[index].price}}</span></div>
           </div>
         </div>
       </div>
@@ -173,7 +178,7 @@
           </div>
         </div>
       </div>
-      <div style="height: 100px"></div>
+      <div style="height: 140px"></div>
     </scroller>
     <!--提交订单-->
 
@@ -459,6 +464,10 @@
         })
       },
       Pay() {
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         if ((this.orderPrice <= 0 || this.disabled) && this.couponId == '') {
           return
         }// 没有价格或者发票信息完整并且优惠券为空
