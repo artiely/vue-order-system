@@ -2,7 +2,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import api from '@/api/api'
-import { Toast } from 'mint-ui';
+import {Toast} from 'mint-ui';
+
 Vue.use(Vuex)
 const state = { //状态
   callId: '', //点击的工单的id ()
@@ -30,15 +31,15 @@ const mutations = { //状态只能通过此改变
     sessionStorage.oid = payload.oid
     sessionStorage.id = payload.id
   },
-  ['SET_ORDER_NUMBER'](state, payload){
+  ['SET_ORDER_NUMBER'](state, payload) {
     state.oid = payload
     sessionStorage.oid = payload
   },
-  ['SET_ORDER_INFO'](state, payload){
+  ['SET_ORDER_INFO'](state, payload) {
     state.orderInfo = payload
     sessionStorage.orderInfo = JSON.stringify(payload)
   },
-  ['TOGGLE_DETAIL_SHOW'](state, payload){
+  ['TOGGLE_DETAIL_SHOW'](state, payload) {
     state.detailVisiable = !state.detailVisiable
   }
 }
@@ -52,7 +53,7 @@ const actions = {
     //     instance2 = Toast({duration: -1, message: 'loading...', iconClass: 'iconfont icon-loading2 icon-rock'});
     // },1000)
     commit('GET_ORDER_NUMBER', payload);
-    if(state.callId=='null'){
+    if (!state.callId || state.callId == 'null') {
       // loading=true
       // if (instance2)
       //   instance2.close();

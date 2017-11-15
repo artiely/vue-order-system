@@ -5,11 +5,11 @@
     </mt-header>
     <div class="page-content" style="overflow: hidden">
       <div class="wrapper-box">
-        <mt-cell class="title-box">
+        <div class="title-box">
         <span class="title" slot="title">
           {{$t('message.Service_location')}}
         </span>
-        </mt-cell>
+        </div>
         <div class="companyName" @click.native="toggleOpen">
           <mt-field label="" :state="stateTip" v-model="addressObj.label" readonly @click.native="toggleOpen"
                     :placeholder="$t('message.Choose_location')"></mt-field>
@@ -32,11 +32,11 @@
       <!--其他e-->
       <!--日期s-->
       <div class="wrapper-box">
-        <mt-cell class="title-box">
+        <div class="title-box">
           <span class="title" slot="title">
             {{$t('message.Range_date')}}
           </span>
-        </mt-cell>
+        </div>
         <div class="dateWrap border-bottom">
           <span class="title">请选择开始日期</span>
           <mu-date-picker
@@ -64,9 +64,9 @@
       <!--日期e-->
       <!--时间s-->
       <div class="flexBox wrapper-box">
-        <mt-cell class="title-box">
+        <div class="title-box">
           <span class="title" slot="title">{{$t('message.Range_time')}}</span>
-        </mt-cell>
+        </div>
         <vue-slider
           ref="slider"
           v-model="rangeTimeOption.rangeTimeValue"
@@ -84,18 +84,18 @@
       <!--时间e-->
       <div class="wrapper-box">
         <div style="margin-bottom: -1px">
-          <mt-cell class="my-cell title-box">
+          <div class="my-cell title-box">
             <span class="title" slot="title">{{$t('message.Fault_description')}}</span>
-          </mt-cell>
+          </div>
         </div>
         <div>
           <mt-field type="textarea" rows="2" :placeholder="$t('message.Please_describe')" v-model="faultDesc"></mt-field>
         </div>
       </div>
       <div class="wrapper-box">
-        <mt-cell class="my-cell title-box">
+        <div class="my-cell title-box">
           <span slot="title" class="title">{{$t('message.Server_need')}}</span>
-        </mt-cell>
+        </div>
         <div>
           <mt-cell class="my-cell" :title="$t('message.Lunch_break')">
             <mt-switch v-model="query.sfwx"></mt-switch>
@@ -113,9 +113,9 @@
       </div>
       <!--服务时间选择组件e-->
       <div class="flexBox">
-        <mt-cell class="my-cell title-box"  v-show="trPriceList.length>0">
+        <div class="my-cell title-box"  v-show="trPriceList.length>0">
           <span slot="title" class="title">服务预约列表</span>
-        </mt-cell>
+        </div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
           <tr v-for="(item,index) in trPriceList" :key="index" :index="index" class="timeItem"
               v-if="trPriceList.length>0">
@@ -358,7 +358,11 @@
         })
       },
       anOrder(){
-        this.faultDesc = '' // 清空描述让button disabled
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
+
         var data = this.trPriceList;
         //cb 数据映射
         function ObjStory(orgId, amount, CallDetailEntity, reservationTimeEntity) //声明对象
@@ -408,10 +412,6 @@
   .wrapper-box {
     margin-bottom: 10px;
     background: #fff;
-  }
-
-  .title-box.mint-cell {
-    min-height: 24px;
   }
 
   .title {

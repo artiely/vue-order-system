@@ -301,7 +301,7 @@
           <mt-header :title="$t('message.complaint')" fixed style="z-index: 9;">
             <mt-button icon="back" @click="toushuVisible=!toushuVisible" slot="left">{{$t('message.Back')}}</mt-button>
           </mt-header>
-          <div style="padding-top: 40px;text-align: left">
+          <scroller style="padding-top: 40px;text-align: left">
             <div class="mint-radiolist-title">{{$t('message.Complaints_suggestions')}}</div>
             <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3" title="尼玛"
                       v-model="complainTxt"></mt-field>
@@ -321,8 +321,9 @@
             <mt-button type="primary" size="small" style="width: 95%" :disabled="complainTxt.length==0" @click.native="toComplain">
               {{$t('message.Submit')}}
             </mt-button>
+              <div style="height:140px"></div>
             </div>
-          </div>
+          </scroller>
         </mt-popup>
         <!--投诉/-->
       </div>
@@ -485,6 +486,10 @@
         })
       },
       pingjia(id)  {
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         this.callDetailId = id
         this.pingjiaVisible = !this.pingjiaVisible
         this._ratingHistory()
@@ -503,6 +508,10 @@
        * 评价子单
        * */
       RatingSubOrder() {
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         let data = {
           callDetailIds: [this.callDetailId],
           comments: this.evaluate,
@@ -539,6 +548,10 @@
         })
       },
       reminder(){
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         this.$api.reminder_order({callid: this.state.callId}).then(res => {
           if (res.code == ERR_OK) {
             alert(res.msg)
@@ -552,6 +565,10 @@
         }).catch(err => console.error(err))
       },
       toComplain(){
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         let data = {
           callId: this.state.callId,
           complainDesc: this.complainTxt,

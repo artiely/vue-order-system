@@ -103,16 +103,16 @@
   }
 
   .border-top {
-    background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 50%, transparent 50%);
-    background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 50%, transparent 50%);
+    background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 30%, transparent 50%);
     background-size: 150% 1px;
     background-repeat: no-repeat;
     background-position: top;
   }
 
   .border-top-pad {
-    background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 50%, transparent 50%);
-    background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 50%, transparent 50%);
+    background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 30%, transparent 50%);
     background-size: calc(100%-6px) 1px;
     background-repeat: no-repeat;
     background-position: 10px top;
@@ -169,5 +169,16 @@
   }
   .my-cell2  .mint-cell-title{
     text-align:left;padding-left:20px
+  }
+  .title-box {
+    min-height: 24px;
+    line-height: 24px;
+    padding-left:10px;
+    background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-size: 150% 1px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-color: white;
   }
 </style>

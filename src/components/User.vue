@@ -143,6 +143,7 @@
 
 <script type="text/ecmascript-6">
   import { mapState } from 'vuex';
+  import {Toast} from 'mint-ui'
   export default {
     name: 'user',
     data () {
@@ -185,6 +186,10 @@
         this.settingVisible = false
       },
       showUserInfo(){
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         this.$router.push('/info?edit=1')
       },
       /*getCustomerNotification () {
@@ -197,6 +202,10 @@
         })
       },*/
       showNotificationList(){
+        if(this.customerNotificationList.length==0){
+          Toast('暂无消息')
+          return
+        }
         this.notificationListVisible = !this.notificationListVisible
       },
       jumpToInfo(item){
@@ -227,6 +236,10 @@
 //        Toast('敬请期待')
       },
       switchAccount () {
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         this.switchVisible = true
       },
       changeAccount (item){

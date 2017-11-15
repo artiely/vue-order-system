@@ -79,6 +79,10 @@
 //        this.$router.push({path: '/orderdetail'});
       },
       goDelete(item) {
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         let data = {
           id: item.id,
           fwoneCheckState: 20,

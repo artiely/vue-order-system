@@ -9,10 +9,10 @@
               :refreshText="$t('message.Pull_to_refresh')"
               :noDataText="$t('message.No_more_data')">
       <mt-navbar v-model="selected">
-        <mt-tab-item id="0">{{$t('message.Enable')}}</mt-tab-item>
+        <mt-tab-item id="0">{{$t('message.Enable')}} <span class="mint-badge is-error is-size-small" style="position: fixed;margin:-3px 0 0 3px">{{total}}</span></mt-tab-item>
         <mt-tab-item id="1">{{$t('message.Disable')}}</mt-tab-item>
       </mt-navbar>
-
+      <div v-if="DataList.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
       <div v-for="item in DataList" class="coupons-item redbg " :class="selected==1?'expire':''"
            style=";text-align: left;padding: 6px;margin-bottom: 2px">
         <div class="dot-line left">
@@ -59,7 +59,8 @@
           state: 0, // 表示未使用、1表示已使用
           expire: 0 // 表示未过期、1表示已过期
         },
-        DataList: []
+        DataList: [],
+        total:0
       }
     },
     watch: {
@@ -80,7 +81,8 @@
           this.$api.COUPON(this.params).then(res => {
             if (res.code == 0) {
               if (this.params.page == 1) {
-                this.DataList = res.page.list
+                this.DataList = res.page.list;
+                this.total = res.page.totalCount
               } else {
                 this.DataList = this.DataList.concat(res.page.list)
               }
@@ -126,7 +128,9 @@
     color: #999;
     background: #eee;
   }
-
+  .mint-tab-item{
+    padding: 13px 0 9px;
+  }
   .card {
     p {
       margin: 0;

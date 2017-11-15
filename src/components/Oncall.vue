@@ -8,9 +8,9 @@
         <router-link style="color: #fff" to="info?edit=1">前去绑定!</router-link>
       </mt-badge>
       <div class="wrapper-box">
-        <mt-cell class="title-box">
+        <div class="title-box">
           <span slot="title" class="title">{{$t('message.Address')}}</span>
-        </mt-cell>
+        </div>
         <div class="companyName" @click.native="toggleopen">
           <mt-field label="" :state="addressObj.address?'success':'error'" v-model="addressObj.address" readonly
                     @click.native="toggleopen" :placeholder="$t('message.Choose_location')"></mt-field>
@@ -35,9 +35,9 @@
       </div>
       <!--服务日期快捷选择按钮e-->
       <div v-if="popupVisibleTime" class="wrapper-box border-bottom">
-        <mt-cell class="title-box">
+        <div class="title-box">
           <span class="title" slot="title">{{$t('message.Range_date')}}</span>
-        </mt-cell>
+        </div>
         <div class="dateWrap">
           <span class="title">请选择开始日期</span>
           <mu-date-picker class="dateItem" :hintText="$t('message.Start_date')" :minDate="minDate" v-model="startDate"
@@ -52,9 +52,9 @@
       <!--服务时间选择组件s-->
       <div class="wrapper-box">
         <div class="flexBox">
-          <mt-cell class="title-box">
+          <div class="title-box">
             <span class="title" slot="title">{{$t('message.Range_time')}}</span>
-          </mt-cell>
+          </div>
           <vue-slider ref="slider"
                       v-model="rangeTimeOption.rangeTimeValue"
                       :processStyle="rangeTimeOption.processStyle"
@@ -72,9 +72,9 @@
       <!--服务时间选择组件e-->
       <div class="wrapper-box">
         <div class="flexBox">
-          <mt-cell class="title-box">
+          <div class="title-box">
             <span class="title" slot="title">{{$t('message.Can_time_list')}}</span>
-          </mt-cell>
+          </div>
           <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
             <tr v-for="(item,index) in timeMap" :key="index" :index="index" class="timeItem" v-if="timeMap.length>0">
               <td><span >&nbsp;&nbsp;{{item.date}}</span></td>
@@ -87,17 +87,17 @@
         </div>
       </div>
       <div style="margin-bottom: -1px">
-      <mt-cell class="my-cell title-box">
+      <div class="my-cell title-box">
         <span slot="title" class="title">{{$t('message.Fault_description')}}</span>
-      </mt-cell>
+      </div>
       </div>
       <div class="wrapper-box">
         <mt-field :placeholder="$t('message.Please_describe')" type="textarea" rows="2" v-model="faultDesc"></mt-field>
       </div>
       <div style="margin-bottom: -1px">
-      <mt-cell class="my-cell title-box">
+      <div class="my-cell title-box">
         <span slot="title" class="title">{{$t('message.Server_need')}}</span>
-      </mt-cell>
+      </div>
       </div>
       <div class="wrapper-box">
         <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model="identify"></mt-field>
@@ -648,7 +648,10 @@
         chart.render()
       },
       anOrder(){
-
+        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+          this.$store.commit('GUEST_TIP')
+          return
+        }
         let newData = []
         for (var i = 0; i < this.timeMap.length; i++) {
           newData.push({
@@ -750,8 +753,16 @@
     background: #fff;
   }
 
-  .title-box.mint-cell {
+  .title-box {
     min-height: 24px;
+    line-height: 24px;
+    padding-left:10px;
+    background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 30%, transparent 50%);
+    background-size: 150% 1px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-color: white;
   }
 
   .title {

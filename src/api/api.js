@@ -2,7 +2,8 @@
  * Created by Administrator on 2017/7/20.
  */
 import fetch from './fetch'
-import { isWeixnBrowser } from '@/utils'
+import {isWeixnBrowser} from '@/utils'
+
 /**
  *
  * @params{loginNum:登录次数,userName:用户名,password:密码}
@@ -787,9 +788,23 @@ const CHECK_TEL_CODE = params => {
  * @param params /person/resetPswByMobile?password=65432
  * @constructor
  */
-const RESET_PASSWORD= params => {
+const RESET_PASSWORD = params => {
   return fetch({
     url: '/person/resetPswByMobile',
+    method: 'get',
+    params: params
+  })
+}
+
+
+/*
+* 判断当前登录账号是否是游客
+*
+* */
+
+const IS_GUEST = params => {
+  return fetch({
+    url: '/sys/role/getRoleIdByUserId',
     method: 'get',
     params: params
   })
@@ -855,7 +870,8 @@ const apiList = {
   CODE_JOIN_COMPANY,
   GET_MSG,
   CHECK_TEL_CODE,
-  RESET_PASSWORD
+  RESET_PASSWORD,
+  IS_GUEST
 }
 
 export default apiList

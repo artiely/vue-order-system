@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div style="height: 80px"></div>
+      <div style="height: 140px"></div>
     </scroller>
   </div>
 </template>

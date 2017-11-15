@@ -2,6 +2,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import api from '../../api/api.js'
+import {MessageBox} from 'mint-ui'
+import router from '../../router'
 Vue.use(Vuex)
 
 const state = {//状态
@@ -11,6 +13,7 @@ const state = {//状态
   accountState: '',
   accountInfo:'',
   isCompany: true ,// 判断当前用户是个人还是公司
+  isGuest:false,// 判断当前用户是否是游客
   customerNotificationList:[]
 }
 
@@ -37,12 +40,26 @@ const mutations = {//状态只能通过此改变
   ['IS_COMPANY'](state, payload){
     state.isCompany = payload
   },
+  ['IS_GUEST'](state,payload){
+    state.isGuest = payload
+    sessionStorage.setItem('isGuest', payload)
+  },
   ['SET_ACCOUNT_INFO'](state, payload){
     state.accountInfo = payload
   },
   ['C_NOTIFICATION_LIST'](state, payload){
     state.customerNotificationList = payload
   },
+  ['GUEST_TIP'](state,payload){
+    if(state.isGuest){
+      MessageBox.confirm('当前游客模式，是否前去登录或注册?').then(action => {
+        router.push('/login')
+      });
+      return true
+    }else{
+      return false
+    }
+  }
 }
 const actions = {
   login: ({commit}, payload) => {

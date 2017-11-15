@@ -7,6 +7,7 @@
               :refreshText="$t('message.Pull_to_refresh')"
               :noDataText="$t('message.No_more_data')">
       <div style="margin-bottom: 10px;">
+        <div v-if="orderList.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
         <table class="order-item" v-for="(item,index) in orderList" :key="index"
                @click="showOrderDetail({id:item.callId,oid:item.orderNumber})">
           <tr class="border-bottom" style="line-height: 25px">
