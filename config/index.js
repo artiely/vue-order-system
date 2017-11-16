@@ -44,7 +44,7 @@ const config = {
     cssSourceMap: false
   }
 }
-// const targetPath = 'http://172.16.7.248:8087' //服务器的地址
+const targetPath = 'http://localhost:8088'
 const pathX = '/*'
 var keysArr = [
   pathX + '/orderinfo/**/*',
