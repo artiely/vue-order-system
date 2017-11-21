@@ -809,6 +809,22 @@ const IS_GUEST = params => {
     params: params
   })
 }
+
+const NEW_ACCOUNT = params => {
+  return fetch({
+    url: '/person/getPromotionSource',
+    method: 'get',
+    params: params
+  })
+}
+/* 更新地址 */
+const EDIT_ADDRESS = params => {
+  return fetch({
+    url: '/company/updateByUser',
+    method: 'post',
+    data: params
+  })
+}
 const apiList = {
   login,
   initWeiXinOpenId,
@@ -871,7 +887,9 @@ const apiList = {
   GET_MSG,
   CHECK_TEL_CODE,
   RESET_PASSWORD,
-  IS_GUEST
+  IS_GUEST,
+  NEW_ACCOUNT,
+  EDIT_ADDRESS
 }
 
 export default apiList

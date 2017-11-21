@@ -136,6 +136,7 @@
         </div>
       </div>
       <div v-else class="bluebg" style="color: #fff;padding: 6px">{{$t('message.No_switch_account')}}</div>
+      <div class="bluebg" style="position:absolute;bottom:0;left:0;right:0;padding:10px" @click="newAccount">注册新账号</div>
     </mt-popup>
     <!--账号切换/-->
   </div>
@@ -287,6 +288,15 @@
           }
         }).catch(err => console.error(err))
       },
+      newAccount () {
+        this.$api.NEW_ACCOUNT().then(res=>{
+          if(res.code==0){
+            let table_id=res.table_id||''
+            let table_name=res.table_name||''
+            this.$router.push(`/register?table_id=${table_id}&table_name=${table_name}`)
+          }
+        })
+      }
     },
     created(){
 

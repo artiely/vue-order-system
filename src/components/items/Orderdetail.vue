@@ -477,6 +477,9 @@
       },
       getPriceRemark(){
         console.log('执行报价')
+        if(!this.state.callId){
+          return
+        }
         this.$api.GET_PRICE_REMARK({callId: this.state.callId.toString()}).then(res => {
           if(res.code==0){
             this.priceRemark = res.remarkTrPrice
@@ -495,6 +498,9 @@
         this._ratingHistory()
       },
       getSubOrder() {
+        if(!this.state.callId){
+          return
+        }
         this.$api.get_sub_order({callId: this.state.callId.toString()}).then(res => {
           if (res.code == ERR_OK) {
             this.subList = res.callDetailList;

@@ -212,6 +212,7 @@
             <input type="radio" name="payType" v-model="invoice.invoiceType" value="2">
             {{$t('message.Value-added_invoice')}}<i class="iconfont icon-right" v-if="invoice.invoiceType=='2'"></i>
           </label>
+          <div style="height:10px;background:#f8f8f8"></div>
 
           <div @click="showInvoiceHistory" v-if="invoice.invoiceType!=0&&invoiceList.length>0" class="yellowbg"
                style=";border-radius: 22px;font-size: 12px;display: inline-block;margin: 4px auto;padding: 8px 14px">

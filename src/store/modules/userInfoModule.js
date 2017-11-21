@@ -72,7 +72,7 @@ const actions = {
    */
   isCompany_action:({commit},payload)=>{
     api.CHECK_ACCOUNT_TYPE().then(res=>{
-      if(res.code==ERR_OK){
+      if(res.code==0){
         if(res.state==2){
           commit('IS_COMPANY',true)
         }else{
@@ -90,7 +90,7 @@ const actions = {
    */
   getAccountInfo:({commit,state},payload)=>{
     api.get_person_info({personId: state.personId}).then(res => {
-      if (res.code == ERR_OK) {
+      if (res.code == 0) {
         commit('SET_ACCOUNT_INFO',res.person)
       }else{
         alert('获取账号信息错误',JSON.stringify(res))
@@ -103,7 +103,7 @@ const actions = {
    * */
   getCustomerNotification :({commit,state},payload)=> {
     api.get_notification_list().then(res => {
-      if (res.code == ERR_OK) {
+      if (res.code == 0) {
         // this.customerNotificationList = res.customerNotificationList
         commit('C_NOTIFICATION_LIST',res.customerNotificationList)
       } else {

@@ -4,9 +4,17 @@
       <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <div class="page-content">
-      <div v-if="!serviceAddress||serviceAddress.length==0" class="noData" style="text-align: center"><i class="iconfont icon-zanwushuju"></i><div style="color: #999;font-size: 14px">{{$t('message.No_more_data')}}</div></div>
+      <div v-if="!serviceAddress||serviceAddress.length==0" class="noData" style="text-align: center"><i
+        class="iconfont icon-zanwushuju"></i>
+        <div style="color: #999;font-size: 14px">{{$t('message.No_more_data')}}</div>
+      </div>
       <mt-cell-swipe v-for="(item,index) in serviceAddress" :key="index" :id="item.companyId" class="cell-swipe"
                      :right="[
+        {
+          content: editIcon,
+          style: {background: '#ff8f00', color: '#fff'},
+          handler: () => editAddress(item)
+        },
         {
           content: deleteIcon,
           style: {background: '#ff3b2f', color: '#fff'},
@@ -22,7 +30,8 @@
             </tr>
             <tr>
               <td><span class="top-icon"><i class="iconfont icon-coordinates_fill"></i></span></td>
-              <td><p style="margin: 0;color: #B9B9B9;font-size: 12px;line-height: 1.5;">{{item.allAddress}}</p></td>
+              <td><p style="margin: 0;color: #B9B9B9;font-size: 12px;line-height: 1.5;">
+                {{item.newValue ? item.newValue.address : item.allAddress}}</p></td>
             </tr>
           </table>
         </div>
@@ -32,22 +41,24 @@
     </div>
     <mt-popup v-model="addVisible" position="right" :closeOnClickModal="false" :modal="false"
               style="width: 100%;height: 100%">
-      <mt-header :title="$t('message.Add')" style="z-index: 9;">
+      <mt-header :title="addressTit" style="z-index: 9;">
         <mt-button icon="back" @click="showAddM" slot="left">{{$t('message.Back')}}</mt-button>
       </mt-header>
       <div v-if="showEditAddress">
         <mt-field :label="$t('message.Company')" v-if="isCompany" :state="companyName.length>0?'success':'error'"
                   v-model="companyName"
                   :placeholder="$t('message.qingshuru')+$t('message.Company_name')" class="bg-img-bottom"></mt-field>
-        <div @click="showAddress" class="cell-ad bg-img-bottom "><span class="cell-ad-title">{{ $t('message.Area')}}</span>{{ addressProvince }} {{ addressCity }}
+        <div @click="showAddress" class="cell-ad bg-img-bottom "><span
+          class="cell-ad-title">{{ $t('message.Area')}}</span>{{ addressProvince }} {{ addressCity }}
           {{addressXian}}
-          <i class="iconfont icon-enter pull-right" ></i>
+          <i class="iconfont icon-enter pull-right"></i>
         </div>
         <div @click="showStreet" class="cell-ad">
           <span class="cell-ad-title">{{ $t('message.Street')}}</span>
           {{noStreet?addressStreet:"暂无可选街道"}}
-          <i class="iconfont icon-enter pull-right" ></i></div>
-        <mt-field :label="$t('message.Detailed_address')" type="textarea" :placeholder="$t('message.qingshuru')+$t('message.Detailed_address')"
+          <i class="iconfont icon-enter pull-right"></i></div>
+        <mt-field :label="$t('message.Detailed_address')" type="textarea"
+                  :placeholder="$t('message.qingshuru')+$t('message.Detailed_address')"
                   id="" cols="4" rows="3" class="bg-img-bottom mt-textarea" style="margin-bottom: 10px"
                   v-model="desMore"></mt-field>
         <!--公司-->
@@ -82,12 +93,17 @@
 <script>
   import s from '../../statics/mobile/json/address4.json'
   import {MessageBox} from 'mint-ui';
+
   export default {
     name: 'address',
-    data () {
+    data() {
       return {
+        addressTit: '',
+        isEdit: false,
+        editOval: '',
         companyName: '',
         deleteIcon: `<div style="display: block;height: 100%;padding:10px;display: flex; justify-content: center; flex-direction: column;"><i class="iconfont icon-close" style="font-size: 18px"></i></div>`,
+        editIcon: `<div style="display: block;height: 100%;padding:10px;display: flex; justify-content: center; flex-direction: column;"><i class="iconfont icon-editor" style="font-size: 18px"></i></div>`,
         addressSlots: [
           {
             flex: 1,
@@ -138,10 +154,10 @@
       }
     },
     computed: {
-      isCompany(){
+      isCompany() {
         return this.$store.state.userInfo.isCompany
       },
-      accountInfo(){
+      accountInfo() {
         return this.$store.state.userInfo.accountInfo
       }
     },
@@ -149,6 +165,7 @@
       back() {
         this.$router.back()
       },
+
       /**
        * [onAddressChange 添加服务地址]
        * @param  {[Object]} picker [picker实例对象]
@@ -172,22 +189,24 @@
         picker.setSlotValues(2, Object.keys(xian));
       },
 
-      onStreetChange(picker, values){
+      onStreetChange(picker, values) {
         this.addressStreet = values[0]
       },
-      showAddress(){
+      showAddress() {
 
         this.addressVisible = true
       },
-      showStreet(){
+      showStreet() {
         if (this.noStreet)
           this.streetVisible = true
       },
-      showAddM(){
-        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+      showAddM() {
+        if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
           this.$store.commit('GUEST_TIP')
           return
         }
+        this.addressTit = '添加'
+        this.isEdit = false
         this.addVisible = !this.addVisible;
         this.showEditAddress = true
         setTimeout(() => {
@@ -198,10 +217,16 @@
       /**
        * 获取服务点数据
        */
-      getServiceAddress () {
+      getServiceAddress() {
         this.$api.get_service_address().then((res) => {
           if (res.code == ERR_OK) {
-            this.serviceAddress = res.serviceAddress
+            this.serviceAddress = res.serviceAddress.map(item => {
+              if (item.newValue) {
+                item.newValue = JSON.parse(item.newValue)
+              }
+              return item
+            })
+            console.log(this.serviceAddress)
           } else {
             this.$toast(res.msg)
           }
@@ -212,7 +237,7 @@
       /**
        * 保存服务点地址
        */
-      saveAddress(){
+      saveAddress() {
 
         let _this = this;
         let _city = '上海市'
@@ -236,22 +261,55 @@
         if (!this.isCompany) {
           data.companyname = this.accountInfo.personName
         }
+        ;
 
-        this.$api.save_service_address(data).then(res => {
-          if (res.code == ERR_OK) {
-            this.$toast(this.$t('message.Save_successful'));
-            this.addVisible = false;
-            this.getServiceAddress()
-          } else {
-            alert(res.msg)
-          }
-        })
+        if (this.isEdit == true) {
+          let editData = {"id": this.editOval.companyId, "customerAlias": this.companyName, "newValue": data.address}
+          this.$api.EDIT_ADDRESS(editData).then(res => {
+            if (res.code == 0) {
+              this.$toast('修改成功')
+              this.addVisible = false;
+              this.getServiceAddress()
+            } else {
+              alert(res.msg)
+            }
+          })
+        } else {
+          this.$api.save_service_address(data).then(res => {
+            if (res.code == ERR_OK) {
+              this.$toast(this.$t('message.Save_successful'));
+              this.addVisible = false;
+              this.getServiceAddress()
+            } else {
+              alert(res.msg)
+            }
+          })
+        }
+      },
+      /* 编辑地址 目前类似重置 */
+      editAddress(item) {
+        console.log('------item----', item)
+        if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
+          this.$store.commit('GUEST_TIP')
+          return
+        }
+        this.editOval = item
+        this.addressTit = '编辑'
+        this.isEdit = true
+        this.addVisible = true;
+        this.showEditAddress = true
+
+        this.companyName = item.companyName || ''
+        setTimeout(() => {
+          this.addressSlots[0].defaultIndex = 0;
+        }, 20)
+
       },
       /**
        * 删除服务点地址
        */
-      deleteAddress(id){
-        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+      deleteAddress(id) {
+        if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
           this.$store.commit('GUEST_TIP')
           return
         }
@@ -278,7 +336,7 @@
     },
     watch: {
       'addressXian': {
-        handler(val, oval){
+        handler(val, oval) {
           let street = this.xianObj[this.addressXian]
           this.streetSlots[0].values = street;
           if (street.length == 0) {
@@ -289,14 +347,14 @@
         }
       }
     },
-    created(){
+    created() {
     },
-    activated(){
+    activated() {
       this.getServiceAddress()
       this.$store.dispatch('isCompany_action')
       this.$store.dispatch('getAccountInfo')
     },
-    mounted(){
+    mounted() {
     }
   }
 </script>
@@ -358,17 +416,21 @@
     font-size: 14px;
 
   }
-  .cell-ad .iconfont{
-    color:#999;
+
+  .cell-ad .iconfont {
+    color: #999;
   }
-  .cell-ad-title{
-    width: 105px;display:inline-block;
+
+  .cell-ad-title {
+    width: 105px;
+    display: inline-block;
     text-align: right;
-    padding-right:35px;
-    color:#999
+    padding-right: 35px;
+    color: #999
   }
-  a{
-    color:#999!important;
+
+  a {
+    color: #999 !important;
   }
 
   textarea {
@@ -383,7 +445,8 @@
     background-repeat: no-repeat;
     background-position: bottom;
   }
-  .bg-img-bottom{
+
+  .bg-img-bottom {
     background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 50%, transparent 50%);
     background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 50%, transparent 50%);
     background-size: 120% 1px;

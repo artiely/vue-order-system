@@ -548,16 +548,16 @@
       checkMobile () { // 编辑分离出去后这个方法似乎不需要了
         this.$api.CHECK_BIND_MOBILE().then(res => {
           if (res.code === 0) {
-            if (res.exist === 1) { // 是手机号登录(注册)
+            if (res.exist === '1') { // 是手机号登录(注册)
               this.isMobile = true
             } else {
               this.isMobile = false
-              if (res.exist === 2) { //2 微信 3 邮箱
+              if (res.exist === '2') { //2 微信 3 邮箱
                 this.isWechat = true
               } else {
                 this.isWechat = false
               }
-              if (res.exist === 3) {
+              if (res.exist === '3') {
                 this.isEmail = true
               } else {
                 this.isEmail = false
@@ -574,7 +574,6 @@
     },
     activated(){
       this.checkToken()
-
     },
     mounted(){
     }
