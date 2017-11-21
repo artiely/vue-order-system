@@ -74,7 +74,7 @@
         </div>
         <div class="border-top select-wrapper">
           <select v-model="query.companyId" class="select-search" placeholder="请选择服务点">
-            <option :value="item.companyId" v-for="(item,index) in serviceAddress" :key="index">{{item.companyName}}
+            <option :value="item.companyId" v-for="(item,index) in serviceAddress" :key="index">{{item.companyName?item.companyName:item.allAddress}}
             </option>
           </select>
         </div>

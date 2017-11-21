@@ -73,6 +73,7 @@
           :processStyle="rangeTimeOption.processStyle"
           :bgStyle="rangeTimeOption.bgStyle"
           :dotSize="rangeTimeOption.dotSize"
+          :interval="rangeTimeOption.interval"
           :min="rangeTimeOption.min"
           :max="rangeTimeOption.max"
           :formatter="rangeTimeOption.formatter"
@@ -85,16 +86,17 @@
       <div class="wrapper-box">
         <div style="margin-bottom: -1px">
           <div class="my-cell title-box">
-            <span class="title" slot="title">{{$t('message.Fault_description')}}</span>
+            <span class="title" slot="title">{{$t('message.Server_need')}}</span>
           </div>
         </div>
         <div>
-          <mt-field type="textarea" rows="2" :placeholder="$t('message.Please_describe')" v-model="faultDesc"></mt-field>
+          <mt-field type="textarea" rows="2" :placeholder="$t('message.Please_describe_ma')"
+                    v-model="faultDesc"></mt-field>
         </div>
       </div>
       <div class="wrapper-box">
         <div class="my-cell title-box">
-          <span slot="title" class="title">{{$t('message.Server_need')}}</span>
+          <span slot="title" class="title">{{$t('message.engineer_need')}}</span>
         </div>
         <div>
           <mt-cell class="my-cell" :title="$t('message.Lunch_break')">
@@ -113,7 +115,7 @@
       </div>
       <!--服务时间选择组件e-->
       <div class="flexBox">
-        <div class="my-cell title-box"  v-show="trPriceList.length>0">
+        <div class="my-cell title-box" v-show="trPriceList.length>0">
           <span slot="title" class="title">服务预约列表</span>
         </div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
@@ -123,26 +125,28 @@
             <td @click="selectTime(index)">{{item.trTimeFrom}}</td>
             <td @click="selectTime(index)">{{item.trTimeTo}}</td>
             <td><span class="label">￥{{item.unitPrice}}</span></td>
-            <td @click="deleteDate(index)" class="del"><i class="iconfont icon-empty"></i> <!--{{$t('message.Delete')}}--></td>
+            <td @click="deleteDate(index)" class="del"><i class="iconfont icon-empty"></i>
+              <!--{{$t('message.Delete')}}--></td>
           </tr>
         </table>
       </div>
       <div style="height: 10px;"></div>
-      <mt-tabbar  fixed style="z-index=99999999999999999999999999999">
-      <div class="footerBar">
-        <div class="b_btn shadow-top" style="z-index:7;display: inline-block">
-          <mt-button  class="btn-white-flat"  size="large" @click.native="getPriceMa" style="width: 50%;float:left">
-            <i class="iconfont icon-jisuan"></i> {{$t('message.Cost_Estimation')}}
-          </mt-button>
-          <mt-button class="an_order" @click.native="anOrder" type="danger"
-                     :disabled="trPriceList.length==0" style="width: 50%;float:right;background:#ef4f4f ">
-            <i class="iconfont icon-task_fill"></i> {{$t('message.Confirm')}}
-          </mt-button>
+      <mt-tabbar fixed style="z-index=99999999999999999999999999999">
+        <div class="footerBar">
+          <div class="b_btn shadow-top" style="z-index:7;display: inline-block">
+            <mt-button class="btn-white-flat" size="large" @click.native="getPriceMa" style="width: 50%;float:left">
+              <i class="iconfont icon-jisuan"></i> {{$t('message.Cost_Estimation')}}
+            </mt-button>
+            <mt-button class="an_order" @click.native="anOrder" type="danger"
+                       :disabled="trPriceList.length==0" style="width: 50%;float:right;background:#ef4f4f ">
+              <i class="iconfont icon-task_fill"></i> {{$t('message.Confirm')}}
+            </mt-button>
+          </div>
         </div>
-      </div>
       </mt-tabbar>
       <!--单个调整-->
-      <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 150px;font-size: 14px;padding:10px"
+      <mt-popup v-model="popupVisibleSelectTime" position="top"
+                style="width: 100%;height: 150px;font-size: 14px;padding:10px"
                 v-if="popupVisibleSelectTime">
         <div class="title">服务时间编辑</div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
@@ -160,6 +164,7 @@
           :processStyle="rangeTimeOption.processStyle"
           :bgStyle="rangeTimeOption.bgStyle"
           :dotSize="rangeTimeOption.dotSize"
+          :interval="rangeTimeOption.interval"
           :min="rangeTimeOption.min"
           :max="rangeTimeOption.max"
           :formatter="rangeTimeOption.formatter"
@@ -176,13 +181,14 @@
   import moment from 'moment'
   import {Toast} from 'mint-ui';
   import vueSlider from 'vue-slider-component'
-  import { MessageBox } from 'mint-ui';
+  import {MessageBox} from 'mint-ui';
+
   export default {
     name: 'ma',
     components: {
       vueSlider
     },
-    data () {
+    data() {
       return {
         addressTip: '',
         stateTip: 'error',
@@ -216,6 +222,7 @@
           dotSize: 30,
           min: 0,
           max: 24 * 60,
+          interval:15
         },
         query: {
           sfwx: false,
@@ -247,7 +254,7 @@
         }
       },
       'rangeTimeOption.rangeTimeValue': {
-        handler(value){
+        handler(value) {
           let arr = []
           if (value) {
             for (let i = 0; i < value.length; i++) {
@@ -261,7 +268,7 @@
         }
       },
       'selectRangeValue': {
-        handler(value){
+        handler(value) {
           let arr = []
           if (value) {
             for (let i = 0; i < value.length; i++) {
@@ -276,14 +283,14 @@
         }
       }
     },
-    created(){
+    created() {
       this.getServiceAddress()
     },
     methods: {
-      back(){
+      back() {
         this.$router.back()
       },
-      getServiceAddress () {
+      getServiceAddress() {
         this.$api.get_service_address().then(res => {
           if (res.code == ERR_OK) {
             let _temp = [];
@@ -296,16 +303,16 @@
             }
             this.serviceAddress = _temp
           } else {
-            MessageBox.alert(res.msg,'')
+            MessageBox.alert(res.msg, '')
           }
         }).catch(err => console.error(err))
 
       },
-      toggleOpen(){
+      toggleOpen() {
         this.popupVisibleCompany = true
         this.getServiceAddress()
       },
-      disableWeekends(date){
+      disableWeekends(date) {
         if (this.query.sfgzr) {
           return date.getDay() === 0 || date.getDay() === 6
         } else {
@@ -313,7 +320,7 @@
         }
 
       },
-      selectTime(index){
+      selectTime(index) {
         this.popupVisibleSelectTime = true;
         this.selectIndex = index;
         this.selectRangeValue = [this.rangeTimeOption.rangeTimeValue[0], this.rangeTimeOption.rangeTimeValue[1]]
@@ -321,16 +328,16 @@
           this.$refs.slider2.refresh();
         }, 400)
       },
-      deleteDate(index){
+      deleteDate(index) {
         this.trPriceList.splice(index, 1)
         Toast(this.$t('message.Del_success'));
       },
-      getPriceMa(){
-        if (this.checkValue=='') {
+      getPriceMa() {
+        if (this.checkValue == '') {
           MessageBox.alert('请选择服务点', '');
           return;
         }
-        if (this.faultDesc=='') {
+        if (this.faultDesc == '') {
           MessageBox.alert('请填写故障描述', '');
           return;
         }
@@ -350,20 +357,20 @@
           if (res.code == ERR_OK) {
             this.trPriceList = res.trPriceList
           }
-          this.$nextTick(()=>{
-            setTimeout(()=>{
-              window.scrollTo(0,615)
-            },500)
+          this.$nextTick(() => {
+            setTimeout(() => {
+              window.scrollTo(0, 615)
+            }, 500)
           })
         })
       },
-      anOrder(){
-        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+      anOrder() {
+        if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
           this.$store.commit('GUEST_TIP')
           return
         }
-
         var data = this.trPriceList;
+
         //cb 数据映射
         function ObjStory(orgId, amount, CallDetailEntity, reservationTimeEntity) //声明对象
         {
@@ -383,19 +390,19 @@
             "reservationDate": data[i].trDate,
             "startTime": data[i].trTimeFrom,
             "endTime": data[i].trTimeTo
-
           }))
         }
         this.$api.save_price_Ma(newData).then(res => {
           if (res.code == ERR_OK) {
             MessageBox.alert(this.$t('message.Checkout_success'));
             this.trPriceList = []
+            this.faultDesc = ''
           } else {
             MessageBox.alert(res.msg)
           }
         }).catch(err => console.error(err))
       },
-      goAddress(){
+      goAddress() {
         this.$router.push('/address')
         this.popupVisibleCompany = false
       }
@@ -426,7 +433,7 @@
     border-radius: 16px;
     box-sizing: border-box;
     background: #fff;
-    outline:none;
+    outline: none;
   }
 
   .page-content {

@@ -60,6 +60,7 @@
                       :processStyle="rangeTimeOption.processStyle"
                       :bgStyle="rangeTimeOption.bgStyle"
                       :dotSize="rangeTimeOption.dotSize"
+                      :interval="rangeTimeOption.interval"
                       :min="rangeTimeOption.min"
                       :max="rangeTimeOption.max"
                       :real-time="true"
@@ -77,27 +78,28 @@
           </div>
           <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
             <tr v-for="(item,index) in timeMap" :key="index" :index="index" class="timeItem" v-if="timeMap.length>0">
-              <td><span >&nbsp;&nbsp;{{item.date}}</span></td>
+              <td><span>&nbsp;&nbsp;{{item.date}}</span></td>
               <td><span class="label">{{item.weekday}}</span></td>
               <td @click="selectTime(index)">{{item.sTime}}</td>
               <td @click="selectTime(index)">{{item.eTime}}</td>
-              <td @click="deleteDate(index)" class="del"><i class="iconfont icon-empty"></i> <!--{{$t('message.Delete')}}--></td>
+              <td @click="deleteDate(index)" class="del"><i class="iconfont icon-empty"></i>
+                <!--{{$t('message.Delete')}}--></td>
             </tr>
           </table>
         </div>
       </div>
       <div style="margin-bottom: -1px">
-      <div class="my-cell title-box">
-        <span slot="title" class="title">{{$t('message.Fault_description')}}</span>
-      </div>
+        <div class="my-cell title-box">
+          <span slot="title" class="title">{{$t('message.Server_need')}}</span>
+        </div>
       </div>
       <div class="wrapper-box">
-        <mt-field :placeholder="$t('message.Please_describe')" type="textarea" rows="2" v-model="faultDesc"></mt-field>
+        <mt-field :placeholder="$t('message.Please_describe_oncall')" type="textarea" rows="2" v-model="faultDesc"></mt-field>
       </div>
       <div style="margin-bottom: -1px">
-      <div class="my-cell title-box">
-        <span slot="title" class="title">{{$t('message.Server_need')}}</span>
-      </div>
+        <div class="my-cell title-box">
+          <span slot="title" class="title">{{$t('message.engineer_need')}}</span>
+        </div>
       </div>
       <div class="wrapper-box">
         <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model="identify"></mt-field>
@@ -119,6 +121,7 @@
           :processStyle="rangeTimeOption.processStyle"
           :bgStyle="rangeTimeOption.bgStyle"
           :dotSize="rangeTimeOption.dotSize"
+          :interval="rangeTimeOption.interval"
           :min="rangeTimeOption.min"
           :max="rangeTimeOption.max"
           :formatter="rangeTimeOption.formatter"
@@ -127,23 +130,24 @@
 
       </mt-popup>
       <div class="wrapper-box">
-      <mt-cell :title="$t('message.Price_curve')" v-if="addressObj.id&&addressObj.address">
-        <mt-switch v-model="popupVisiblechart"></mt-switch>
-      </mt-cell>
-      <div v-if="popupVisiblechart" class="border-bottom">
-        <div class="echarts" v-show="showchart" style="width: 100%;height: 300px;">
-          <canvas id="c1" style="width:95%;height:218px;margin:0 auto;display: block"></canvas>
+        <mt-cell :title="$t('message.Price_curve')" v-if="addressObj.id&&addressObj.address">
+          <mt-switch v-model="popupVisiblechart"></mt-switch>
+        </mt-cell>
+        <div v-if="popupVisiblechart" class="border-bottom">
+          <div class="echarts" v-show="showchart" style="width: 100%;height: 300px;">
+            <canvas id="c1" style="width:95%;height:218px;margin:0 auto;display: block"></canvas>
+          </div>
+          <div style="padding:0 10px 10px;color:#999" v-show="!showchart">
+            <i class="iconfont icon-message"></i> {{$t('message.In_service')}}
+          </div>
         </div>
-        <div style="padding:0 10px 10px;color:#999" v-show="!showchart">
-          <i class="iconfont icon-message"></i> {{$t('message.In_service')}}
-        </div>
-      </div>
       </div>
     </div>
-    <mt-tabbar  fixed style="z-index=99999999999999999999999999999">
+    <mt-tabbar fixed style="z-index=99999999999999999999999999999">
       <div class="footerBar" style="position:fixed;top:100vh;left:0">
         <div class="b_btn  shadow-top">
-          <mt-button class="an_order" @click="anOrder" type="danger"  :disabled="addressObj.id==null || faultDesc==''||timeMap==''">
+          <mt-button class="an_order" @click="anOrder" type="danger"
+                     :disabled="addressObj.id==null || faultDesc==''||timeMap==''">
             <i class="iconfont icon-task"></i> {{$t('message.Confirm')}}
           </mt-button>
         </div>
@@ -153,17 +157,18 @@
 </template>
 <script type="text/javascript">
   import vueSlider from 'vue-slider-component'
-  import { Toast } from 'mint-ui'
-  import { MessageBox } from 'mint-ui';
+  import {Toast} from 'mint-ui'
+  import {MessageBox} from 'mint-ui';
   import moment from 'moment'
   import GM from 'g2-mobile'
+
   export default {
     name: 'oncall',
     components: {
       vueSlider,
 //      'date-picker':datePicker
     },
-    data () {
+    data() {
       return {
         promotions: [this.$t('message.By_today'), this.$t('message.Before_Tomorrow'), this.$t('message.Within_Week'), this.$t('message.Before_week'), this.$t('message.Other')],
         promotionIndex: 0,
@@ -216,12 +221,15 @@
           dotSize: 30,
           min: 0,
           max: 24 * 60,
-          interval: 4
+//          data:[0,15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 225, 240, 255, 270, 285, 300, 315, 330, 345, 360, 375, 390, 405, 420, 435, 450, 465, 480, 495, 510, 525, 540, 555, 570, 585, 600, 615, 630, 645, 660, 675, 690, 705, 720, 735, 750, 765, 780, 795, 810, 825, 840, 855, 870, 885, 900, 915, 930, 945, 960, 975, 990, 1005, 1020, 1035, 1050, 1065, 1080, 1095, 1110, 1125,1140],
+          interval: 15,
+          piecewise: true,
+          lazy: true
         },
         loading: true,//控制图表的loading
         GMoptions: [],
         faultDesc: '',//故障描述,
-        identify:'',
+        identify: '',
         noBindMobile: false,
         datepickerOption: {
           ok: this.$t('message.Ok'),
@@ -230,6 +238,33 @@
         timer: ''
       }
     },
+    created() {
+//      var _arr = []
+//      _arr.length = 1140
+//      console.log('1', _arr)
+//      for (let i = 0; i < 1140; i++) {
+//        _arr[i] = i
+//      }
+//      _arr = _arr.filter(item => {
+//        if (item % 15 == 0) {
+//          return item
+//        }
+//      })
+//      this.rangeTimeOption.data = _arr
+//      console.log('3', _arr)
+//      console.log('**************', this.rangeTimeOption.data)
+    },
+//    computed:{
+//      'rangeTimeOption.data':function(){
+//        var _arr=new Array(24*60)
+//       return _arr.map((item,i)=>{
+//          return i
+//        })
+//        .filter(item=>{
+//          return item%15==0
+//        })
+//      }
+//    },
     watch: {
       'popupValue': {
         handler: function (val) {
@@ -273,7 +308,7 @@
       'rangeTimeOption.rangeTimeValue': {
         handler: function (val, oldVal) {
 //          console.log("changed", val);
-          function formatTime (value) {
+          function formatTime(value) {
             let HS = parseInt(value / 60).toString().length < 2 ? '0' + parseInt(value / 60) : parseInt(value / 60)
             let MS = (value % 60).toString().length < 2 ? '0' + (value % 60) : (value % 60)
             var formatTime = HS + ':' + MS
@@ -322,7 +357,7 @@
         }
       },
       'timeMap': {
-        handler(){
+        handler() {
           if (this.popupVisiblechart == true) {
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
@@ -334,19 +369,19 @@
         deep: true
       },
       'addressObj': {
-        handler(val){
+        handler(val) {
           if (this.popupVisiblechart == true) {
 //            this.popupVisiblechart=false
             this.getPriceLine()
           }
           if (val.id) {
-            this.$api.WORK_TIME({id:val.id}).then(res=>{
+            this.$api.WORK_TIME({id: val.id}).then(res => {
               if (res.code == 0) {
                 this.startTime = res.defaultWorkTime.amWorkinTime
                 this.endTime = res.defaultWorkTime.pmWorkoffTime
 //                this.selectRangeValue=[this.startTime.split(":")[0]*60,this.endTime.split(":")[0]*60]
-                this.$set(this.selectRangeValue,0,this.startTime.split(":")[0]*60)
-                this.$set(this.selectRangeValue,1,this.endTime.split(":")[0]*60)
+                this.$set(this.selectRangeValue, 0, this.startTime.split(":")[0] * 60)
+                this.$set(this.selectRangeValue, 1, this.endTime.split(":")[0] * 60)
                 console.log(this.selectRangeValue)
               }
             })
@@ -360,7 +395,7 @@
           this.timeMap[this.selectIndex].s = this.selectRangeValue[0]
           this.timeMap[this.selectIndex].e = this.selectRangeValue[1]
 
-          function formatTime (value) {
+          function formatTime(value) {
             let HS = parseInt(value / 60).toString().length < 2 ? '0' + parseInt(value / 60) : parseInt(value / 60)
             let MS = (value % 60).toString().length < 2 ? '0' + (value % 60) : (value % 60)
             var formatTime = HS + ':' + MS
@@ -376,10 +411,10 @@
 
     },
     methods: {
-      back(){
+      back() {
         this.$router.back()
       },
-      getCompanyList(cb){
+      getCompanyList(cb) {
         this.$api.get_service_address().then(res => {
           if (res.code == ERR_OK) {
             this.companyOptions = []
@@ -400,21 +435,21 @@
           }
         })
       },
-      goAddress(){
+      goAddress() {
         this.$router.push('/address')
         this.popupVisibleCompany = false
       },
       onValuesChange(pickeker, values) {
         this.popupValue = values
       },
-      toggleopen(){
+      toggleopen() {
         this.popupVisibleCompany = !this.popupVisibleCompany
         this.getCompanyList()
       },
       openPicker() {
         this.$refs.picker.open()
       },
-      showmodal(){
+      showmodal() {
         //点击其他的时候让模态的状态为展示
         if (this.promotionIndex == 4) {
           this.popupVisibleTime = true
@@ -422,32 +457,32 @@
           this.popupVisibleTime = false
         }
       },
-      deleteDate(index){
-        console.log(index,this.selectIndex)
+      deleteDate(index) {
+        console.log(index, this.selectIndex)
 //        this.timeMap.splice(index, 1)  // 两种方法都可以
-        this.$delete(this.timeMap,index)
-        this.selectIndex=0 // selectIndex 初始化为0 因为删除后selectIndex对应的值已不存在会报错
+        this.$delete(this.timeMap, index)
+        this.selectIndex = 0 // selectIndex 初始化为0 因为删除后selectIndex对应的值已不存在会报错
         Toast(this.$t('message.Del_success'))
       },
-      timeMapTable(){
+      timeMapTable() {
         //对页面时间的处理
         this.timeMap = []
         let _timeMap = this.splitDate()
         for (let i = 0; i < _timeMap[0].length; i++) {
-          if(moment().format('YYYY-MM-DD') == moment(_timeMap[0][i]).format('YYYY-MM-DD')){
+          if (moment().format('YYYY-MM-DD') == moment(_timeMap[0][i]).format('YYYY-MM-DD')) {
             console.log("相等的")
-            let _sh=moment().format('HH:mm')
-            let _sa=_sh.split(':')
-            console.log(_sh,moment().format('HH:mm'),Number(_sa[0])*60+Number(_sa[1] ))
+            let _sh = moment().format('HH:mm')
+            let _sa = _sh.split(':')
+            console.log(_sh, moment().format('HH:mm'), Number(_sa[0]) * 60 + Number(_sa[1]))
             this.timeMap.push({
               'date': moment(_timeMap[0][i], 'YYYY-MM-DD').format('YYYY-MM-DD'),
               'sTime': _sh,
-              's':  Number(_sa[0])*60+Number(_sa[1] ),
+              's': Number(_sa[0]) * 60 + Number(_sa[1]),
               'eTime': this.endTime,
               'e': this.rangeTimeOption.rangeTimeValue[1],
               'weekday': _timeMap[1][i]
             })
-          }else{
+          } else {
             console.log("不等的")
             this.timeMap.push({
               'date': moment(_timeMap[0][i], 'YYYY-MM-DD').format('YYYY-MM-DD'),
@@ -459,7 +494,7 @@
             })
           }
         }
-        console.log('123',this.timeMap)
+        console.log('123', this.timeMap)
 
 //          if (moment().format('YYYY-MM-DD') == moment(_timeMap[0][0]).format('YYYY-MM-DD')) {
 //          let  zou = this.$t('message.Today')
@@ -481,7 +516,7 @@
 
 //        this.getPriceLine()
       },
-      timeChanged(){ //全局的时间滑块
+      timeChanged() { //全局的时间滑块
         let _timeMap = this.timeMap
         for (let i = 0; i < _timeMap.length; i++) {
 
@@ -491,7 +526,7 @@
 
         }
       },
-      splitDate(){
+      splitDate() {
         ///日期划分成每一天
         var start_time = this.startDate
         var end_time = this.endDate
@@ -593,7 +628,7 @@
       onReady(instance) {
 //        console.log("ready", instance);
       },
-      selectTime(index){
+      selectTime(index) {
         this.popupVisibleSelectTime = true
         this.selectIndex = index
         this.selectRangeValue = [this.timeMap[index].s, this.timeMap[index].e]
@@ -601,11 +636,11 @@
           this.$refs.slider2.refresh()
         }, 400)
       },
-      shouldDisableDate(date){
+      shouldDisableDate(date) {
         return moment(this.startDate).valueOf() > moment(date).valueOf()
       }
       ,
-      renderLine(){
+      renderLine() {
         GM.Global.pixelRatio = 2
         var Util = GM.Util
         var data = this.GMoption
@@ -647,8 +682,8 @@
         chart.line().position('minute*price')
         chart.render()
       },
-      anOrder(){
-        if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
+      anOrder() {
+        if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
           this.$store.commit('GUEST_TIP')
           return
         }
@@ -662,7 +697,7 @@
         }
         var data = {
           'orgId': this.addressObj.id,
-          'identify':this.identify,
+          'identify': this.identify,
           'reservationtimeEntityList': newData,
           'callDetailEntity': {
             'customerEmployeeId': this.customerEmployeeId/*下单用户的ID 手机暂时无或者用登录用户的*/,
@@ -678,7 +713,7 @@
           }
         }).catch(err => console.error(err))
       },
-      _getEmployeeId(){
+      _getEmployeeId() {
         this.$api.GET_PERSON_ACCOUNT_USER().then(res => {
           if (res.code == 0) {
             this.customerEmployeeId = res.personId
@@ -698,7 +733,7 @@
           }
         })
       },
-      _checkAccountType(cb){
+      _checkAccountType(cb) {
         // 检查账号类型，是个人还是企业
         this.$api.CHECK_ACCOUNT_TYPE().then(res => {
           if (res.code == 0) {
@@ -713,13 +748,13 @@
           }
         })
       },
-      _getUser(){
+      _getUser() {
         this.$api.get_yh({company: this.addressObj.id}).then(res => {
           this.customerEmployeeId = res.defaultLoginUser
         })
       }
     },
-    mounted(){
+    mounted() {
       if (this.promotionIndex == 4) {
         this.popupVisibleTime = !this.popupVisibleTime
       }
@@ -727,7 +762,7 @@
         this.promotionIndex = 2
       })
     },
-    activated(){
+    activated() {
 //      this.timeMapTable()
       this._checkAccountType(() => {
         if (this.isCompany == false) {
@@ -756,7 +791,7 @@
   .title-box {
     min-height: 24px;
     line-height: 24px;
-    padding-left:10px;
+    padding-left: 10px;
     background-image: -webkit-linear-gradient(top, #d9d9d9, #d9d9d9 30%, transparent 50%);
     background-image: linear-gradient(180deg, #d9d9d9, #d9d9d9 30%, transparent 50%);
     background-size: 150% 1px;
@@ -783,7 +818,8 @@
     text-indent: 6px;;
     width: 50%;
   }
-  .mu-text-field-input{
+
+  .mu-text-field-input {
     text-align: center;
   }
 

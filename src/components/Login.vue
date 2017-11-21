@@ -83,7 +83,8 @@
     },
     methods: {
       guestLogin() {
-        let data = "username=lradmin666&password=123456&loginNum=1";
+//        let data = "username=lradmin666&password=123456&loginNum=1";
+        let data = "username=Bq/visitor&password=123456&loginNum=1";
         this.$api.login(data).then((res) => {
           if (res.code == ERR_OK) { // 登录成功
             this.error = false;

@@ -375,7 +375,7 @@
         this.$api.REGISTER_BY_MOBILE(data).then(res => {
           if (res.code === 0) {
             if (res.state === '1') { // 成功
-              this.$router.push(`/type?table_id=${GetQueryString('table_name') || ''}&table_name=${GetQueryString('table_name') || ''}`)
+              this.$router.push(`/type?table_id=${GetQueryString('table_id') || ''}&table_name=${GetQueryString('table_name') || ''}`)
             } else if (res.state == '2') { // 不正确
               MessageBox.alert('验证码错误')
             } else if (res.state == '3') { // 过期

@@ -8,17 +8,17 @@
         <div v-if="editData.accountType==2">
           <div class="form-content">
             <mu-text-field :hintText="$t('message.Company_name')" class="require" v-model="form2.company"
-                           />
+            />
             <div class="help">{{$t('message.Company_name_help')}}</div>
-            <mu-text-field :hintText="$t('message.Mark')" v-model="form2.mark" class="require" />
+            <mu-text-field :hintText="$t('message.Mark')" v-model="form2.mark" class="require"/>
             <div class="help">{{$t('message.Mark_help')}}</div>
             <mu-text-field :hintText="$t('message.Company_id_num')" v-model="form2.companyIdNum"
-                           />
+            />
             <div class="help">{{$t('message.Company_id_num_help')}}</div>
             <mu-text-field :hintText="$t('message.AdminName')" class="require" v-model="form2.userName"
-                           />
+            />
             <mu-text-field :hintText="$t('message.Admin_phone_num')" class="require" v-model="form2.phone"
-                            />
+            />
             <div>
               <mu-text-field :hintText="$t('message.Msg_code')" class="require" v-model="form2.code"
                              style="width: 60%"/>
@@ -29,13 +29,21 @@
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
+            <div>
+              <mu-text-field :hintText="$t('message.reset_pwd')" v-model="form2.password" :type="passType"
+                             style="width:80%"/>
+              <span style="width:15%;text-align:center;display:inline-block;float:right;line-height:36px"
+                    @click="changeType"><i style="font-size:22px" class="iconfont"
+                                           :class="passType=='text'?'icon-kejian':'icon-bukejian'"></i></span>
+            </div>
+
           </div>
         </div>
         <div v-if="editData.accountType==1">
           <div class="form-content">
-            <mu-text-field :hintText="$t('message.Name')" class="require" v-model="form1.userName"  />
+            <mu-text-field :hintText="$t('message.Name')" class="require" v-model="form1.userName"/>
             <mu-text-field :hintText="$t('message.Phone_number')" class="require" v-model="form1.phone"
-                           />
+            />
             <div class="help">{{$t('message.cell-phone_help')}}</div>
             <div>
               <mu-text-field :hintText="$t('message.Msg_code')" class="require" v-model="form1.code"
@@ -47,12 +55,20 @@
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
+            <div>
+              <mu-text-field :hintText="$t('message.reset_pwd')" v-model="form1.password" :type="passType"
+                             style="width:80%"/>
+              <span style="width:15%;text-align:center;display:inline-block;float:right;line-height:36px"
+                    @click="changeType"><i style="font-size:22px" class="iconfont"
+                                           :class="passType=='text'?'icon-kejian':'icon-bukejian'"></i></span>
+            </div>
           </div>
         </div>
 
-        <div >
+        <div>
           <span class="form-group__message" v-if="!$v.form2.companyIdNum.minLength||!$v.form2.companyIdNum.maxLength">{{$t('message.company_id_error')}}.</span>
           <span class="form-group__message" v-if="!$v.form2.mark.alpha">{{$t('message.mark_error')}}.</span>
+          <span class="form-group__message" v-if="!$v.form1.password.minLength||!$v.form2.password.minLength">{{$t('message.password_error')}}</span>
           <span class="form-group__message" v-if="!$v.form2.phone.minLength||!$v.form2.phone.maxLength">{{$t('message.phone_error')}}.</span>
         </div>
         <div class="btn-block-wrapper">
@@ -64,28 +80,33 @@
   </div>
 </template>
 <script>
-  import { GetQueryString } from '@/utils'
-  import { validationMixin } from 'vuelidate'
-  import { required, minLength, maxLength, sameAs, email,requiredUnless ,alpha}from 'vuelidate/lib/validators'
+  import {GetQueryString} from '@/utils'
+  import {validationMixin} from 'vuelidate'
+  import {required, minLength, maxLength, sameAs, email, requiredUnless, alpha} from 'vuelidate/lib/validators'
+
   export default {
     name: 'info',
-    data () {
+    data() {
       return {
+        passType: 'password',
+
         form: {
           typeId: '2', // 2 企业 1 个人
         },
-        form1:{
+        form1: {
           userName: '',
           phone: '',
-          code: ''
+          code: '',
+          password: '',
         },
-        form2:{
+        form2: {
           company: '',
           mark: '',
           companyIdNum: '', // 营业执照号
           userName: '',
           phone: '',
-          code: ''
+          code: '',
+          password: ''
         },
         editData: {},
         count: 60,
@@ -97,12 +118,15 @@
         userName: {
           required,
         },
-        phone:{
+        phone: {
           required,
-          minLength:minLength(11),
-          maxLength:maxLength(11),
+          minLength: minLength(11),
+          maxLength: maxLength(11),
         },
-        code:{
+        password: {
+          minLength: minLength(6),
+        },
+        code: {
           required,
         },
       },
@@ -110,37 +134,48 @@
         company: {
           required,
         },
-        companyIdNum:{
-          minLength:minLength(15),
-          maxLength:maxLength(20),
+        companyIdNum: {
+          minLength: minLength(15),
+          maxLength: maxLength(20),
         },
-        mark:{
+        mark: {
           required,
           alpha
         },
         userName: {
           required,
         },
-        phone:{
+        phone: {
           required,
-          minLength:minLength(11),
-          maxLength:maxLength(11),
+          minLength: minLength(11),
+          maxLength: maxLength(11),
         },
-        code:{
+        code: {
           required,
+        },
+        password: {
+          minLength: minLength(6),
         },
       }
     },
     methods: {
-      back(){
+      changeType() {
+        if (this.passType == 'text') {
+          this.passType = 'password'
+        } else {
+          this.passType = 'text'
+        }
+      },
+      back() {
         this.$router.back()
       },
-      handleSubmit () {
-        if(this.form.typeId === '2'){
-          if(this.$v.form2.$invalid){
+      handleSubmit() {
+        if (this.form.typeId == '2') {
+          console.log('----企业数据修改-----')
+          if (this.$v.form2.$invalid) {
             alert(this.$t('message.check_fields'))
             return
-          }else{
+          } else {
             // 如果是修改 提交参数略有不同
             let eData = {
               account_type: this.form.typeId,
@@ -149,6 +184,7 @@
               business_license_number: this.form2.companyIdNum,
               personName: this.form2.userName,
               telephone: this.form2.phone,
+              password: this.form2.password,
               code: this.form2.code,
               email: this.editData.email,
               personId: this.editData.personId,
@@ -156,26 +192,28 @@
               sysUserId: this.editData.sysUserId,
               companyID: this.editData.companyID
             }
-            this.__postData (eData)
+            this.__postData(eData)
           }
-        }else{
+        } else {
+          console.log('----个人数据修改-----')
           if (this.$v.form1.$invalid) {
             alert(this.$t('message.check_fields'))
             return
-          }else{
+          } else {
             let eData = {
               account_type: this.form.typeId,
               personName: this.form1.userName,
               telephone: this.form1.phone,
               code: this.form1.code,
+              password: this.form1.password,
               email: this.editData.email,
               personId: this.editData.personId,
               rowChangeLogId: this.editData.rowChangeLogId,
               sysUserId: this.editData.sysUserId,
               companyID: this.editData.companyID
             }
+            this.__postData(eData)
           }
-          this.__postData (eData)
         }
         /*if (this.$v.form.$invalid) {
           alert(this.$t('message.check_fields'))
@@ -235,7 +273,7 @@
 
         }*/
       },
-      __postData (eData) {
+      __postData(eData) {
         this.$api.UPDATE_REGISTER_INFO(Object.assign({}, eData)).then(res => {
           if (res.code === 0) {
             if (res.state != '1') { // 验证码错误或过期
@@ -258,10 +296,9 @@
           }
         })
       },
-      getMsgCode () {
-        if (this.form2.phone.length != 11)return
+      getMsgCode() {
         let data = {
-          telephone: this.form2.phone,
+          telephone: this.form.typeId == '1' ? this.form1.phone : this.form2.phone,
           type: 0
         }
         let s = setInterval(() => {
@@ -284,7 +321,7 @@
           }
         })
       },
-      _getRegisterInfo () {
+      _getRegisterInfo() {
         this.$api.GET_REGISTER_INFO().then(res => {
           if (res.code === 0) {
             let data = res.registeInfo[0]
@@ -299,19 +336,19 @@
               code: ''
             }
             this.form = {typeId}
-            this.form1 = { userName, phone, code}
-            this.form2 = { company, mark, companyIdNum, userName, phone, code}
+            this.form1 = {userName, phone, code}
+            this.form2 = {company, mark, companyIdNum, userName, phone, code}
           }
         })
       },
     },
-    created () {
-
+    created() {
+//      this._getRegisterInfo()
     },
-    activated(){
+    activated() {
       this._getRegisterInfo()
     },
-    mounted(){
+    mounted() {
     }
   }
 </script>
