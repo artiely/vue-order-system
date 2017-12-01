@@ -360,7 +360,8 @@
         }
         this.$api.REGISTER(data).then(res => {
           if (res.code === 0) {
-            MessageBox.alert(`激活信息已发送至${this.form.email},请注意查收并及时激活。`)
+//            MessageBox.alert(`激活信息已发送至${this.form.email},请注意查收并及时激活。`)
+            MessageBox.alert(this.$t('message.Send_email_des', {msg: this.form.email}))
           }
         })
       },

@@ -14,25 +14,25 @@
             <td colspan="2"><span class="label">{{$t('message.NO')}}</span>{{item.orderNumber}}</td>
           </tr>
           <tr>
-            <td><span class="label">催单人</span></td>
+            <td><span class="label">{{$t('message.Reminder_of_the')}</span></td>
             <td>{{item.createPersonName}}</td>
           </tr>
           <tr>
-            <td><span class="label"><!--{{$t('message.status')}}：-->受理状态</span></td>
+            <td><span class="label"><!--{{$t('message.status')}}：-->{{$t('message.The_status')}}</span></td>
             <td>
-              <span v-if="item.processDate" class="bluebg span">已受理</span> <span v-else class="redbg span">待受理</span>
+              <span v-if="item.processDate" class="bluebg span">{{$t('message.Processed')}}</span> <span v-else class="redbg span">{{$t('message.To_accept')}}</span>
             </td>
           </tr>
           <tr v-if="item.processName">
-            <td><span class="label">受理人 </span></td>
+            <td><span class="label">{{$t('message.Received_by')}} </span></td>
             <td>{{item.processName}}</td>
           </tr>
           <tr>
-            <td><span class="label">催单时间</span></td>
+            <td><span class="label">{{$t('message.Reminder_time')}}</span></td>
             <td><span class="label">{{item.createDate}}</span></td>
           </tr>
           <tr>
-            <td><span class="label">预约时间</span></td>
+            <td><span class="label">{{$t('message.yuyueshijian')}}</span></td>
             <td style="color:#26a2ff" v-if="item.reservationTimeEntity&&item.reservationTimeEntity.reservationDate">{{item.reservationTimeEntity.reservationDate}}</td>
             <td style="color:#26a2ff" v-else>-- --</td>
           </tr>

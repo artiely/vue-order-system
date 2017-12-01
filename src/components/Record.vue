@@ -1,6 +1,6 @@
 <template>
   <div class="record">
-    <mt-header title="$t('message.record')" fixed style="z-index: 10;">
+    <mt-header :title="$t('message.record')" fixed style="z-index: 10;">
       <mt-button icon="back" @click="back" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <mt-navbar v-model="selected" fixed style="top: 40px;">
