@@ -136,7 +136,7 @@
         </div>
       </div>
       <div v-else class="bluebg" style="color: #fff;padding: 6px">{{$t('message.No_switch_account')}}</div>
-      <div class="bluebg" style="position:absolute;bottom:0;left:0;right:0;padding:10px" @click="newAccount">注册新账号</div>
+      <div class="bluebg" style="position:absolute;bottom:0;left:0;right:0;padding:10px" @click="newAccount">{{$t('message.New_account')}}</div>
     </mt-popup>
     <!--账号切换/-->
   </div>
