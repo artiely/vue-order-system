@@ -103,7 +103,7 @@
             </div>
             <div>
             </div>
-            <div @click="showComplainDetail(index)" class="border-bottom">
+            <div @click="showComplainDetail(index,item)" class="border-bottom">
               <div class="cellBody">
                 <div class="td1">{{$t('message.Order_status')}}</div>
                 <div class="td2"><span v-if="item.status==0" class="span redbg ">{{$t('message.Unprocessed')}}</span>
@@ -197,7 +197,7 @@
             <!--<div><span class="td1">{{$t('message.Rating_processing_result')}}</span></div>-->
             <div class="rating">
               <star-rating :star-size="30" v-model="detailData.rating" :show-rating="false" :inline="true"
-                           :read-only="true"></star-rating>
+                           :read-only="mystatus==3"></star-rating>
               <span v-if="detailData.rating==0" class="text ">{{$t('message.Please_score')}}</span>
               <span v-if="detailData.rating==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
               <span v-if="detailData.rating==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
@@ -234,7 +234,8 @@
         page2: 1,
         page3: 1,
         count: [0, 0, 0],
-        callId: ''
+        callId: '',
+        mystatus: ''
       }
     },
     methods: {
@@ -252,8 +253,11 @@
         this.$store.commit('SET_ORDER_INFO', item)
         this.$router.push({path: '/orderdetail'})
       },
-      showComplainDetail(index) {
+      showComplainDetail(index, item) {
 //        console.log(this.dataList1)
+        if(item){
+          this.mystatus = item.status
+        }
         this.complainDetail = !this.complainDetail;
         if (this.complainDetail == true) {
           if (this.selected == 1) {

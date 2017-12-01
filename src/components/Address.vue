@@ -246,12 +246,20 @@
         } else {
           _city = this.addressCity
         }
+
+        function iGetInnerText(testStr) {
+          var resultStr = testStr.replace(/\ +/g, ""); //去掉空格
+          resultStr = testStr.replace(/[ ]/g, "");    //去掉空格
+          resultStr = testStr.replace(/[\r\n]/g, ""); //去掉回车换行
+          return resultStr;
+        }
+
         let data = {
-          address: this.addressProvince + this.addressCity + (this.addressXian ? this.addressXian : '') + (this.addressStreet ? this.addressStreet : '') + (this.desMore ? this.desMore : ''),
+          address: this.addressProvince + this.addressCity + (this.addressXian ? this.addressXian : '') + (this.addressStreet ? this.addressStreet : '') + (iGetInnerText(this.desMore) ? iGetInnerText(this.desMore) : ''),
           cityName: _city,
           companyname: _this.companyName,
 //          id: "151",//这个id pc上似乎是固定的
-          newValue: this.addressProvince + this.addressCity + (this.addressXian ? this.addressXian : '') + (this.addressStreet ? this.addressStreet : '') + (this.desMore ? this.desMore : ''),
+          newValue: this.addressProvince + this.addressCity + (this.addressXian ? this.addressXian : '') + (this.addressStreet ? this.addressStreet : '') + (iGetInnerText(this.desMore) ? iGetInnerText(this.desMore) : ''),
           operationType: 1,
           shortName: _this.companyName
         };

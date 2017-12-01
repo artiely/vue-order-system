@@ -572,6 +572,8 @@ const REGISTER_BY_MOBILE = params => {
 
 /**
  * 判断是否手机注册（手机注册在填写资料时就不用再绑定手机，而邮箱需要绑定手机）
+ * 判断是否填写了手机号
+ * res.exist==1 有手机号
  * @param params
  * @constructor
  */

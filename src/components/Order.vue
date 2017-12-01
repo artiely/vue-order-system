@@ -223,6 +223,7 @@
           slidesPerView: 'auto',
           paginationClickable: true,
           spaceBetween: 30,
+          freeMode: true,
           onTransitionStart(swiper) {
           }
         },

@@ -8,8 +8,8 @@
               <img src="../.././statics/mobile/img/logo.png" alt="" width="150px">
             </div>
             <div class="errorMeg" v-if="error">{{errorMsg}}</div>
-            <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model="username">
-            <input type="password" :placeholder="$t('message.Account_password')" v-model="password">
+            <input type="text" class="fwone" :placeholder="$t('message.Account_name')" v-model.trim="username">
+            <input type="password" :placeholder="$t('message.Account_password')" v-model.trim="password">
             <button class="login-button" @click="login">{{$t('message.Login')}}</button>
           </div>
           <div style="height: 30px;width: 100%"></div>
@@ -26,7 +26,7 @@
               <option value="TN">中文繁体</option>
             </select>
           </div>
-          <div style="color:#fff;padding:30px;" @click="guestLogin">游客登录</div>
+          <div style="color:#fff;padding:30px;" @click="guestLogin">{{$t('message.Visitors_login')}}</div>
         </div>
         <ul class="bg-bubbles">
           <li></li>

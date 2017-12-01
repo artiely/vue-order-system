@@ -10,13 +10,13 @@
         <div style="background:#fff;text-align: left">
           <!-- 邮箱-->
           <div v-if="selected==1" class="form-content">
-            <mu-text-field :hintText="$t('message.Email')" v-model="form.email" type="email"
+            <mu-text-field :hintText="$t('message.Email')" v-model.trim="form.email" type="email"
                            name="email" class="require" @focus="focus" @blur="blur"
                            fullWidth/>
-            <mu-text-field :hintText="$t('message.password')" v-model="form.pwd" type="password"
+            <mu-text-field :hintText="$t('message.password')" v-model.trim="form.pwd" type="password"
                            name="pwd" class="require"
                            fullWidth/>
-            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form.pwd2" type="password"
+            <mu-text-field :hintText="$t('message.repeat_password')" v-model.trim="form.pwd2" type="password"
                            name="pwd2"
                            class="require"
                            fullWidth/>
@@ -24,11 +24,11 @@
           <!-- 邮箱/-->
           <!--手机号-->
           <div v-if="selected==2" class="form-content">
-            <mu-text-field :hintText="$t('message.Phone_number')" v-model="form2.phone" type="number"
+            <mu-text-field :hintText="$t('message.Phone_number')" v-model.trim="form2.phone" type="number"
                            name="phone" class="require"
                            fullWidth/>
             <div>
-              <mu-text-field :hintText="$t('message.Msg_code')" v-model="form2.code" type="text"
+              <mu-text-field :hintText="$t('message.Msg_code')" v-model.trim="form2.code" type="text"
                              name="code" class="require"
                              style="width: 60%"/>
               <span
@@ -39,10 +39,10 @@
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
-            <mu-text-field :hintText="$t('message.password')" v-model="form2.pwd" type="password"
+            <mu-text-field :hintText="$t('message.password')" v-model.trim="form2.pwd" type="password"
                            name="pwd" class="require"
                            fullWidth/>
-            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form2.pwd2" type="password"
+            <mu-text-field :hintText="$t('message.repeat_password')" v-model.trim="form2.pwd2" type="password"
                            class="require"
                            name="pwd2"
                            fullWidth/>
@@ -52,17 +52,17 @@
 
           <!--加入公司/-->
           <div v-if="selected==3" class="form-content">
-            <mu-text-field :hintText="$t('message.Name')" v-model="form3.personName" type="text"
+            <mu-text-field :hintText="$t('message.Name')" v-model.trim="form3.personName" type="text"
                            name="personName" class="require"
                            fullWidth/>
-            <mu-text-field :hintText="$t('message.InvitationCode')" v-model="form3.InvitationCode" type="text"
+            <mu-text-field :hintText="$t('message.InvitationCode')" v-model.trim="form3.InvitationCode" type="text"
                            name="InvitationCode" class="require"
                            fullWidth/>
-            <mu-text-field :hintText="$t('message.Phone_number')" v-model="form3.phone" type="number"
+            <mu-text-field :hintText="$t('message.Phone_number')" v-model.trim="form3.phone" type="number"
                            name="phone" class="require"
                            fullWidth/>
             <div>
-              <mu-text-field :hintText="$t('message.Msg_code')" v-model="form3.code" type="text"
+              <mu-text-field :hintText="$t('message.Msg_code')" v-model.trim="form3.code" type="text"
                              name="code" class="require"
                              style="width: 60%"/>
               <span
@@ -73,10 +73,10 @@
               {{count}}s {{$t('message.resend')}}
             </span>
             </div>
-            <mu-text-field :hintText="$t('message.password')" v-model="form3.pwd" type="password"
+            <mu-text-field :hintText="$t('message.password')" v-model.trim="form3.pwd" type="password"
                            name="pwd" class="require"
                            fullWidth/>
-            <mu-text-field :hintText="$t('message.repeat_password')" v-model="form3.pwd2" type="password"
+            <mu-text-field :hintText="$t('message.repeat_password')" v-model.trim="form3.pwd2" type="password"
                            name="pwd2" class="require"
                            fullWidth/>
           </div>
@@ -326,7 +326,7 @@
         this.$api.GET_MSG_CODE(data).then(res => {
           if (res.code === 0) {
             if (res.state === 1) {
-              this.$toast('短信已发出，请查收')
+              this.$toast(this.$t('message.Msg_send'))
             } else {
               MessageBox.alert(JSON.stringify(res))
             }
@@ -377,9 +377,9 @@
             if (res.state === '1') { // 成功
               this.$router.push(`/type?table_id=${GetQueryString('table_id') || ''}&table_name=${GetQueryString('table_name') || ''}`)
             } else if (res.state == '2') { // 不正确
-              MessageBox.alert('验证码错误')
+              MessageBox.alert(this.$t('message.Wrong_captcha'))
             } else if (res.state == '3') { // 过期
-              MessageBox.alert('验证码过期')
+              MessageBox.alert(this.$t('message.Wrong_Verification'))
             }
           }
         })
@@ -393,12 +393,28 @@
           personName: this.form3.personName
         }
         this.$api.CODE_JOIN_COMPANY(data).then(res => {
+
+          /*返回:{"state":"3","code":0,"info":"验证码过期"}
+          或者{"state":"2","code":0,"info":"验证码错误"}
+          或者{"state":"1","code":0,"info":"保存成功"}
+          或者{"state":"-1","code":0,"info":"已经存在该公司账号，请直接登录"}
+          或者{"state":"-2","code":0,"info":"邀请码错误"}*/
+
           if (res.code == 0) {
             if (res.state == 1) {
-              MessageBox.alert('保存成功')
+              MessageBox.alert(this.$t('message.Success'))
               this.router.push('login')
             } else {
-              MessageBox.alert(res.info)
+              if(res.state==3){
+                MessageBox.alert(this.$t('message.Wrong_Verification'))
+              }else if(res.state==2){
+                MessageBox.alert(this.$t('message.Wrong_captcha'))
+              }else if(res.state==-1){
+                MessageBox.alert(this.$t('message.Already_exist_company'))
+              }else if(state==-2){
+                MessageBox.alert(this.$t('message.Invitation_code_error'))
+              }
+
             }
           } else {
             MessageBox.alert(JSON.stringify(res))
