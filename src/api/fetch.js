@@ -50,7 +50,10 @@ export default function fetch (options) {
           store.commit('LOGOUT')
           router.replace({name: 'login'})
         } else {
-          resolve(res.data)
+          console.log(res)
+          if(res.status===200){
+            resolve(res.data)
+          }
         }
         return false
       })

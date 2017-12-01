@@ -271,12 +271,14 @@ const routes = [{
     children: [{
       path: '/index',
       name: 'index',
-      component: Index
+      component: Index,
+      // meta: {requiresAuth: true},
     },
       {
         path: '/shop',
         name: 'shop',
-        component: Shop
+        component: Shop,
+        // meta: {requiresAuth: true},
       },
       {
         path: '/order',

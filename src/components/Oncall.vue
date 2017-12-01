@@ -773,6 +773,8 @@
           })
         }
       })
+
+      this.$store.dispatch('hasTelphone')
     }
   }
 </script>

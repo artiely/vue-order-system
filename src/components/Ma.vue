@@ -338,7 +338,7 @@
           return;
         }
         if (this.faultDesc == '') {
-          MessageBox.alert('请填写故障描述', '');
+          MessageBox.alert('请填写服务要求', '');
           return;
         }
         let data = {
@@ -406,6 +406,9 @@
         this.$router.push('/address')
         this.popupVisibleCompany = false
       }
+    },
+    activated(){
+      this.$store.dispatch('hasTelphone')
     }
   }
 </script>

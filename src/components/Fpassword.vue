@@ -2,7 +2,7 @@
   <div class="login" style="background: white">
     <div class="page-content">
       <div class="wrapper">
-        <div style="padding: 10px;text-align: center">找回密码</div>
+        <div style="padding: 10px;text-align: center">{{$t('message.retrieve_password')}}</div>
         <div style="background:#fff;text-align: left" v-if="step1" class="form-content">
           <!--手机号-->
           <div>
@@ -31,7 +31,7 @@
         </div>
         <!--step2-->
         <div v-if="step2">
-          <div style="padding: 10px;text-align: center">选择重置密码的账号</div>
+          <div style="padding: 10px;text-align: center">{{$t('message.Select_account_reset_password')}}</div>
           <div class="greenbg account-btn" v-for="item in switchAccount"
                @click="changeAccount(item)">
             {{item.userName}}
@@ -40,7 +40,7 @@
 
         <!--step2/-->
         <div v-if="step3">
-          <p style="text-align: center">重置后可用手机号登录该账号</p>
+          <p style="text-align: center">{{$t('message.After_reset_mobile_number')}}</p>
           <mu-text-field :hintText="$t('message.password')" v-model="form.repwd" type="password"
                          name="phone" class="require"
                          fullWidth/>
@@ -99,7 +99,7 @@
         this.$api.GET_MSG_CODE(data).then(res => {
           if (res.code === 0) {
             if (res.state === 1) {
-              this.$toast('短信已发出，请查收')
+              this.$toast(this.$t('message.Msg_send'))
             } else {
               alert(JSON.stringify(res))
             }
@@ -112,14 +112,14 @@
         if (this.form.phone.length != 11) {
           this.error = true;
           if (this.form.phone.length == 0)
-            this.errorMsg = "请输入手机号"
+            this.errorMsg = this.$t('message.Please_enter_phone_number')
           else
             this.errorMsg = this.$t('message.phone_error')
           return;
         }
         else if (this.form.code.length ==0) {
           this.error = true;
-          this.errorMsg = "请输入手机验证码"
+          this.errorMsg = this.$t('message.Please_enter_mobile_code')
           return;
         }
         this.$api.CHECK_TEL_CODE({telephone: this.form.phone, code: this.form.code}).then(res => {
@@ -149,11 +149,11 @@
       repassword(){
         if (this.form.repwd.length < 6) {
           this.error = true
-          this.errorMsg = '密码至少6位'
+          this.errorMsg = this.$t('message.password_error')
           return
         } else if (this.form.repwd != this.form.repwd2) {
           this.error = true
-          this.errorMsg = '两次密码不一致'
+          this.errorMsg = this.$t('message.Entered_differ')
           return
         }
         this.$api.RESET_PASSWORD({password: this.form.repwd}).then(res => {

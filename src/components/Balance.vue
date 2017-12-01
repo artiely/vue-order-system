@@ -20,7 +20,7 @@
         <div class="btn yellowbg" @click="pay" style="width: 60%;margin: 6px auto;padding: 6px;border-radius: 22px">{{$t('message.Recharge')}}</div>
       </div>
         <div class="col1 border-bottom">
-          <router-link tag="div" class="balanceBtm" to="record">预付款消费{{$t('message.record')}}<i class="iconfont icon-enter text-gray pull-right"></i> </router-link>
+          <router-link tag="div" class="balanceBtm" to="record">{{$t('message.record')}}<i class="iconfont icon-enter text-gray pull-right"></i> </router-link>
         </div>
       <div class="mxBox">
         <div class="mxTit">
@@ -55,7 +55,7 @@
     </scroller>
     <div v-show="isBackShow" class="backTop" @click="backTop"><i class="iconfont icon-huidaodingbu1"></i></div>
     <mt-popup v-model="payDetail" position="right" class="payDetail">
-      <mt-header title="费用明细" fixed style="z-index: 9;color: #333;background: white;box-shadow:0px 1px 1px #c9c9c9;">
+      <mt-header :title="$t('message.cost_breakdown')" fixed style="z-index: 9;color: #333;background: white;box-shadow:0px 1px 1px #c9c9c9;">
         <mt-button  @click="payDetail=false" icon="back" slot="left"></mt-button>
       </mt-header>
       <scroller :on-infinite="onInfiniteByDetail">
@@ -73,7 +73,7 @@
             </div>
           </div>
         </div>
-        <div v-if="detail.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i><br>暂无明细</div>
+        <div v-if="detail.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i><br>{{$t('message.No_detail')}}</div>
 
       </scroller>
     </mt-popup>

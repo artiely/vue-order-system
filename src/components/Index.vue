@@ -19,7 +19,7 @@
           <div class="intro-box">
             <p>{{$t('message.title')}}</p>
           </div>
-          <p style="font-size: 12px;color: #999"> ©2011-2017 <span >fwone.com</span > <span lang>版权所有</span><br>
+          <p style="font-size: 12px;color: #999"> ©2011-2017 <span>fwone.com</span> <span lang>版权所有</span><br>
             京ICP备 11003662号 | 公网安备11010502025657号</p>
         </div>
       </div>
@@ -83,36 +83,38 @@
         }
       }
     },
-    created(){
+    created() {
       this.$api.get_user_id().then((r) => { // 获取userid作为登录凭证
         if (r.code == ERR_OK) {
           let userId = r.user.id;
           let personId = r.user.personId;
           this.$store.dispatch('login', {userId, personId});
-          this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
-            if (res.code === 0) {
-              if (res.state == 4) { // 不完善
-                this.$router.push('/type?state=4')
-              } else if (res.state == 7) {
-                this.$router.push('/reject?state=7')
-                return
-              } else if (res.state == 8) {
-                this.$router.push('/reject?state=8')
-                return
-              } else {
+          setTimeout(() => {
+            this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
+              if (res.code === 0) {
+                if (res.state == '4') { // 不完善
+                  this.$router.push('/type?state=4')
+                } else if (res.state == '7') {
+                  this.$router.push('/reject?state=7')
+                  return
+                } else if (res.state == '8') {
+                  this.$router.push('/reject?state=8')
+                  return
+                } else {
 
+                }
+              } else {
+                alert(JSON.stringify(res))
               }
-            } else {
-              alert(JSON.stringify(res))
-            }
-          })
+            })
+          }, 500)
         } else {
           this.error = true;
           this.errorMsg = '连接失败'
         }
       })
     },
-    activated(){
+    activated() {
 
     },
     mounted() {
@@ -153,8 +155,15 @@
   .swiper-slide img {
     width: 100%;
   }
-  .intro-box{
-    color: #9e9e9e;margin: 10px auto ;width: 90%;border-radius: 10px;padding:1px 15px;background:#fff;text-align: left;
+
+  .intro-box {
+    color: #9e9e9e;
+    margin: 10px auto;
+    width: 90%;
+    border-radius: 10px;
+    padding: 1px 15px;
+    background: #fff;
+    text-align: left;
     font-size: 15px;
   }
 </style>
