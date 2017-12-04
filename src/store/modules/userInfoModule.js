@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import api from '../../api/api.js'
 import {MessageBox} from 'mint-ui'
 import router from '../../router'
+import i18n from '../../i18n/index'
 
 Vue.use(Vuex)
 
@@ -54,7 +55,7 @@ const mutations = {//状态只能通过此改变
   },
   ['GUEST_TIP'](state, payload) {
     if (state.isGuest) {
-      MessageBox.confirm(this.$t('message.isGuest')).then(action => {
+      MessageBox.confirm('当前游客模式，是否前去登录或注册').then(action => {
         router.push('/login')
       });
       return true
@@ -117,13 +118,14 @@ const actions = {
     })
   },
   hasTelphone: ({commit, state}, payload) => {
+    let _this=this
     api.CHECK_BIND_MOBILE().then(res => {
       if (res.code == 0) {
         if (res.exist == '1') { // 有手机号了
           commit('HAS_TELHPONE', true)
         } else {
           commit('HAS_TELHPONE', false)
-          MessageBox.alert(this.$t('message.no_phone_num')).then(action => {
+          MessageBox.alert('您当前没有绑定手机号，下单后无法与您取得联系，请前去绑定手机号').then(action => {
             router.push('/info')
           });
         }

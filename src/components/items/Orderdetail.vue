@@ -273,10 +273,10 @@
               {{$t('message.Publish')}}
             </mt-button>
             <div v-if="ratingHistoryList.length>0">
-              <h3 style="padding: 0px 0 0 10px;text-align: left">历史评价</h3>
+              <h3 style="padding: 0px 0 0 10px;text-align: left">{{$t('message.Historical_evaluation')}}</h3>
               <mt-cell v-for="(item,index) in ratingHistoryList" :key="index">
                 <div slot="title" style="text-align: left;font-size: 12px">
-                  <p><span class="text-gray">满意度：</span>
+                  <p><span class="text-gray">{{$t('message.degree_Satisfaction')}}：</span>
                     <span v-if="item.score==0" class="text ">{{$t('message.Unvalued')}}</span>
                     <span v-if="item.score==1" class="text redbg">{{$t('message.Very_dissatisfied')}}</span>
                     <span v-if="item.score==2" class="text yellowbg">{{$t('message.Not_satisfied')}}</span>
@@ -303,7 +303,7 @@
           </mt-header>
           <scroller style="padding-top: 40px;text-align: left">
             <div class="mint-radiolist-title">{{$t('message.Complaints_suggestions')}}</div>
-            <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3" title="尼玛"
+            <mt-field :placeholder="$t('message.Complaints_suggestions')" type="textarea" rows="3" title=""
                       v-model="complainTxt"></mt-field>
             <mt-radio
               :title="$t('message.Cause_complaint')"

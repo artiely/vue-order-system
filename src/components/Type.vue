@@ -117,22 +117,22 @@
           </div>
         </div>
         <div v-if="form.typeId==1">
-          <span class="form-group__message" v-if="!$v.wechat1.pwd.minLength">密码长度不够.</span>
-          <span class="form-group__message" v-if="$v.wechat1.pwd.minLength&&!$v.wechat1.pwd2.sameAs">密码不一致.</span>
+          <span class="form-group__message" v-if="!$v.wechat1.pwd.minLength">{{$t('message.password_error')}}.</span>
+          <span class="form-group__message" v-if="$v.wechat1.pwd.minLength&&!$v.wechat1.pwd2.sameAs">{{$t('message.Entered_differ')}}.</span>
         </div>
         <div v-if="form.typeId==2">
-          <span class="form-group__message" v-if="!$v.wechat2.companyIdNum.minLength||!$v.mobile2.companyIdNum.minLength||!$v.email2.companyIdNum.minLength">营业执照号格式不正确.</span>
-          <span class="form-group__message" v-if="!$v.wechat2.pwd.minLength">密码长度不够.</span>
-          <span class="form-group__message" v-if="$v.wechat2.pwd.minLength&&!$v.wechat2.pwd2.sameAs">密码不一致.</span>
-          <span class="form-group__message" v-if="!$v.mobile2.mark.alpha||!$v.wechat2.mark.alpha||!$v.email2.mark.alpha">英文简称只支持英文字母.</span>
-          <span class="form-group__message" v-if="!$v.email2.phone.minLength||!$v.email2.phone.maxLength||!$v.wechat2.phone.minLength||!$v.wechat2.phone.maxLength">手机号格式错误.</span>
+          <span class="form-group__message" v-if="!$v.wechat2.companyIdNum.minLength||!$v.mobile2.companyIdNum.minLength||!$v.email2.companyIdNum.minLength">{{$t('message.company_id_error')}}.</span>
+          <span class="form-group__message" v-if="!$v.wechat2.pwd.minLength">{{$t('message.password_error')}}.</span>
+          <span class="form-group__message" v-if="$v.wechat2.pwd.minLength&&!$v.wechat2.pwd2.sameAs">{{$t('message.Entered_differ')}}.</span>
+          <span class="form-group__message" v-if="!$v.mobile2.mark.alpha||!$v.wechat2.mark.alpha||!$v.email2.mark.alpha">{{$t('message.mark_error')}}.</span>
+          <span class="form-group__message" v-if="!$v.email2.phone.minLength||!$v.email2.phone.maxLength||!$v.wechat2.phone.minLength||!$v.wechat2.phone.maxLength">{{$t('message.phone_error')}}.</span>
         </div>
 
         <button class="Button--primary Button--blue" @click="handleSubmit">{{$t('message.Submit')}}</button>
       </div>
       <div style="padding: 20px" v-if="isEmail&&!token">
-        <h2>链接过期或无效
-          <router-link to="register">重新发送邮件</router-link>
+        <h2>{{$t('message.Links_expire')}}
+          <router-link to="register">{{$t('message.Resend_message')}}</router-link>
         </h2>
       </div>
     </div>

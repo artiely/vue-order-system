@@ -6,7 +6,7 @@
     <scroller class="page-content">
       <div v-if="isCharge!=1">
         <div class="card"  style="margin-bottom: 10px" >
-          订单编号： {{orderNo}}
+          {{$t('message.ordernumber')}}： {{orderNo}}
         </div>
 
 
@@ -242,7 +242,7 @@
     <mt-popup
       v-model="couponVisible"
       position="right" style="height: 100%;width: 100%">
-      <mt-header title="优惠券" fixed style="z-index: 9;">
+      <mt-header :title="$t('message.Coupon')" fixed style="z-index: 9;">
         <mt-button icon="back" @click="hideCoupons" slot="left"></mt-button>
         <mt-button @click="hideCoupons" slot="right">{{$t('message.Done')}}</mt-button>
       </mt-header>
@@ -265,19 +265,23 @@
                 <tr>
                   <td rowspan="2">￥<span style="font-size: 40px">{{item.amount}}</span></td>
                   <td style="text-align: right">
-                    <div>优惠券</div>
+                    <div>{{$t('message.Coupon')}}</div>
                   </td>
                 </tr>
                 <tr>
                   <td style="text-align: right">
-                    <div style="font-size: 10px"> 不可叠加</div>
+                    <div style="font-size: 10px"> {{$t('message.Not_superimposed_use')}}</div>
                   </td>
                 </tr>
               </table>
-              <div style="font-size: 10px">请于{{item.expStartDate}}前使用</div>
+              <div style="font-size: 10px">
+                <!--请于{{item.expStartDate}}前使用 -->
+                <!--{{$t('message.use_it_before',msg:item.expStartDate)}}-->
+                {{$t('message.use_it_before',{msg:item.expEndDate})}}
+              </div>
             </div>
             <div style="width: 80px;border-left: 1px dashed #fff;padding: 8px;font-size: 20px;line-height: 58px;">
-              <div v-show="couponId!==item.id" style="font-size: 14px">点击使用</div>
+              <div v-show="couponId!==item.id" style="font-size: 14px">{{$t('message.use')}}</div>
               <div v-show="couponId===item.id" style="text-align: center">
                 <i class="iconfont icon-right"
                    style="font-size: 40px"></i>
@@ -298,8 +302,8 @@
         <label v-for="item in invoiceList"
                style="position: relative;text-align: left;margin-bottom: 8px;background:#fff;overflow: hidden;display: block"
                @click="checkHistory(item)">
-          <span v-if="item.accountNumber" class="bluebg invoice-type">增票</span>
-          <span v-else class="greenbg invoice-type">普票</span>
+          <span v-if="item.accountNumber" class="bluebg invoice-type">{{$t('message.Value-added_invoice')}}</span>
+          <span v-else class="greenbg invoice-type">{{$t('message.Regular_invoice')}}</span>
           <div style="padding-left: 50px;padding-bottom:10px;padding-top:10px;font-size: 14px ">
             <div style="color: #444">{{item.partAName}}</div>
             <div style="color: #777">{{item.taxNumber}}</div>

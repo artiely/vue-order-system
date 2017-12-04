@@ -204,7 +204,7 @@
       },*/
       showNotificationList(){
         if(this.customerNotificationList.length==0){
-          Toast('暂无消息')
+          Toast(this.$t('message.No_message'))
           return
         }
         this.notificationListVisible = !this.notificationListVisible
@@ -225,7 +225,7 @@
         }
         this.$api.read_notification({tableName: item.tableName, tableId: item.tableId}).then(res => {
           if (res.code == ERR_OK) {
-            this.$toast('消息已读');
+//            this.$toast('消息已读');
 //            this.getCustomerNotification()
             this.$store.dispatch('getCustomerNotification')
           } else {

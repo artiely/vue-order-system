@@ -157,6 +157,9 @@
             if (!this.cck) {
               return true
             }
+            if(value==''){
+              return Promise.resolve(true) // 防止空的验证
+            }
             return new Promise((resolve, reject) => {
               this.$api.CHECK_EMAIL({email: value}).then(res => {
                 if (res.code === 0) {

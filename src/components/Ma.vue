@@ -4,6 +4,11 @@
       <mt-button icon="back" @click.native="back()" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <div class="page-content" style="overflow: hidden">
+      <mt-badge type="error" v-if="noBindMobile">
+        <!--您还未绑定手机号，下单后我们将无法联系您,-->
+        {{$t('message.no_phone_num')}}
+        <router-link style="color: #fff" to="info?edit=1">{{$t('message.To_bind')}}!</router-link>
+      </mt-badge>
       <div class="wrapper-box">
         <div class="title-box">
         <span class="title" slot="title">
@@ -38,7 +43,7 @@
           </span>
         </div>
         <div class="dateWrap border-bottom">
-          <span class="title">请选择开始日期</span>
+          <span class="title">{{$t('message.select_start_date')}}</span>
           <mu-date-picker
             class="dateItem"
             :hintText="$t('message.Start_date')"
@@ -48,7 +53,7 @@
             :okLabel="$t('message.Ok')"
             :cancelLabel="$t('message.Cancel')"
             :shouldDisableDate="disableWeekends"/>
-          <span class="title">请选择结束日期</span>
+          <span class="title">{{$t('message.select_end_date')}}</span>
           <mu-date-picker
             class="dateItem"
             :hintText="$t('message.End_date')"
@@ -116,7 +121,7 @@
       <!--服务时间选择组件e-->
       <div class="flexBox">
         <div class="my-cell title-box" v-show="trPriceList.length>0">
-          <span slot="title" class="title">服务预约列表</span>
+          <span slot="title" class="title">{{$t('message.Service_appointmen_list')}}</span>
         </div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
           <tr v-for="(item,index) in trPriceList" :key="index" :index="index" class="timeItem"
@@ -137,8 +142,9 @@
             <mt-button class="btn-white-flat" size="large" @click.native="getPriceMa" style="width: 50%;float:left">
               <i class="iconfont icon-jisuan"></i> {{$t('message.Cost_Estimation')}}
             </mt-button>
+            <!--:disabled="trPriceList.length==0"-->
             <mt-button class="an_order" @click.native="anOrder" type="danger"
-                       :disabled="trPriceList.length==0" style="width: 50%;float:right;background:#ef4f4f ">
+                        style="width: 50%;float:right;background:#ef4f4f ">
               <i class="iconfont icon-task_fill"></i> {{$t('message.Confirm')}}
             </mt-button>
           </div>
@@ -148,7 +154,7 @@
       <mt-popup v-model="popupVisibleSelectTime" position="top"
                 style="width: 100%;height: 150px;font-size: 14px;padding:10px"
                 v-if="popupVisibleSelectTime">
-        <div class="title">服务时间编辑</div>
+        <div class="title">{{$t('message.Edit_service_time')}}</div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
           <tr class="timeItem">
             <td>{{trPriceList[selectIndex].trDate}}</td>
@@ -235,8 +241,8 @@
         trPriceList: [],
         popupVisibleSelectTime: false,
         selectIndex: 0,
-        selectRangeValue: []
-
+        selectRangeValue: [],
+        noBindMobile: false
       }
     },
     watch: {
@@ -285,6 +291,17 @@
     },
     created() {
       this.getServiceAddress()
+      this.$api.CHECK_BIND_MOBILE().then(res => {
+        if (res.code == 0) {
+          if (res.exist == 0) {
+            this.noBindMobile = true
+          } else {
+            this.noBindMobile = false
+          }
+        } else {
+          MessageBox.alert(JSON.stringify(`绑定手机` + res))
+        }
+      })
     },
     methods: {
       back() {
@@ -334,11 +351,11 @@
       },
       getPriceMa() {
         if (this.checkValue == '') {
-          MessageBox.alert('请选择服务点', '');
+          MessageBox.alert(this.$t('message.Choose_location'), '');
           return;
         }
         if (this.faultDesc == '') {
-          MessageBox.alert('请填写服务要求', '');
+          MessageBox.alert(this.$t('message.service_requirements'), '');
           return;
         }
         let data = {
@@ -370,6 +387,13 @@
           return
         }
         var data = this.trPriceList;
+
+        if(this.trPriceList.length==0){
+          MessageBox.alert(this.$t('message.calculate_first'),'')
+          return
+        }
+
+
 
         //cb 数据映射
         function ObjStory(orgId, amount, CallDetailEntity, reservationTimeEntity) //声明对象

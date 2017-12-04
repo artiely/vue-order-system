@@ -1,8 +1,8 @@
 <template>
   <div class="reject">
-    <div v-if="state==7" class="info-box"> 账号正在审核中，请耐心等待...</div>
-    <div v-if="state==8" class="info-box"> 申请被拒绝，请联系公司管理员。</div>
-    <a href="javascript:;" @click="checkAccount()" style="display: block;padding: 10px;text-align: center">刷新</a>
+    <div v-if="state==7" class="info-box"> {{$t('message.account_review')}}</div>
+    <div v-if="state==8" class="info-box"> {{$t('message.Application_rejection')}}</div>
+    <a href="javascript:;" @click="checkAccount()" style="display: block;padding: 10px;text-align: center">{{$t('message.Refresh')}}</a>
   </div>
 </template>
 <script>
