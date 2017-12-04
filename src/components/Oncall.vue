@@ -4,8 +4,10 @@
       <mt-button icon="back" @click.native='back()' slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <div class="page-content" style="overflow: hidden;">
-      <mt-badge type="error" v-if="noBindMobile">您还未绑定手机号，下单后我们将无法联系您,
-        <router-link style="color: #fff" to="info?edit=1">前去绑定!</router-link>
+      <mt-badge type="error" v-if="noBindMobile">
+        <!--您还未绑定手机号，下单后我们将无法联系您,-->
+        {{$t('message.no_phone_num')}}
+        <router-link style="color: #fff" to="info?edit=1">{{$t('message.To_bind')}}!</router-link>
       </mt-badge>
       <div class="wrapper-box">
         <div class="title-box">
@@ -39,10 +41,10 @@
           <span class="title" slot="title">{{$t('message.Range_date')}}</span>
         </div>
         <div class="dateWrap">
-          <span class="title">请选择开始日期</span>
+          <span class="title">{{$t('message.select_start_date')}}</span>
           <mu-date-picker class="dateItem" :hintText="$t('message.Start_date')" :minDate="minDate" v-model="startDate"
                           :underlineShow="false" :okLabel="$t('message.Ok')" :cancelLabel="$t('message.Cancel')"/>
-          <span class="title">请选择结束日期</span>
+          <span class="title">{{$t('message.select_end_date')}}</span>
           <mu-date-picker class="dateItem" :hintText="$t('message.End_date')" :shouldDisableDate="shouldDisableDate"
                           :minDate="startDate"
                           v-model="endDate" :underlineShow="false" :okLabel="$t('message.Ok')"
@@ -94,7 +96,7 @@
         </div>
       </div>
       <div class="wrapper-box">
-        <mt-field :placeholder="$t('message.Please_describe_oncall')" type="textarea" rows="2" v-model="faultDesc"></mt-field>
+        <mt-field :placeholder="$t('message.Please_describe_oncall')" type="textarea" rows="2" v-model.trim="faultDesc"></mt-field>
       </div>
       <div style="margin-bottom: -1px">
         <div class="my-cell title-box">
@@ -105,7 +107,7 @@
         <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model="identify"></mt-field>
       </div>
       <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 160px;padding:10px">
-        <div class="title">可上门时间编辑</div>
+        <div class="title">{{$t('message.Edit_service_time')}}</div>
         <table style="width: 100%" border="0" cellspacing="0" cellpadding="0" v-if="timeMap.length>0&&selectIndex>=0">
           <tr class="timeItem">
             <td>{{timeMap[selectIndex].date}}</td>
@@ -146,8 +148,10 @@
     <mt-tabbar fixed style="z-index=99999999999999999999999999999">
       <div class="footerBar" style="position:fixed;top:100vh;left:0">
         <div class="b_btn  shadow-top">
+          <!--:disabled="addressObj.id==null || faultDesc==''||timeMap==''"-->
           <mt-button class="an_order" @click="anOrder" type="danger"
-                     :disabled="addressObj.id==null || faultDesc==''||timeMap==''">
+
+          >
             <i class="iconfont icon-task"></i> {{$t('message.Confirm')}}
           </mt-button>
         </div>
@@ -687,6 +691,18 @@
           this.$store.commit('GUEST_TIP')
           return
         }
+        /*空判断*/
+        if(!this.addressObj.id){
+          MessageBox.alert(this.$t('message.Choose_location'))
+          return
+        }else if(this.timeMap.length==0){
+          MessageBox.alert(this.$t('message.Please_select_time'))
+          return
+        }else if(!this.faultDesc){
+          MessageBox.alert(this.$t('message.service_requirement'))
+          return
+        }
+
         let newData = []
         for (var i = 0; i < this.timeMap.length; i++) {
           newData.push({
@@ -706,7 +722,7 @@
         }
         this.$api.save_price_oncall(data).then(res => {
           if (res.code == ERR_OK) {
-            MessageBox.alert('预约成功')
+            MessageBox.alert(this.$t('message.Success'))
             this.faultDesc = '' // 清空描述让button disabled
           } else {
             MessageBox.alert(`预约` + res.msg)

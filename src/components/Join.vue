@@ -125,7 +125,7 @@
           this.$api.GET_MSG_CODE(data).then(res => {
             if (res.code === 0) {
             if (res.state === 1) {
-              this.$toast('短信已发出，请查收')
+              this.$toast(this.$t('message.Msg_send'))
             } else {
               alert(JSON.stringify(res))
             }

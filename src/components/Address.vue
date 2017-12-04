@@ -75,7 +75,7 @@
     </mt-popup>
     <mt-popup v-model="addressVisible" position="bottom" style="width: 100%;">
       <div class="page-picker-wrapper">
-        <div style="padding:10px;color:#999">请选择所在区域</div>
+        <div style="padding:10px;color:#999">{{$t('message.select_your_area')}}</div>
         <mt-picker :slots="addressSlots" v-if="addressSlots" class="picker" @change="onAddressChange"
                    :visible-item-count="5"></mt-picker>
       </div>
@@ -205,7 +205,7 @@
           this.$store.commit('GUEST_TIP')
           return
         }
-        this.addressTit = '添加'
+        this.addressTit = this.$t('message.add')
         this.isEdit = false
         this.addVisible = !this.addVisible;
         this.showEditAddress = true
@@ -275,7 +275,7 @@
           let editData = {"id": this.editOval.companyId, "customerAlias": this.companyName, "newValue": data.address}
           this.$api.EDIT_ADDRESS(editData).then(res => {
             if (res.code == 0) {
-              this.$toast('修改成功')
+              this.$toast(this.$t('message.Success'))
               this.addVisible = false;
               this.getServiceAddress()
             } else {
@@ -302,7 +302,7 @@
           return
         }
         this.editOval = item
-        this.addressTit = '编辑'
+        this.addressTit = this.$t('message.edit')
         this.isEdit = true
         this.addVisible = true;
         this.showEditAddress = true

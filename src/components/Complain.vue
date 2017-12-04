@@ -34,7 +34,7 @@
             </div>
             <div @click="showComplainDetail(index)" class="border-bottom">
               <div class="cellBody">
-                <div class="td1">受理状态</div>
+                <div class="td1">{{$t('message.The_status')}}</div>
                 <div class="td2"><span v-if="item.status==0" class="span redbg">{{$t('message.Unprocessed')}}</span>
                 </div>
               </div>

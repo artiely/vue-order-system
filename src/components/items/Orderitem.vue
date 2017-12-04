@@ -38,7 +38,7 @@
       <tr class="item-body nopadding"></tr>
       <tr class="item-body nopadding item-header">
         <td colspan="3" class="text-left" style="font-size: 10px;padding:9px 5px 7px 5px">
-          {{item.repairpersonname}} <span class="text-gray">报修于</span> {{item.reporttime}}<span class="yh pull-right"
+          {{item.repairpersonname}} <span class="text-gray">{{$t('message.The_repair_in')}}</span> {{item.reporttime}}<span class="yh pull-right"
                                                                                                 @click="showReservationTime">{{$t('message.yuyueshijian')}}</span>
         </td>
       </tr>
@@ -88,10 +88,10 @@
           fwoneCheckState: 20,
           ordernumber: item.ordernumber
         };
-        MessageBox.confirm('确定要取消此次服务?').then(action => {
+        MessageBox.confirm(this.$t('message.cancel_service')).then(action => {
           this.$api.delete_order_updata(data).then(res => {
             if (res.code == ERR_OK) {
-              Toast('取消成功');
+              Toast(this.$t('message.Success'));
               this.$emit('refresh')
             }
           });

@@ -3,7 +3,7 @@
     <header class="sBox" style="height: 40px;background:#fff;z-index: 99" >
       <div style="width: 10%;float: left" @click="goBack" ><i class="iconfont icon-return" ></i ></div >
       <div style="width: 90%;float: right;height: 44px" >
-        <mt-search v-model="value" cancel-text="取消" placeholder="搜索" ></mt-search >
+        <mt-search v-model="value" :cancel-text="$t('message.Cancel')" :placeholder="$t('message.search')" ></mt-search >
       </div >
     </header >
     <div class="my-header my-border-bottom flexbox" >
@@ -26,19 +26,19 @@
     >
       <scroller class="filter_scroller">
       <div class="my-title" >
-        按时间选择
+        {{$t('message.timing')}}
       </div >
       <div class="von-button-bar">
-        <a class="button button-assertive button-outline" >7天前</a ><a class="button button-assertive button-outline" >一个月前</a >
+        <a class="button button-assertive button-outline" >{{$t('message.Seven_days_ago')}}</a ><a class="button button-assertive button-outline" >{{$t('message.a_month_ago')}}</a >
       </div>
       <div class="von-button-bar">
-        <a class="button button-assertive button-outline" >一年前</a >  <a class="button button-assertive button-outline" >三年前</a >
+        <a class="button button-assertive button-outline" >{{$t('message.a_year_ago')}}</a >  <a class="button button-assertive button-outline" >{{$t('message.three_years_ago')}}</a >
       </div>
       <div class="von-button-bar">
-        <a class="button button-assertive button-outline" >时间不限</a >
+        <a class="button button-assertive button-outline" >{{$t('message.Unlimited_Time')}}</a >
       </div>
       <div class="my-title" >
-        按服务点选择
+        {{$t('message.Select_by_service_point')}}
       </div >
 
         <select v-model="selected_company"  style="width: 100%;height: 30px"  placeholder="点击选择">
@@ -46,7 +46,7 @@
         </select >
 
       <div class="my-title" >
-        按用户选择
+        {{$t('message.User_selection')}}
       </div >
         <select v-model="selected_yh"  style="width: 100%;height: 30px"  placeholder="点击选择">
           <option value=""  v-for="item in yh">{{item}}</option >
@@ -54,16 +54,16 @@
 
 
       <div class="my-title" >
-        其他选择
+        {{$t('message.other_choice')}}
       </div >
-      <mt-cell class="my-cell" title="显示我的报修"><mt-switch v-model="query.sfbx"></mt-switch></mt-cell>
-      <mt-cell class="my-cell" title="显示驻场工单" ><mt-switch v-model="query.sfzc"></mt-switch></mt-cell>
+      <mt-cell class="my-cell" :title="$t('message.my_repair')"><mt-switch v-model="query.sfbx"></mt-switch></mt-cell>
+      <mt-cell class="my-cell" :title="$t('message.MA_order')" ><mt-switch v-model="query.sfzc"></mt-switch></mt-cell>
       <mt-cell class="my-cell" title="显示现场工单" ><mt-switch v-model="query.sfxc"></mt-switch></mt-cell>
         <div style="height: 60px;width: 100%"></div>
       </scroller>
       <div class="b_btn" >
-        <div style="width: 40%;float: left;background: #eee">重置</div>
-        <div style="width: 60%;float:right;background: #ea5a49;color: #fff">完成</div>
+        <div style="width: 40%;float: left;background: #eee">{{$t('message.Reset')}}</div>
+        <div style="width: 60%;float:right;background: #ea5a49;color: #fff">{{$t('message.Done')}}</div>
       </div>
     </mt-popup >
 
