@@ -420,11 +420,6 @@
           }
         }
       },
-      'status': {
-        handler(val){
-          this.$refs.mySwiper.swiper.slideTo(val)
-        }
-      },
       'ratingToService': {
         handler(val){
           this.ratingToAll = Math.ceil((val + this.ratingToEngineer) / 2)
@@ -506,7 +501,7 @@
             this.subList = res.callDetailList;
             this.score= res.minScore;
           } else {
-            alert(res.msg)
+//            alert(res.msg)
           }
         }).catch(err => console.error(err))
       },
@@ -598,7 +593,15 @@
     },
 
     mounted(){
-
+      let swip= this.$refs.mySwiper
+      this.$store.watch(
+        (state)=> state.detail.detail.status,
+        (val)=>{
+          setTimeout(function(){
+            if (val!=0)
+              swip.swiper.slideTo(val-2)},10)
+        },{deep: true}
+      )
     },
     created(){
       //页面刷新重新赋值
@@ -613,7 +616,6 @@
         console.log('weinull buzou')
         this.$store.commit('SET_ORDER_INFO', JSON.parse(item))
       }
-
     },
     activated(){
       this.getSubOrder()

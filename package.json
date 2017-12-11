@@ -16,7 +16,7 @@
     "axios": "^0.16.1",
     "babel-polyfill": "^6.26.0",
     "g2-mobile": "^2.1.19",
-    "js-cookie": "^2.1.4",
+    "js-cookie": "^2.2.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.4",
     "mint-ui": "^2.2.7",

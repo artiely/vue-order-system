@@ -182,9 +182,9 @@
       },
       loginOut(){
         this.$store.commit('LOGOUT')
-        this.$api.LOGOUT()
 //        this.$router.push({path: '/shop', name: 'shop'});
         this.settingVisible = false
+        window.location.reload()
       },
       showUserInfo(){
         if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){
@@ -443,5 +443,9 @@
 
   .msgitem {
     flex: 1;
+  }
+
+  .user-cell:active {
+    background-color: rgba(0, 0, 0, 0.03);
   }
 </style>

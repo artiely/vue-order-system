@@ -1,7 +1,7 @@
 <template>
   <div class="coupons">
     <mt-header fixed :title="$t('message.My_coupons')">
-      <mt-button icon="back" slot="left" @click="back"></mt-button>
+      <mt-button icon="back" slot="left" @click="back">{{$t('message.Back')}}</mt-button>
     </mt-header>
     <scroller style="padding-top: 40px"
               :on-infinite="onInfinite"
@@ -13,7 +13,7 @@
         <mt-tab-item id="1">{{$t('message.Disable')}}</mt-tab-item>
       </mt-navbar>
       <div v-if="DataList.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
-      <div v-for="item in DataList" class="coupons-item redbg " :class="selected==1?'expire':''"
+      <div v-for="item in DataList" class="coupons-item skybbg " :class="selected==1?'expire':''"
            style=";text-align: left;padding: 6px;margin-bottom: 2px">
         <div class="dot-line left">
           <div v-for="i in 10" class="o-o"></div>
