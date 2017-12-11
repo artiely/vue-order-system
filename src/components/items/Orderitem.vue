@@ -1,10 +1,10 @@
 <template>
   <div style="width: 100%">
-    <table class="order-item border-bottom" style="width: 100%">
+    <table class="order-item border-bottom  " style="width: 100%">
       <tr class="item-header border-bottom">
         <td colspan="3">
           <span class="text-gray"> {{$t('message.NO')}} : </span>{{item.ordernumber}}
-          <a v-if="item.orderstateid<4000 && orderStateId!=8" @click="goDelete(item)"
+          <a v-if="item.orderstateid<4000 && orderStateId!=8 && !loading" @click="goDelete(item)"
              class="text-center orderBtn cancleBtn pull-right">
             <i class="iconfont icon-empty_fill text-gray" style="color: rgba(221, 75, 57,.5)"></i>
           </a>
@@ -54,7 +54,8 @@
     props: {
       item: {},
       orderStateId: '',
-      index: ''
+      index: '',
+      loading:false
     },
     data() {
       return {}
@@ -155,6 +156,7 @@
 
   .cancleBtn {
     color: #f44336;
+    line-height: 1;
   }
 
   .text-left {
@@ -229,5 +231,9 @@
     padding: 2px 3px 1px 1px;
     color: lightgrey;
     font-size: 8px !important;
+  }
+
+  .text-left:active {
+    background-color: rgba(0, 0, 0, 0.03);
   }
 </style>

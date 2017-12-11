@@ -14,7 +14,7 @@
             <td colspan="2"><span class="label">{{$t('message.NO')}}</span>{{item.orderNumber}}</td>
           </tr>
           <tr>
-            <td><span class="label">{{$t('message.Reminder_of_the')}</span></td>
+            <td><span class="label">{{$t('message.Reminder_of_the')}}</span></td>
             <td>{{item.createPersonName}}</td>
           </tr>
           <tr>

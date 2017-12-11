@@ -116,6 +116,7 @@
 </template>
 <script>
   import {GetQueryString} from '@/utils'
+  import Cookies from 'js-cookie'
   import {validationMixin} from 'vuelidate'
   import {required, minLength, maxLength, sameAs, email} from 'vuelidate/lib/validators'
 
@@ -243,6 +244,14 @@
         }
       }
     },
+    computed:{
+      table(){
+//       table = GetQueryString('table_name') || Cookies.getJSON('table_id').table_name || ''
+        return {
+
+        }
+      }
+    },
 
     methods: {
       back() {
@@ -357,8 +366,8 @@
           email: this.form.email,
           password: this.form.pwd,
           url: url,
-          table_name: GetQueryString('table_name') || '',
-          table_id: GetQueryString('table_id') || '',
+          table_name: GetQueryString('table_name') || (Cookies.getJSON('table_id') && Cookies.getJSON('table_id').table_name )|| '',
+          table_id: GetQueryString('table_id') ||  (Cookies.getJSON('table_id') && Cookies.getJSON('table_id').table_id )|| '',
           open_id: GetQueryString('open_id') || ''
         }
         this.$api.REGISTER(data).then(res => {
@@ -373,13 +382,13 @@
           telephone: this.form2.phone,
           code: this.form2.code,
           password: this.form2.pwd,
-          table_name: GetQueryString('table_name') || '',
-          table_id: GetQueryString('table_id') || '',
+          table_name: GetQueryString('table_name') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_name )|| '',
+          table_id: GetQueryString('table_id') || (Cookies.getJSON('table_id') && Cookies.getJSON('table_id').table_id )|| '',
         }
         this.$api.REGISTER_BY_MOBILE(data).then(res => {
           if (res.code === 0) {
             if (res.state === '1') { // 成功
-              this.$router.push(`/type?table_id=${GetQueryString('table_id') || ''}&table_name=${GetQueryString('table_name') || ''}`)
+              this.$router.push(`/type?table_id=${GetQueryString('table_id') ||  (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| ''}&table_name=${GetQueryString('table_name') ||  Cookies.getJSON('table_id').table_name || ''}`)
             } else if (res.state == '2') { // 不正确
               MessageBox.alert(this.$t('message.Wrong_captcha'))
             } else if (res.state == '3') { // 过期

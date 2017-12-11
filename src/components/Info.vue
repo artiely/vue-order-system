@@ -2,7 +2,7 @@
   <div class="login" style="background: white">
     <div class="page-content">
       <mt-header fixed :title="$t('message.Personal_information')">
-        <mt-button icon="back" slot="left" @click="back"></mt-button>
+        <mt-button icon="back" slot="left" @click="back">{{$t('message.Back')}}</mt-button>
       </mt-header>
       <div class="wrapper" style="text-align: left;background:#fff;padding-top: 40px">
         <div v-if="editData.accountType==2">

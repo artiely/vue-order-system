@@ -46,9 +46,10 @@
       :refreshText="$t('message.Pull_to_refresh')"
       :noDataText="$t('message.No_more_data')"
     >
-      <div v-if="orderinfo.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
+      <div v-if="orderinfo.length==0" class="noData animated fadeIn"><i class="iconfont icon-zanwushuju"></i></div>
       <order-item :item="item" :orderStateId="query.orderStateId" v-for="(item,index) in orderinfo" :index="index"
-                  :key="index"
+                  :key="index" :loading="loading"
+                  class="animated fadeIn"
                   v-on:getsp="getScrollPosition"
                   v-on:refresh="onRefreshAgain"></order-item>
     </scroller>
@@ -107,7 +108,7 @@
         </div>
       </div>
     </mt-popup>
-    <mt-popup v-model="detailVisible" position="right" style="height: 100%;width: 100%">
+    <mt-popup v-model="detailVisible" position="right" style="height: 100%;width: 100%" :modal=false>
       <mt-header :title="$t('message.Detail')" fixed style="z-index: 99;">
         <mt-button icon="back" @click.native="backList" slot="left">{{$t('message.Back')}}</mt-button>
       </mt-header>
@@ -130,6 +131,7 @@
     },
     data() {
       return {
+        imgShow:false,
         orderinfo: [],
         totalPage: 1,
 //        detailVisible:false,
@@ -150,6 +152,7 @@
           sfxc: false,
           sfbx: false,
           timeType: '0',//查询类型 报修时间/服务时间 0/1
+          loading:false
         },
         rangeDate: [{
           id: 1,
@@ -284,6 +287,7 @@
         this.$store.commit('TOGGLE_DETAIL_SHOW')
       },
       getdata(cb) {
+        this.loading=true
         let params = {
           limit: this.query.limit,
           page: this.query.page,
@@ -314,6 +318,7 @@
           if (cb && typeof cb == 'function') {
             cb()
           }
+          this.loading=false
         }).catch(err => {
           console.error(err)
         })
@@ -654,4 +659,5 @@
     height: 30px;
     background: white;
   }
+
 </style>

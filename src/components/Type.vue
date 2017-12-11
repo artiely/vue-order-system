@@ -141,6 +141,7 @@
 </template>
 <script>
   import { GetQueryString } from '@/utils'
+  import Cookies from 'js-cookie'
   import { validationMixin } from 'vuelidate'
   import { required, minLength, maxLength, sameAs, email,requiredUnless ,alpha}from 'vuelidate/lib/validators'
   export default {
@@ -320,8 +321,8 @@
               let data={
                 account_type: this.form.typeId,
                 personName: this.mobile1.personName,
-                table_name: GetQueryString('table_name') || '',
-                table_id: GetQueryString('table_id') || '',
+                table_name: GetQueryString('table_name') ||(Cookies.getJSON('table_id') && Cookies.getJSON('table_id').table_name) || '',
+                table_id: GetQueryString('table_id') ||(Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| '',
                 email: GetQueryString('e') || '',
                 source: GetQueryString('source') || 'telephone'
               }
@@ -337,8 +338,8 @@
                 comp_eng_short_name: this.mobile2.mark,
                 business_license_number: this.mobile2.companyIdNum,
                 personName: this.mobile2.personName,
-                table_name: GetQueryString('table_name') || '',
-                table_id: GetQueryString('table_id') || '',
+                table_name: GetQueryString('table_name') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_name )|| '',
+                table_id: GetQueryString('table_id') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| '',
                 email: GetQueryString('e') || '',
                 source: GetQueryString('source') || 'telephone'
               }
@@ -360,8 +361,8 @@
                 let data={
                   account_type: this.form.typeId,
                   personName: this.email1.personName,
-                  table_name: GetQueryString('table_name') || '',
-                  table_id: GetQueryString('table_id') || '',
+                  table_name: GetQueryString('table_name') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_name )|| '',
+                  table_id: GetQueryString('table_id') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| '',
                   email: GetQueryString('e') || '',
                   source: GetQueryString('source') || '',
                   telephone: this.email1.phone,
@@ -380,8 +381,8 @@
                   business_license_number: this.email2.companyIdNum,
                   personName: this.email2.personName,
                   telephone: this.email2.phone,
-                  table_name: GetQueryString('table_name') || '',
-                  table_id: GetQueryString('table_id') || '',
+                  table_name: GetQueryString('table_name') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_name )|| '',
+                  table_id: GetQueryString('table_id') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id) || '',
                   email: GetQueryString('e') || '',
                   code: this.email2.code,
                   source: GetQueryString('source') || ''
@@ -404,8 +405,8 @@
                 let data={
                   account_type: this.form.typeId,
                   personName: this.wechat1.personName,
-                  table_name: GetQueryString('table_name') || '',
-                  table_id: GetQueryString('table_id') || '',
+                  table_name: GetQueryString('table_name') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_name )|| '',
+                  table_id: GetQueryString('table_id') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id) || '',
                   email: GetQueryString('e') || '',
                   source: GetQueryString('source') || '',
                   telephone: this.wechat1.phone,
@@ -426,8 +427,8 @@
                   business_license_number: this.wechat2.companyIdNum,
                   personName: this.wechat2.personName,
                   telephone: this.wechat2.phone,
-                  table_name: GetQueryString('table_name') || '',
-                  table_id: GetQueryString('table_id') || '',
+                  table_name: GetQueryString('table_name') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_name) || '',
+                  table_id: GetQueryString('table_id') || (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| '',
                   email: GetQueryString('e') || '',
                   code: this.wechat2.code,
                   source: GetQueryString('source') || '',

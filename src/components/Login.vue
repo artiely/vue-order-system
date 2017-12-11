@@ -26,7 +26,7 @@
               <option value="TN">中文繁体</option>
             </select>
           </div>
-          <div style="color:#fff;padding:30px;" @click="guestLogin">{{$t('message.Visitors_login')}}</div>
+          <div style="color:#fff;" @click="guestLogin" class="visitor">{{$t('message.Visitors_login')}}</div>
         </div>
         <ul class="bg-bubbles">
           <li></li>
@@ -46,6 +46,8 @@
 </template>
 <script>
   import {mapState} from 'vuex';
+  import Cookies from 'js-cookie'
+  import {GetQueryString} from '../utils'
 
   export default {
     name: 'login',
@@ -202,7 +204,13 @@
       }
     },
     mounted() {
-
+      if( GetQueryString('table_name')){
+        let data={
+          table_name: GetQueryString('table_name') || '',
+          table_id: GetQueryString('table_id') || ''
+        }
+        Cookies.set('table_id',data, { expires: 1 });
+      }
     },
     activated() {
       console.log('SERVER_BASE_URL', SERVER_BASE_URL)
@@ -450,5 +458,15 @@
       transform: translateY(-700px) rotate(600deg);
     }
   }
-
+  .visitor {
+    color:#fff;
+    border-radius: 2px;
+    padding: 5px;
+    width:80px;
+    margin:0 auto;
+    border:1px solid white;
+    &:active {
+      background-color: rgba(255, 255, 255, .3);
+    }
+  }
 </style>

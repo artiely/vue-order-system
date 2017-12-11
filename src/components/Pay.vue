@@ -220,19 +220,19 @@
           </div>
           <div style="margin-top: 10px">
             <mt-field type="text" :placeholder="$t('message.Company_name')" v-model="invoice.partAName"
-                      v-show="invoice.invoiceType!=0"></mt-field>
+                      v-if="invoice.invoiceType!=0"></mt-field>
             <mt-field type="text" :placeholder="$t('message.taxpayer_registration_number')" v-model="invoice.taxNumber"
-                      v-show="invoice.invoiceType!=0"></mt-field>
+                      v-if="invoice.invoiceType!=0"></mt-field>
             <mt-field type="text" :placeholder="$t('message.bank_of_deposit')" v-model="invoice.bankName"
-                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+                      v-if="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
             <mt-field type="text" :placeholder="$t('message.credit_card_numbers')" v-model="invoice.accountNumber"
-                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+                      v-if="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
             <mt-field type="text" :placeholder="$t('message.company_tel')" v-model="invoice.telephone"
-                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+                      v-if="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
             <mt-field type="text" :placeholder="$t('message.company_address')" v-model="invoice.companyAddress"
-                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+                      v-if="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
             <mt-field type="text" :placeholder="$t('message.Bill-to_address')" v-model="invoice.invoiceAddress"
-                      v-show="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
+                      v-if="invoice.invoiceType!=0&&invoice.invoiceType!=1"></mt-field>
           </div>
         </div>
       </div>
