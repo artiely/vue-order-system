@@ -9,6 +9,7 @@ function resolve(dir) {
 
 module.exports = {
   entry: {
+    // vendor: ["vue", "vuex","vue-router"],
     app: ["babel-polyfill", "./src/main.js"]
   },
   output: {
@@ -18,6 +19,13 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
+  // externals:{
+  //   'Vue':'vue',
+  //   'Router':'vue-router',
+  //   'Vuex':'vuex',
+  //   'moment':'moment',
+  //   // 'VueAwesomeSwiper':'vue-awesome-swiper'
+  // },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {

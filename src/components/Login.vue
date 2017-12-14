@@ -86,7 +86,7 @@
     methods: {
       guestLogin() {
 //        let data = "username=lradmin666&password=123456&loginNum=1";
-        let data = "username=Bq/visitor&password=123456&loginNum=1";
+       /* let data = "username=Bq/visitor&password=123456&loginNum=1";
         this.$api.login(data).then((res) => {
           if (res.code == ERR_OK) { // 登录成功
             this.error = false;
@@ -109,14 +109,15 @@
                     } else {
                       this.$api.IS_GUEST().then(response => {
                         if (response.state == '1') {// 游客
-                          this.$store.commit('IS_GUEST', true)
+                          this.$store.commit('IS_GUEST', true);
+                          this.$router.push('/index');
                         } else {
                           this.$store.commit('IS_GUEST', false)
-                        }
-                        if (!this.$api.initWeiXinOpenId(data, redirect)) {
-                          this.$router.push({ // 跳到对应页面
-                            path: redirect
-                          });
+                          if (!this.$api.initWeiXinOpenId(data, redirect)) {
+                            this.$router.push({ // 跳到对应页面
+                              path: redirect
+                            });
+                          }
                         }
                       })
 
@@ -135,7 +136,26 @@
             this.error = true;
             this.errorMsg = res.msg
           }
-        }).catch(err => console.error(err))
+        }).catch(err => console.error(err))*/
+        this.$api.VISITOR_LOGIN().then(res=>{
+          if(res.code==0){
+            this.$api.IS_GUEST().then(response => {
+              if (response.state == '1') {// 游客
+                this.$store.commit('IS_GUEST', true);
+                this.$router.push('/index');
+              } else {
+                this.$store.commit('IS_GUEST', false)
+                if (!this.$api.initWeiXinOpenId(data, redirect)) {
+                  this.$router.push({ // 跳到对应页面
+                    path: redirect
+                  });
+                }
+              }
+            })
+          }else{
+            alert(JSON.stringify(res))
+          }
+        })
       },
       login() {
         if (this.username == '' || this.password == '') {
@@ -166,14 +186,15 @@
                     } else {
                       this.$api.IS_GUEST().then(response => {
                         if (response.state == '1') {// 游客
-                          this.$store.commit('IS_GUEST', true)
+                          this.$store.commit('IS_GUEST', true);
+                          this.$router.push('/index');
                         } else {
                           this.$store.commit('IS_GUEST', false)
-                        }
-                        if (!this.$api.initWeiXinOpenId(data, redirect)) {
-                          this.$router.push({ // 跳到对应页面
-                            path: redirect
-                          });
+                          if (!this.$api.initWeiXinOpenId(data, redirect)) {
+                            this.$router.push({ // 跳到对应页面
+                              path: redirect
+                            });
+                          }
                         }
                       })
                     }
@@ -197,7 +218,7 @@
         this.$router.back()
       },
       toRegister() {
-        this.$router.push('/register')
+        this.$router.push({name:'register',params: {}})
       },
       forget_password() {
         this.$router.push('/f_password')

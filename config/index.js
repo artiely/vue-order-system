@@ -9,6 +9,7 @@ const config = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'statics/mobile',
     assetsPublicPath: '/PT/',
+    port: 8089,
     // baseServerUrl: 'http://172.16.3.48:8080/PT', // 测试
     baseServerUrl: '/PT', // 测试
     // baseServerUrl: 'http://weixintestt.tunnel.echomod.cn/PT', // 测试

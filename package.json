@@ -10,9 +10,11 @@
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit && npm run e2e"
+    "test": "npm run unit && npm run e2e",
+    "libs": "npm run build --report=true"
   },
   "dependencies": {
+    "area-data": "^1.0.0",
     "axios": "^0.16.1",
     "babel-polyfill": "^6.26.0",
     "g2-mobile": "^2.1.19",
@@ -92,7 +94,7 @@
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.3.3",
     "webpack": "^2.6.1",
-    "webpack-bundle-analyzer": "^2.2.1",
+    "webpack-bundle-analyzer": "^2.9.1",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.18.0",
     "webpack-merge": "^4.1.0"

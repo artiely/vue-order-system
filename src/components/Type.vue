@@ -18,7 +18,7 @@
                            />
           </div>
 
-          <div v-if="isWechat">
+          <!--<div v-if="isWechat">
             <mu-text-field :hintText="$t('message.Company_name')" v-model="wechat2.company" class="require"
                            />
             <mu-text-field :hintText="$t('message.Mark')" v-model="wechat2.mark" class="require" />
@@ -30,7 +30,7 @@
             <mu-text-field :hintText="$t('message.Admin_phone_num')" v-model="wechat2.phone" class="require"
                             />
 
-            <!--只有微信注册手机号才可以为登录账号-->
+            &lt;!&ndash;只有微信注册手机号才可以为登录账号&ndash;&gt;
             <div>
               <mu-text-field :hintText="$t('message.Msg_code')" v-model="wechat2.code" class="require"
                              style="width: 60%"/>
@@ -50,7 +50,7 @@
 
                              fullWidth/>
             </div>
-          </div>
+          </div>-->
           <div v-if="isEmail">
             <mu-text-field :hintText="$t('message.Company_name')" class="require" v-model="email2.company"
                            />
@@ -77,11 +77,12 @@
           <div v-if="isMobile">
             <mu-text-field :hintText="$t('message.Name')" class="require" v-model="mobile1.personName" />
           </div>
-          <div v-if="isWechat">
+
+          <!--<div v-if="isWechat">
             <mu-text-field :hintText="$t('message.Name')" class="require" v-model="wechat1.personName" />
             <mu-text-field :hintText="$t('message.Phone_number')"
                            v-model="wechat1.phone" />
-            <!--只有微信注册手机号才可以为登录账号-->
+            &lt;!&ndash;只有微信注册手机号才可以为登录账号&ndash;&gt;
             <div>
               <mu-text-field :hintText="$t('message.Msg_code')" v-model="wechat1.code" style="width: 60%"/>
               <span class="countBtn"
@@ -99,7 +100,8 @@
 
                              fullWidth/>
             </div>
-          </div>
+          </div>-->
+
           <div v-if="isEmail">
             <mu-text-field :hintText="$t('message.Name')" class="require" v-model="email1.personName" />
 
@@ -117,7 +119,7 @@
           </div>
         </div>
         <div v-if="form.typeId==1">
-          <span class="form-group__message" v-if="!$v.wechat1.pwd.minLength">{{$t('message.password_error')}}.</span>
+          <!--<span class="form-group__message" v-if="!$v.wechat1.pwd.minLength">{{$t('message.password_error')}}.</span>-->
           <span class="form-group__message" v-if="$v.wechat1.pwd.minLength&&!$v.wechat1.pwd2.sameAs">{{$t('message.Entered_differ')}}.</span>
         </div>
         <div v-if="form.typeId==2">
@@ -324,9 +326,10 @@
                 table_name: GetQueryString('table_name') ||(Cookies.getJSON('table_id') && Cookies.getJSON('table_id').table_name) || '',
                 table_id: GetQueryString('table_id') ||(Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| '',
                 email: GetQueryString('e') || '',
-                source: GetQueryString('source') || 'telephone'
+                source:( GetQueryString('source')=='wechat'?'telephone': GetQueryString('source') )|| 'telephone'
               }
               this._postData(data)
+              console.log('data',data)
             }else{
               alert(this.$t('message.check_fields'))
             }
@@ -369,6 +372,7 @@
                   code: this.email1.code,
                 }
                 this._postData(data)
+                console.log('data',data)
               }else{
                 alert(this.$t('message.check_fields'))
               }
@@ -388,6 +392,7 @@
                   source: GetQueryString('source') || ''
                 }
                 this._postData(data)
+                console.log('data',data)
               }else{
                 alert(this.$t('message.check_fields'))
               }
@@ -414,6 +419,7 @@
                   password:this.wechat1.pwd,
                 }
                 this._postData(data)
+                console.log('data',data)
               }else{
                 alert(this.$t('message.check_fields'))
               }
@@ -523,9 +529,11 @@
             }
           })
         } else if (GetQueryString('source') && GetQueryString('source') == 'wechat') {
-          this.isWechat = true
+//          this.isWechat = true
+          this.isWechat = false
           this.isEmail = false
-          this.isMobile = false
+//          this.isMobile = false
+          this.isMobile = true
           this.$api.CHECK_ACCOUNT().then(res => { // 判断注册信息是否完善
             if (res.code === 0) {
               if (res.state == 4) { // 不完善
@@ -554,7 +562,9 @@
             } else {
               this.isMobile = false
               if (res.exist === '2') { //2 微信 3 邮箱
-                this.isWechat = true
+//                this.isWechat = true
+                this.isMobile=true
+                this.isWechat = false
               } else {
                 this.isWechat = false
               }
