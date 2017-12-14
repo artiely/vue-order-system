@@ -252,6 +252,12 @@
         }
       }
     },
+    created(){
+      if(GetQueryString('source')&&GetQueryString('source')=='wechat'){
+        this.$router.replace({name:'register',params: {}})
+      }
+
+    },
 
     methods: {
       back() {
@@ -361,7 +367,9 @@
           url = url.split(window.location.search)[0];
         }
         console.log('url', url)
-        url = url.replace('mobile.html#/register', 'type.html') // 这里也换成pc的地址
+//        url = url.replace('mobile.html#/register', 'type.html') // 这里也换成pc的地址
+        url = url.replace('mobile.html', 'type.html') // 这里也换成pc的地址
+        url = url.replace('#/register', '') // 这里也换成pc的地址
         let data = {
           email: this.form.email,
           password: this.form.pwd,
@@ -388,7 +396,7 @@
         this.$api.REGISTER_BY_MOBILE(data).then(res => {
           if (res.code === 0) {
             if (res.state === '1') { // 成功
-              this.$router.push(`/type?table_id=${GetQueryString('table_id') ||  (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| ''}&table_name=${GetQueryString('table_name') ||  Cookies.getJSON('table_id').table_name || ''}`)
+              this.$router.push(`/type?table_id=${GetQueryString('table_id') ||  (Cookies.getJSON('table_id') &&Cookies.getJSON('table_id').table_id )|| ''}&table_name=${GetQueryString('table_name') ||  (Cookies.getJSON('table_id') && Cookies.getJSON('table_id').table_name )|| ''}`)
             } else if (res.state == '2') { // 不正确
               MessageBox.alert(this.$t('message.Wrong_captcha'))
             } else if (res.state == '3') { // 过期

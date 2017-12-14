@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import router from './router'
+
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import './assets/font/iconfont.css'
@@ -23,7 +24,7 @@ Vue.use(Vuelidate)
 Vue.component('mu-date-picker', datePicker)
 Vue.component('mu-text-field', textField)
 Vue.component('button-bar', ButtonBar)
-Vue.component('star-rating', StarRating);
+Vue.component('star-rating', StarRating)
 Vue.use(VueAwesomeSwiper)
 Vue.use(VueScroller)
 Vue.use(MintUI)

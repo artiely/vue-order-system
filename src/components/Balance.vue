@@ -208,6 +208,7 @@
 //        window.location.href='http://172.16.7.248:8088/statics/mobile/detail.htm'
 //        return
         this.$router.push('/pay?isCharge=1')
+//        this.$router.push({name:'pay',params:{isCharge:'1'}})
       }
 
     },

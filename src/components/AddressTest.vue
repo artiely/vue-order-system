@@ -89,7 +89,7 @@
   </div>
 </template>
 <script>
-  import s from '../../statics/mobile/json/address4.json'
+  import s from '../../statics/mobile/json/address4.js'
   import {MessageBox} from 'mint-ui';
   import picker from 'vue-3d-picker';
 

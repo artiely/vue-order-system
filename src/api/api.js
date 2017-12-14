@@ -24,8 +24,8 @@ const login = params => {
 const initWeiXinOpenId = (params, redirect) => {
   if (isWeixnBrowser()) {
     //window.location.href=SERVER_BASE_URL+'/oauth2/toOauth?'+params+'&fromUrl='+window.location.href.split('#')[0]+''+redirect;
-    var fromUrl = window.location.href.replace(/(\/?#.*)/g, '//' + redirect)
-    window.location.href = SERVER_BASE_URL + '/oauth2/toOauth?' + params + '&fromUrl=' + fromUrl
+    var fromUrl = window.location.href.replace(/(\/?#.*)/g, '//' + redirect);
+    window.location.href = SERVER_BASE_URL + '/oauth2/toOauth?' + params + '&fromUrl=' + fromUrl;
     return true
   }
   return false
@@ -827,6 +827,15 @@ const EDIT_ADDRESS = params => {
     data: params
   })
 }
+
+/*游客登录*/
+const VISITOR_LOGIN = params => {
+  return fetch({
+    url: '/sys/user/visitorLogin',
+    method: 'get',
+    params: params
+  })
+}
 const apiList = {
   login,
   initWeiXinOpenId,
@@ -891,7 +900,8 @@ const apiList = {
   RESET_PASSWORD,
   IS_GUEST,
   NEW_ACCOUNT,
-  EDIT_ADDRESS
+  EDIT_ADDRESS,
+  VISITOR_LOGIN
 }
 
 export default apiList

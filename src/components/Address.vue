@@ -92,8 +92,11 @@
 </template>
 <script>
   import s from '../../statics/mobile/json/address4.json'
-  import {MessageBox} from 'mint-ui';
-
+  import {MessageBox} from 'mint-ui'
+//  import areaDate from 'area-data'
+//  console.log('---',address)
+//  console.log('area',areaDate)
+//  var s=address
   export default {
     name: 'address',
     data() {

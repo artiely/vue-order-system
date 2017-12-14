@@ -91,7 +91,7 @@
           </div>
         </div>
       </div>
-      <div v-if="isCharge==1" class="card">
+      <div v-show="isCharge==1" class="card">
         群思科技有限公司预付款充值  ({{orderNo}})
         <mu-text-field v-model="orderPrice" fullWidth :label="$t('message.pay_count')" :hintText="$t('message.please_enter')" type="number" labelFloat/>
         <br/>
@@ -611,6 +611,7 @@
     },
     activated() {
       this.isCharge = GetQueryString("isCharge");
+//      this.isCharge = this.$route.params.isCharge
       if (this.isCharge) {
         this.orderNo = "Advc" + new Date().getTime();
       } else {
