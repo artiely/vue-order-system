@@ -96,7 +96,7 @@
         </div>
         <div>
           <mt-field type="textarea" rows="2" :placeholder="$t('message.Please_describe_ma')"
-                    v-model="faultDesc"></mt-field>
+                    v-model.trim="faultDesc"></mt-field>
         </div>
       </div>
       <div class="wrapper-box">
