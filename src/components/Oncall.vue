@@ -96,7 +96,8 @@
         </div>
       </div>
       <div class="wrapper-box">
-        <mt-field :placeholder="$t('message.Please_describe_oncall')" type="textarea" rows="2" v-model.trim="faultDesc"></mt-field>
+        <mt-field :placeholder="$t('message.Please_describe_oncall')" type="textarea" rows="2"
+                v-model.trim="faultDesc"></mt-field>
       </div>
       <div style="margin-bottom: -1px">
         <div class="my-cell title-box">
@@ -104,7 +105,7 @@
         </div>
       </div>
       <div class="wrapper-box">
-        <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model="identify"></mt-field>
+        <mt-field :placeholder="$t('message.Please_i')" type="textarea" rows="4" v-model.trim="identify"></mt-field>
       </div>
       <mt-popup v-model="popupVisibleSelectTime" position="top" style="width: 100%;height: 160px;padding:10px">
         <div class="title">{{$t('message.Edit_service_time')}}</div>
@@ -383,10 +384,23 @@
               if (res.code == 0) {
                 this.startTime = res.defaultWorkTime.amWorkinTime
                 this.endTime = res.defaultWorkTime.pmWorkoffTime
+                let __sh = Number( this.startTime.split(":")[0] * 60)
+                let __sm = Number(this.startTime.split(":")[1])
+                let __stm = __sh+__sm
+
+                let __eh = Number(this.endTime.split(":")[0] * 60)
+                let __em = Number(this.endTime.split(":")[1])
+                let __etm = __eh+__em
+
 //                this.selectRangeValue=[this.startTime.split(":")[0]*60,this.endTime.split(":")[0]*60]
-                this.$set(this.selectRangeValue, 0, this.startTime.split(":")[0] * 60)
-                this.$set(this.selectRangeValue, 1, this.endTime.split(":")[0] * 60)
+                this.$set(this.selectRangeValue, 0,__stm)
+                this.$set(this.selectRangeValue, 1,__etm)
+              console.log('获取的工作时间',this.startTime, this.endTime)
+              console.log('++',__sh+__sm,__eh+__em)
                 console.log(this.selectRangeValue)
+
+                this.$set(this.rangeTimeOption.rangeTimeValue,0,__stm)
+                this.$set(this.rangeTimeOption.rangeTimeValue,1,__etm)
               }
             })
           }
@@ -722,7 +736,9 @@
         }
         this.$api.save_price_oncall(data).then(res => {
           if (res.code == ERR_OK) {
-            MessageBox.alert(this.$t('message.Success'))
+            MessageBox.confirm(this.$t('message.Success'),{cancelButtonText:'查看订单',showConfirmButton:true,confirmButtonText:'继续下单'}).catch(()=>{
+              this.$router.push({name:'order',params:{'ref':true}})
+            })
             this.faultDesc = '' // 清空描述让button disabled
           } else {
             MessageBox.alert(`预约` + res.msg)
@@ -790,7 +806,9 @@
         }
       })
 
-      this.$store.dispatch('hasTelphone')
+      setTimeout(()=>{
+        this.$store.dispatch('hasTelphone')
+      },1000)
     }
   }
 </script>

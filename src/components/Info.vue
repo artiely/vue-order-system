@@ -30,7 +30,7 @@
             </span>
             </div>
             <div>
-              <mu-text-field :hintText="$t('message.reset_pwd')" v-model="form2.password" :type="passType"
+              <mu-text-field :hintText="$t('message.re_set_pwd')" v-model="form2.password" :type="passType"
                              style="width:80%"/>
               <span style="width:15%;text-align:center;display:inline-block;float:right;line-height:36px"
                     @click="changeType"><i style="font-size:22px" class="iconfont"
@@ -56,7 +56,7 @@
             </span>
             </div>
             <div>
-              <mu-text-field :hintText="$t('message.reset_pwd')" v-model="form1.password" :type="passType"
+              <mu-text-field :hintText="$t('message.re_set_pwd')" v-model="form1.password" :type="passType"
                              style="width:80%"/>
               <span style="width:15%;text-align:center;display:inline-block;float:right;line-height:36px"
                     @click="changeType"><i style="font-size:22px" class="iconfont"

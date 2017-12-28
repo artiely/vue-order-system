@@ -415,8 +415,10 @@
           })
           if (val === '') {
             this.orderPrice = this.originalPrice
+            this.orderPrice = this.orderPrice.toFixed(2)
           } else {
             this.orderPrice = this.originalPrice - this.choiceCoupon[0].amount < 0 ? 0 : this.originalPrice - this.choiceCoupon[0].amount
+            this.orderPrice = this.orderPrice.toFixed(2)
           }
 
         }
@@ -461,7 +463,7 @@
               sum += Number(res.callDetails[i][0].price || 0)
             }
             this.productName = res.callDetails[0][0].serviceName;
-            this.orderPrice = sum;
+            this.orderPrice = sum.toFixed(2);
             this.originalPrice = sum;// 原始的订单价格
           } else {
             alert(res.msg)
@@ -503,7 +505,7 @@
         this.$api.post_pay_ment(postData).then(res => {
           Indicator.close();
           if (res.code != 0) {
-            alert('支付出错')
+            alert(res.msg)
             return
           }
           let curThis = this;

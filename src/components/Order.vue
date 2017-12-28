@@ -489,6 +489,10 @@
       this.getdata()
     },
     activated() {
+      let _ref = this.$route.params.ref?this.$route.params.ref:''
+      if(_ref){
+        this.getdata()
+      }
       this.$store.dispatch('isCompany_action')
       var orderNum = this.$route.params.orderNum
       if (orderNum && orderNum > 0) {
