@@ -19,7 +19,7 @@
         </div>
         <div class="right-des">
           {{$t('message.Notifications')}}
-          <span class="num" v-if="customerNotificationList.length>0">{{customerNotificationList.length}}</span>
+          <span class="num" v-if="customerNotificationList.length>0">{{customerNotificationList.length>99?'99+':customerNotificationList.length}}</span>
         </div>
         <div class="right-icon">
           <i class="iconfont icon-enter"></i>

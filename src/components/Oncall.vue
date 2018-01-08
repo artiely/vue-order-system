@@ -455,6 +455,7 @@
       },
       goAddress() {
         this.$router.push('/address')
+        sessionStorage.orderPageNew = 'true'
         this.popupVisibleCompany = false
       },
       onValuesChange(pickeker, values) {
@@ -805,6 +806,8 @@
           })
         }
       })
+
+      this.getCompanyList()
 
       setTimeout(()=>{
         this.$store.dispatch('hasTelphone')

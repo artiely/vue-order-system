@@ -20,7 +20,7 @@
       </mt-tab-item>
       <mt-tab-item id="4">
         <mt-badge type="error" size="small" style="position: absolute;top:2px;right: 10px;font-size: 8px" v-if="customerNotificationList.length>0">
-          {{customerNotificationList.length > 99 ?'99' : customerNotificationList.length}}
+          {{customerNotificationList.length > 99 ?'99+' : customerNotificationList.length}}
         </mt-badge>
         <i slot="icon" class="iconfont" :class="selected==4?'icon-people_fill':'icon-people'"></i> {{ $t('message.user')}}
       </mt-tab-item>
