@@ -266,6 +266,9 @@
           operationType: 1,
           shortName: _this.companyName
         };
+        if(sessionStorage.getItem('orderPageNew') == 'true'){
+          data.orderPageNew = 'true'
+        }
         /**
          * 如果是个人账号提交的公司名为用户名
          */

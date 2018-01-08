@@ -429,6 +429,7 @@
       goAddress() {
         this.$router.push('/address')
         this.popupVisibleCompany = false
+        sessionStorage.orderPageNew = 'true'
       }
     },
     activated(){

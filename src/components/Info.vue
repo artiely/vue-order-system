@@ -287,7 +287,7 @@
                 url = url.split(window.location.search)[0]
               }
               url = url.replace('info', 'user')
-              this.$toast(this.$t('message.Reset_success'))
+              this.$toast(this.$t('message.Success'))
               window.location.href = url
             }
 
