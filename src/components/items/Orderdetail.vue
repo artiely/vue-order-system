@@ -49,13 +49,13 @@
                   {{$t('message.Sign')}}
                 </div>
               </swiper-slide>
-              <swiper-slide v-if="detailData.payway==0>
+              <swiper-slide v-if="detailData.payway==0">
                 <div class="item" :class="status >= 6 ?'fw1':'fw0'">
                   <i class="iconfont icon-financial_fill"></i><br>
                   {{$t('message.Confirm_price')}}
                 </div>
               </swiper-slide>
-              <swiper-slide v-if="detailData.payway==0>
+              <swiper-slide v-if="detailData.payway==0">
                 <div class="item" :class="status >= 7 ?'fw1':'fw0'">
                   <i class="iconfont icon-coupons_fill"></i><br>
                   {{$t('message.Invoice')}}
