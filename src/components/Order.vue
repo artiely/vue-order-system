@@ -502,7 +502,7 @@
         this.query.page = 1
         this.getdata()
       }
-      this.getCompanyList()
+//      this.getCompanyList()
     },
 
     mounted() {
