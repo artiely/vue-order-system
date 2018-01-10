@@ -417,8 +417,6 @@ router.beforeEach((to, from, next) => {
 
     // let token = Cookies.get('token')
   let token = sessionStorage.getItem('token')
-  console.log('session-token', token)
-console.log('******************',sessionStorage.getItem('isGuest'))
   if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
     store.commit('IS_GUEST', true)
   }else{

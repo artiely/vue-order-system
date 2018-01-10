@@ -11,8 +11,6 @@ export default function fetch (options) {
       headers: {},
       transformResponse: [function (data) {
         data = JSON.parse(data)
-        console.log(data)
-        console.log(typeof data)
         if (typeof data != 'object') {
 
           return {
@@ -50,7 +48,6 @@ export default function fetch (options) {
           store.commit('LOGOUT')
           router.replace({name: 'login'})
         } else {
-          console.log(res)
           if(res.status===200){
             resolve(res.data)
           }
