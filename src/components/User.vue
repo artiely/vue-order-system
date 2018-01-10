@@ -361,7 +361,7 @@
         background: -o-linear-gradient(315deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
         background: linear-gradient(135deg, #fd3fb3 0, #fd3f81 30%, #fd3e4f 79%);
         color: #fff;
-        border-radius: 50%;
+        border-radius: 8px;
         font-size: 11px;
       }
     }
