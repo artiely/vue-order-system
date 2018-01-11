@@ -19,7 +19,7 @@
           <div class="intro-box">
             <p>{{$t('message.title')}}</p>
           </div>
-          <p style="font-size: 12px;color: #999"> ©2011-2017 <span>fwone.com</span> <span lang>版权所有</span><br>
+          <p style="font-size: 12px;color: #999"> ©2011-2020 <span>fwone.com</span> <span lang>版权所有</span><br>
             京ICP备 11003662号 | 公网安备11010502025657号</p>
         </div>
       </div>
