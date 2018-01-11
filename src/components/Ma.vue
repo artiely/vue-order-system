@@ -3,7 +3,7 @@
     <mt-header :title="$t('message.Residency_service')" fixed style="z-index: 7;">
       <mt-button icon="back" @click.native="back()" slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
-    <div class="page-content" style="overflow: hidden">
+    <div class="page-content" >
       <mt-badge type="error" v-if="noBindMobile">
         <!--您还未绑定手机号，下单后我们将无法联系您,-->
         {{$t('message.no_phone_num')}}
@@ -465,9 +465,15 @@
   }
 
   .page-content {
-    padding-top: 40px;
     text-align: left;
     padding-bottom: 40px;
+    position:absolute;
+    top:40px;
+    bottom:41px;
+    width:100%;
+    left:0;
+    right:0;
+    overflow-y:scroll
   }
 
   .dateWrap {

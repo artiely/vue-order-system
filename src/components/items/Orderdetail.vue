@@ -81,11 +81,11 @@
                 <td>{{$t('message.Order_status')}}</td><td style="color:#26a2ff" v-html="status!=-1?statusLabel[status]:$t('message.Cancelled')"></td>
               </tr>
               <tr>
-                <td>{{$t('message.NO')}}</td><td>{{orderNum}}</td>
+                <td>{{$t('message.NO')}}</td><td>{{orderNum}} </td>
               </tr>
-              <tr v-if="score">
+              <tr v-if="detailData.workFlow && detailData.workFlow.score">
                 <td>{{$t('message.Rate')}}</td>
-                <td><span v-for="n in score/2"><i class="iconfont icon-collection_fill text-yellow"></i></span> </td>
+                <td><span v-for="n in detailData.workFlow.score/2"><i class="iconfont icon-collection_fill text-yellow"></i></span> </td>
               </tr>
               <tr v-if="priceRemark">
                 <td>{{$t('message.baojia')}}</td><td><div v-if="priceRemark" v-html="priceRemark"></div></td>
@@ -134,7 +134,7 @@
                 <tr>
                   <td></td>
                   <td>
-                    <button size="small" class="footerBtn pull-right" v-if="status>=3&&subList.length>0"
+                    <button size="small" class="footerBtn pull-right" v-if="detailData.status>=3"
                             @click="pingjia(subitem.id)">{{$t('message.Rate')}}
                     </button>
                   </td>
@@ -353,7 +353,6 @@
           onTransitionStart(){
           },
         },
-        score:0,
         some: '',
         pingjiaVisible: false,
         callDetailId: '',// 提交评价子单的id
@@ -499,7 +498,7 @@
         this.$api.get_sub_order({callId: this.state.callId.toString()}).then(res => {
           if (res.code == ERR_OK) {
             this.subList = res.callDetailList;
-            this.score= res.minScore;
+//            this.score= res.minScore
           } else {
 //            alert(res.msg)
           }
@@ -591,17 +590,18 @@
       }
 
     },
-
     mounted(){
-      let swip= this.$refs.mySwiper
-      this.$store.watch(
-        (state)=> state.detail.detail.status,
-        (val)=>{
-          setTimeout(function(){
-            if (val!=0)
-              swip.swiper.slideTo(val-2)},10)
-        },{deep: true}
-      )
+      this.$nextTick(()=>{
+        let swip= this.$refs.mySwiper
+        this.$store.watch(
+          (state)=> state.detail.detail.status,
+          (val)=>{
+            setTimeout(function(){
+              if (val>2)
+                swip.swiper.slideTo(val-2)},17)
+          },{deep: true}
+        )
+      })
     },
     created(){
       //页面刷新重新赋值
@@ -611,14 +611,12 @@
         type: sessionStorage.getItem('type')
       })
       var item = sessionStorage.getItem('orderInfo')
-      console.log('999999999',item)
       if (item !== 'null') {
-        console.log('weinull buzou')
         this.$store.commit('SET_ORDER_INFO', JSON.parse(item))
       }
     },
     activated(){
-      this.getSubOrder()
+//      this.getSubOrder()
       this.show_reminder = true
       this.priceRemark = ''
       this.getPriceRemark()

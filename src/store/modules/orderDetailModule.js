@@ -9,10 +9,9 @@ const state = { //状态
   callId: '', //点击的工单的id ()
   detail: '', //工单详情的数据
   orderInfo: {},// 工单的信息
-  workFlow: '',
+  workFlow: {},
   oid: '', //详情页面的ordernum
   type: '',// 521 驻场远程电话
-  detailVisiable: false
 }
 
 const mutations = { //状态只能通过此改变
@@ -38,9 +37,6 @@ const mutations = { //状态只能通过此改变
   ['SET_ORDER_INFO'](state, payload) {
     state.orderInfo = payload
     sessionStorage.orderInfo = JSON.stringify(payload)
-  },
-  ['TOGGLE_DETAIL_SHOW'](state, payload) {
-    state.detailVisiable = !state.detailVisiable
   }
 }
 const actions = {
@@ -66,13 +62,6 @@ const actions = {
       } else {
         alert(res.msg)
       }
-      // loading=true
-      // if (instance2)
-      // setTimeout(() => {
-      //   instance2.close();
-      // }, 100)
-      if (payload.showDetail)
-        state.detailVisiable = !state.detailVisiable
     }).catch(err => console.error(err))
   },
 

@@ -76,8 +76,8 @@
         // 获取对应id的详情
         this.$store.dispatch('new_detail', payload)
         this.$store.commit('SET_ORDER_INFO', item)
-//        this.$emit('getsp');
-//        this.$router.push({path: '/orderdetail'});
+        this.$emit('getsp');
+        this.$router.push({path: '/orderdetail'});
       },
       goDelete(item) {
         if(sessionStorage.getItem('isGuest')&&sessionStorage.getItem('isGuest')=='true'){

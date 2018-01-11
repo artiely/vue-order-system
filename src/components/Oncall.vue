@@ -3,7 +3,7 @@
     <mt-header :title="$t('message.Timely_assistance')" fixed>
       <mt-button icon="back" @click.native='back()' slot="left">{{$t('message.Back')}}</mt-button>
     </mt-header>
-    <div class="page-content" style="overflow: hidden;">
+    <div class="page-content" >
       <mt-badge type="error" v-if="noBindMobile">
         <!--您还未绑定手机号，下单后我们将无法联系您,-->
         {{$t('message.no_phone_num')}}
@@ -863,8 +863,12 @@
   }
 
   .page-content {
-    padding-top: 40px;
-    padding-bottom: 40px;
+    position:absolute;
+    top:40px;
+    left:0;
+    right:0;
+    bottom:40px;
+    overflow-y:scroll;
   }
 
   .mint-header.is-fixed {

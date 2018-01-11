@@ -482,7 +482,7 @@
         }
         setTimeout(() => {
           this.$refs.myScroller.scrollTo(0, y, false)
-        }, 10)
+        }, 17)
       }
     },
     created() {
@@ -503,6 +503,9 @@
         this.getdata()
       }
 //      this.getCompanyList()
+      this.$nextTick(() => {
+        this.setScrollerPosition()
+      })
     },
 
     mounted() {
