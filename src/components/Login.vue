@@ -234,7 +234,6 @@
       }
     },
     activated() {
-      console.log('SERVER_BASE_URL', SERVER_BASE_URL)
       let lang = window.localStorage.getItem('lang')
       if (lang && (lang !== 'null' || lang !== 'undefined')) {
         this.lang = lang

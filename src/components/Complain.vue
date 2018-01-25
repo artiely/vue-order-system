@@ -254,7 +254,6 @@
         this.$router.push({path: '/orderdetail'})
       },
       showComplainDetail(index, item) {
-//        console.log(this.dataList1)
         if(item){
           this.mystatus = item.status
         }

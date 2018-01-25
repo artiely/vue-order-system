@@ -244,32 +244,7 @@
       }
     },
     created() {
-//      var _arr = []
-//      _arr.length = 1140
-//      console.log('1', _arr)
-//      for (let i = 0; i < 1140; i++) {
-//        _arr[i] = i
-//      }
-//      _arr = _arr.filter(item => {
-//        if (item % 15 == 0) {
-//          return item
-//        }
-//      })
-//      this.rangeTimeOption.data = _arr
-//      console.log('3', _arr)
-//      console.log('**************', this.rangeTimeOption.data)
     },
-//    computed:{
-//      'rangeTimeOption.data':function(){
-//        var _arr=new Array(24*60)
-//       return _arr.map((item,i)=>{
-//          return i
-//        })
-//        .filter(item=>{
-//          return item%15==0
-//        })
-//      }
-//    },
     watch: {
       'popupValue': {
         handler: function (val) {
@@ -312,7 +287,6 @@
       },
       'rangeTimeOption.rangeTimeValue': {
         handler: function (val, oldVal) {
-//          console.log("changed", val);
           function formatTime(value) {
             let HS = parseInt(value / 60).toString().length < 2 ? '0' + parseInt(value / 60) : parseInt(value / 60)
             let MS = (value % 60).toString().length < 2 ? '0' + (value % 60) : (value % 60)
@@ -392,13 +366,8 @@
                 let __em = Number(this.endTime.split(":")[1])
                 let __etm = __eh+__em
 
-//                this.selectRangeValue=[this.startTime.split(":")[0]*60,this.endTime.split(":")[0]*60]
                 this.$set(this.selectRangeValue, 0,__stm)
                 this.$set(this.selectRangeValue, 1,__etm)
-              console.log('获取的工作时间',this.startTime, this.endTime)
-              console.log('++',__sh+__sm,__eh+__em)
-                console.log(this.selectRangeValue)
-
                 this.$set(this.rangeTimeOption.rangeTimeValue,0,__stm)
                 this.$set(this.rangeTimeOption.rangeTimeValue,1,__etm)
               }
@@ -477,8 +446,6 @@
         }
       },
       deleteDate(index) {
-        console.log(index, this.selectIndex)
-//        this.timeMap.splice(index, 1)  // 两种方法都可以
         this.$delete(this.timeMap, index)
         this.selectIndex = 0 // selectIndex 初始化为0 因为删除后selectIndex对应的值已不存在会报错
         Toast(this.$t('message.Del_success'))
@@ -489,10 +456,8 @@
         let _timeMap = this.splitDate()
         for (let i = 0; i < _timeMap[0].length; i++) {
           if (moment().format('YYYY-MM-DD') == moment(_timeMap[0][i]).format('YYYY-MM-DD')) {
-            console.log("相等的")
             let _sh = moment().format('HH:mm')
             let _sa = _sh.split(':')
-            console.log(_sh, moment().format('HH:mm'), Number(_sa[0]) * 60 + Number(_sa[1]))
             this.timeMap.push({
               'date': moment(_timeMap[0][i], 'YYYY-MM-DD').format('YYYY-MM-DD'),
               'sTime': _sh,
@@ -502,7 +467,6 @@
               'weekday': _timeMap[1][i]
             })
           } else {
-            console.log("不等的")
             this.timeMap.push({
               'date': moment(_timeMap[0][i], 'YYYY-MM-DD').format('YYYY-MM-DD'),
               'sTime': this.startTime,
@@ -513,27 +477,6 @@
             })
           }
         }
-        console.log('123', this.timeMap)
-
-//          if (moment().format('YYYY-MM-DD') == moment(_timeMap[0][0]).format('YYYY-MM-DD')) {
-//          let  zou = this.$t('message.Today')
-//            let _sh=moment().format('HH:mm').split(':')
-//            console.log(_sh)
-//            this.timeMap[0].sTime= moment().format('HH:mm')
-//            this.timeMap[0].s= Number(_sh[0])*60+Number(_sh[1] )
-//
-////            this.timeMap[0].sTime={
-////              'date': moment().format('YYYY-MM-DD'),
-////              'sTime': moment().format('HH:mm'),
-////              's':Number(_sh[0])*60+Number(_sh[1] ),
-////              'eTime': this.endTime,
-////              'e': this.rangeTimeOption.rangeTimeValue[1],
-////              'weekday':zou
-////            }
-//            console.log('123',this.timeMap)
-//          }
-
-//        this.getPriceLine()
       },
       timeChanged() { //全局的时间滑块
         let _timeMap = this.timeMap
@@ -617,8 +560,6 @@
             oncallWeek: _this.timeMap[i].weekday
           })
         }
-        console.log(_upTable)
-        console.log(_this.timeMap)
         var data = {
           companyId: this.addressObj.id,//服务点ID  要等服务点列表加载成功后才有值，所以先让图表隐藏
           oncallDateFrom: this.startDate//开始日期 yyyy-MM-dd
@@ -645,7 +586,6 @@
 
       },
       onReady(instance) {
-//        console.log("ready", instance);
       },
       selectTime(index) {
         this.popupVisibleSelectTime = true

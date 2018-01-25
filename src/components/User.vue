@@ -247,12 +247,11 @@
         if (item.id == this.userId)return
         this.$api.SWITCH_ACCOUNT({id: item.id}).then(res => {
           if (res.code == ERR_OK) {
-            console.log('账号切换成功')
+            // console.log('账号切换成功')
             this.switchVisible = false
             this.$store.dispatch('login', {userId: item.id});
             let url = window.location.href
             url = url.replace('user', 'index')
-//            window.location.href = url
             window.location.reload()
           }else{
             alert(`账号切换`+JSON.stringify(res))

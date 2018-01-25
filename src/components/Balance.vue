@@ -13,7 +13,7 @@
       :noDataText="$t('message.No_more_data')"
     >
       <div class="balanceBox">
-        <div v-if="total.length>0" class="balanceNum" v-for="item in total">{{item.balance}}<span
+        <div v-if="total.length>0" class="balanceNum" v-for="item in total" :key="item.balance">{{item.balance}}<span
           class="balanceTxt">{{item.currency}}</span>
         </div>
         <div v-if="total.length==0" class="balanceNum">0.00<span class="balanceTxt">{{$t('message.Overall_balance')}}</span></div>

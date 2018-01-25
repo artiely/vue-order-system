@@ -7,7 +7,7 @@
       <div style="padding-bottom: 80px">
         <div class="page-content">
           <swiper :options="swiperOption" class="swiper-box">
-            <div class="swiper-slide" v-for="banner in banners">
+            <div class="swiper-slide" v-for="banner in banners" :key="banner">
               <img :src="banner">
             </div>
           </swiper>
@@ -43,7 +43,6 @@
           loop: true,
           pagination: '.swiper-pagination',
           onSlideChangeEnd: swiper => {
-//            console.log('onSlideChangeEnd', swiper.realIndex)
           }
         },
         locale: 'CN'

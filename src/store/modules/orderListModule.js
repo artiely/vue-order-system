@@ -1,10 +1,6 @@
 //vuex状态管理
-import Vue from 'vue'
-import Vuex from 'vuex'
 import axios from 'axios'
-import $ from 'n-zepto'
 import moment from 'moment'
-Vue.use(Vuex);
 
 const state = {//状态
   orderinfo: [],//订单list

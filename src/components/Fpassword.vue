@@ -75,13 +75,19 @@
         step3: false
       }
     },
+    watch:{
+      'form.code':{
+        handler(){
+          this.error = false
+        }
+      }
+    },
 
     methods: {
       back(){
         this.$router.back()
       },
       getMsgCode (val) {
-        console.log(val)
         if (val.length != 11)return
         let data = {
           telephone: val,
@@ -97,6 +103,7 @@
         }, 1000)
 
         this.$api.GET_MSG_CODE(data).then(res => {
+          this.error = false;
           if (res.code === 0) {
             if (res.state === 1) {
               this.$toast(this.$t('message.Msg_send'))

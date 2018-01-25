@@ -170,7 +170,6 @@
           let userId = r.user.id;
           let personId = r.user.personId;
           this.$store.dispatch('login', {userId, personId});
-          console.log('userId', userId)
           let redirect = decodeURIComponent(this.$route.query.redirect || '/');
         } else {
           this.error = true;
