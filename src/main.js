@@ -30,7 +30,7 @@ Vue.use(VueScroller)
 Vue.use(MintUI)
 Vue.use(api)
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = true;
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// if (process.env.NODE_ENV === 'development') {
-//   Vue.use(Vuex)
-// }
+if (process.env.NODE_ENV === 'development') {
+// Vue.use(Vuex)
+}
 Vue.use(Vuex)
 import detailModule from  './modules/orderDetailModule'
 import userInfoModule from  './modules/userInfoModule'

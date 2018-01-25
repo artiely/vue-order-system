@@ -836,6 +836,47 @@ const VISITOR_LOGIN = params => {
     params: params
   })
 }
+
+
+/**
+ * 验证公司名称是否被注册
+ * @param params
+ * @constructor
+ */
+const CHECK_COMPANY_NAME = params => {
+  return fetch({
+    url: '/company/checkRegistComapnyInfo',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 验证公司营业执照号是否被注册
+ * @param params
+ * @constructor
+ */
+const CHECK_BUSINESS_LICENSE = params => {
+  return fetch({
+    url: '/company/checkRegistBusinessLicense',
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 天眼检索公司名和营业执照号码
+ * @param params
+ * @constructor
+ */
+const GET_COMPANY_LICENSE = params => {
+  return fetch({
+    url: '/company/getCompanyNameOrBussinessLicence',
+    method: 'get',
+    params: params
+  })
+}
+
 const apiList = {
   login,
   initWeiXinOpenId,
@@ -901,7 +942,10 @@ const apiList = {
   IS_GUEST,
   NEW_ACCOUNT,
   EDIT_ADDRESS,
-  VISITOR_LOGIN
+  VISITOR_LOGIN,
+  CHECK_COMPANY_NAME,
+  CHECK_BUSINESS_LICENSE,
+  GET_COMPANY_LICENSE
 }
 
 export default apiList

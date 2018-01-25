@@ -9,14 +9,14 @@
     <div class="my-header my-border-bottom flexbox" >
       <swiper :options="swiperOption" ref="mySwiper" class="mySwiper" style="height: 40px;padding-right: 45px">
         <!-- slides -->
-        <swiper-slide v-for="(item,index) in status" @click.native="dosearch" :index="index">{{item}}</swiper-slide>
+        <swiper-slide :key="index" v-for="(item,index) in status" @click.native="dosearch" :index="index">{{item}}</swiper-slide>
       </swiper>
       <i class="iconfont icon-guanjiaowangtubiao35" @click="toggleopen" ></i >
     </div >
 
 
       <scroller class="page-content"  :on-refresh="onRefresh" ref="myScroller" :on-infinite="onInfinite">
-        <order-item  :item="item" v-for="item in orderinfo" ></order-item >
+        <order-item  :item="item" v-for="(item,i) in orderinfo" :key="i"></order-item >
         <div v-if="query.page > totalPage" class="text-center" >没有更多数据</div >
       </scroller>
 
@@ -42,14 +42,14 @@
       </div >
 
         <select v-model="selected_company"  style="width: 100%;height: 30px"  placeholder="点击选择">
-          <option value=""  v-for="item in company">{{item}}</option >
+          <option value=""  v-for="item in company" :key="item">{{item}}</option >
         </select >
 
       <div class="my-title" >
         {{$t('message.User_selection')}}
       </div >
         <select v-model="selected_yh"  style="width: 100%;height: 30px"  placeholder="点击选择">
-          <option value=""  v-for="item in yh">{{item}}</option >
+          <option value=""  v-for="item in yh" :key="item">{{item}}</option >
         </select >
 
 
@@ -70,7 +70,7 @@
   </div >
 </template >
 
-<script >
+<script>
   import OrderItem from './items/Orderitem.vue'
   import  axios from 'axios'
   import $ from 'n-zepto'
@@ -80,12 +80,12 @@
     data () {
       return {
         selected: null,
-        company: ['1北京史塞克北京史塞克北京史塞克北京史塞克','2北京史塞克北京史塞克北京史塞克北京史塞克','3北京史塞克北京史塞克北京史塞克北京史塞克','4北京史塞克北京史塞克北京史塞克北京史塞克','5北京史塞克北京史塞克北京史塞克北京史塞克','6北京史塞克北京史塞克北京史塞克北京史塞克','1北京史塞克北京史塞克北京史塞克北京史塞克','2北京史塞克北京史塞克北京史塞克北京史塞克','3北京史塞克北京史塞克北京史塞克北京史塞克','4北京史塞克北京史塞克北京史塞克北京史塞克','5北京史塞克北京史塞克北京史塞克北京史塞克','6北京史塞克北京史塞克北京史塞克北京史塞克','1北京史塞克北京史塞克北京史塞克北京史塞克','2北京史塞克北京史塞克北京史塞克北京史塞克','3北京史塞克北京史塞克北京史塞克北京史塞克','4北京史塞克北京史塞克北京史塞克北京史塞克','5北京史塞克北京史塞克北京史塞克北京史塞克','6北京史塞克北京史塞克北京史塞克北京史塞克'],
+        company: [],
         popupVisible: false,//筛选的
         popupVisible2: false,//地址的
         orderinfo: [],
-        companyName:'北京史塞克北京史塞克北京史塞克北京史塞克',
-        yh:['张三','张三','张三','张三','张三'],
+        companyName:'',
+        yh:[],
         selected_yh:null,
         selected_company:null,
         totalPage:1,
@@ -118,7 +118,6 @@
           // swiper callbacks
           // swiper的各种回调函数也可以出现在这个对象中，和swiper官方一样
           onTransitionStart(swiper){
-//            console.log(swiper)
           },
           // more Swiper configs and callbacks...
           // ...
@@ -150,30 +149,20 @@
           method: 'get',
           url: '/orderinfo/listVo?&limit=8&page=' + _this.query.page + '&sidx=&order=asc&orderStateId=' + _this.query.orderStateId + '&contractId=1950&startDate=2017-02-19&endDate=2017-05-24&companyId=&on=&yh=&sfzc=false&sfxc=false&sfbx=false',
         }).then(function (r) {
-//        Indicator.close()
           if (r.data.code == 0) {
             var list = _this.orderinfo.concat(r.data.page.list);
             _this.totalPage = r.data.page.totalPage;
             _this.orderinfo = list;
-//            console.log("list", list)
-//            console.log("totalPage", _this.totalPage)
-//            console.log("page", _this.query.page)
             sessionStorage.setItem("orderinfo", JSON.stringify(list))
             sessionStorage.setItem("page", _this.query.page)
             sessionStorage.setItem("totalPage", _this.totalPage)
-
           } else {
-//          Indicator.open('系统繁忙...请稍后重试...');
-//          setTimeout(Indicator.close(),3000)
           }
-
           if (cb) {
             cb()
           }
         }).catch(function (error) {
-          console.error(error);
-//        Indicator.open('系统繁忙...请稍后重试...');
-//        setTimeout(Indicator.close(),3000)
+          console.error(error)
         })
       },
       onRefresh(done) {
@@ -188,7 +177,6 @@
         if(this.totalPage<this.query.page){
           this.$refs.myScroller.finishInfinite()
         }else{
-//          console.log(111)
           this.query.page++;
           this.getdata(function () {
             done()
@@ -198,7 +186,6 @@
       dosearch($event){
         var _this = this;
         var index = $($event.currentTarget).attr('index');
-//        console.log(index)
         switch (index) {
           case '0':
             _this.query.orderStateId = 1;

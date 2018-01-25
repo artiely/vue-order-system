@@ -1,12 +1,8 @@
 //vuex状态管理
-import Vue from 'vue'
-import Vuex from 'vuex'
+
 import api from '../../api/api.js'
 import {MessageBox} from 'mint-ui'
 import router from '../../router'
-import i18n from '../../i18n/index'
-
-Vue.use(Vuex)
 
 const state = {//状态
   token: null, //就是userid

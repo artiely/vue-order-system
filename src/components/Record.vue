@@ -170,25 +170,21 @@
         })
       },
       onInfinite(done) {
-        console.log(3333)
         switch (this.selected) {
           case '1':
             this.getData(this.page1++, 1, () => {
               done(true)
             });
-            console.log(1111111)
             break
           case '2':
             this.getData(this.page2++, 2, () => {
               done(true)
             });
-            console.log(222222)
             break
           case '0':
             this.getData(this.page0++, 0, () => {
               done(true)
             });
-            console.log('00000000')
             break
         }
       },

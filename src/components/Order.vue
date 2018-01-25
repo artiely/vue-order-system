@@ -255,7 +255,6 @@
       },
       'detailVisible': {
         handler(val) {
-          console.log('123', val)
         }
       }
     },

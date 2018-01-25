@@ -13,13 +13,13 @@
         <mt-tab-item id="1">{{$t('message.Disable')}}</mt-tab-item>
       </mt-navbar>
       <div v-if="DataList.length==0" class="noData"><i class="iconfont icon-zanwushuju"></i></div>
-      <div v-for="item in DataList" class="coupons-item skybbg " :class="selected==1?'expire':''"
+      <div v-for="(item,i) in DataList" class="coupons-item skybbg " :key="i" :class="selected==1?'expire':''"
            style=";text-align: left;padding: 6px;margin-bottom: 2px">
         <div class="dot-line left">
-          <div v-for="i in 10" class="o-o"></div>
+          <div v-for="i in 10" class="o-o" :key="i"></div>
         </div>
         <div class="dot-line right" >
-          <div v-for="i in 10" class="o-o"></div>
+          <div v-for="i in 10" class="o-o"  :key="i"></div>
         </div>
         <div style="display: flex">
           <div style="font-size: 14px;margin: 0;padding: 6px;box-sizing: border-box;flex: 1">

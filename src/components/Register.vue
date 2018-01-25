@@ -270,7 +270,6 @@
         this.cck = true
       },
       checkEmail(val, cb) {
-        console.log('邮箱', val)
         if (val.indexOf('@') <= 0 ) {
           return
         }
@@ -326,7 +325,6 @@
           }
       },
       getMsgCode(val) {
-        console.log(val)
         if (val.length != 11) return
         let data = {
           telephone: val,
@@ -366,8 +364,6 @@
         } else {
           url = url.split(window.location.search)[0];
         }
-        console.log('url', url)
-//        url = url.replace('mobile.html#/register', 'type.html') // 这里也换成pc的地址
         url = url.replace('mobile.html', 'type.html') // 这里也换成pc的地址
         url = url.replace('#/register', '') // 这里也换成pc的地址
         let data = {

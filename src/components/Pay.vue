@@ -10,11 +10,11 @@
         </div>
 
 
-        <div v-for="(list,index) in callDetails" v-if="callDetails.length>0">
+        <div v-for="(list,index) in callDetails" v-if="callDetails.length>0" :key="index">
           <div class="card">
             {{list[index].serviceName}}
           </div>
-          <div v-for="item in list">
+          <div v-for="(item,i) in list" :key="i">
             <div class="card">
               <div class="admin-type">
                 <small class="type">{{item.detailName}}</small>
@@ -250,13 +250,13 @@
                 :on-infinite="onInfinite"
                 :refreshText="$t('message.Pull_to_refresh')"
                 :noDataText="$t('message.No_more_data')">
-        <label v-for="item in couponsList" class="coupons-item redbg "
+        <label v-for="(item,i) in couponsList" class="coupons-item redbg " :key="i"
                style=";text-align: left;padding: 6px;margin-bottom: 2px" @click.prevent="couponHandler(item)">
           <div class="dot-line left">
-            <div v-for="i in 10" class="o-o"></div>
+            <div v-for="i in 10" class="o-o" :key="i"></div>
           </div>
           <div class="dot-line right">
-            <div v-for="i in 10" class="o-o"></div>
+            <div v-for="i in 10" class="o-o" :key="i"></div>
           </div>
           <input type="radio" name="" v-model="couponId" :value="item.id" style="display: none">
           <div style="display: flex">
@@ -299,7 +299,7 @@
       v-model="invoiceHistoryVisible"
       position="bottom" style="height: 60%;width: 100%;background:#eee;overflow: auto">
       <div>
-        <label v-for="item in invoiceList"
+        <label v-for="(item,i) in invoiceList" :key="i"
                style="position: relative;text-align: left;margin-bottom: 8px;background:#fff;overflow: hidden;display: block"
                @click="checkHistory(item)">
           <span v-if="item.accountNumber" class="bluebg invoice-type">{{$t('message.Value-added_invoice')}}</span>
@@ -317,7 +317,7 @@
     </mt-popup>
     <!--历史开票/-->
     <form id="rppaysubmit" name="rppaysubmit" :action="payFormData.actionUrl" :method="payFormData.submitMethod">
-      <input type="hidden" :name="key" :value="val" v-for="(val, key) in payFormData.formItemMap"/>
+      <input type="hidden" :name="key" :value="val" v-for="(val, key) in payFormData.formItemMap" :key="key"/>
     </form>
   </div>
 </template>
@@ -546,13 +546,10 @@
         this.couponVisible = false
       },
       couponHandler(item){
-        console.log(item)
         if (this.couponId == item.id) {
           this.couponId = ''
-//          this.orderPrice = this.orderPrice + item.amount
         } else {
           this.couponId = item.id
-//          this.orderPrice = this.orderPrice - item.amount < 0 ? 0 : this.orderPrice - item.amount
         }
       },
       getCouponsList(cb){
@@ -602,7 +599,6 @@
           columnName: 'PARTY_A_NAME',
           partAName: ''
         }).then(res => {
-          console.log('res99999' + res)
           if (res.code == 0) {
             this.invoice = res.invoiceHistory[0]
           }

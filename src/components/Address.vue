@@ -91,12 +91,10 @@
   </div>
 </template>
 <script>
-  import s from '../../statics/mobile/json/address4.json'
+  // import s from '../../statics/mobile/json/address4.json'
+  // const s = import()
+  import s from '../assets/address4.json'
   import {MessageBox} from 'mint-ui'
-//  import areaDate from 'area-data'
-//  console.log('---',address)
-//  console.log('area',areaDate)
-//  var s=address
   export default {
     name: 'address',
     data() {
@@ -229,7 +227,6 @@
               }
               return item
             })
-            console.log(this.serviceAddress)
           } else {
             this.$toast(res.msg)
           }
@@ -302,7 +299,6 @@
       },
       /* 编辑地址 目前类似重置 */
       editAddress(item) {
-        console.log('------item----', item)
         if (sessionStorage.getItem('isGuest') && sessionStorage.getItem('isGuest') == 'true') {
           this.$store.commit('GUEST_TIP')
           return
