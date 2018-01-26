@@ -24,9 +24,7 @@ module.exports = {
     'vue-router': 'VueRouter',
     'vuex': 'Vuex',
     'moment':'moment',
-    'axios':'axios',
-    // 'mint-ui': 'mint-ui'
-    // 'VueAwesomeSwiper':'vue-awesome-swiper'
+    'axios':'axios'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
