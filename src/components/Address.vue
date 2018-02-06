@@ -289,10 +289,11 @@ export default {
 
       let _this = this;
       let _city = '上海市'
-      if (this.addressCity == '市辖区') {
-        _city = this.addressProvince
+      let _addressString = this.addressString.split(',')
+      if (_addressString[1] == '市辖区') {
+        _city = _addressString[0]
       } else {
-        _city = this.addressCity
+        _city = _addressString[1]
       }
 
       function iGetInnerText(testStr) {
@@ -303,10 +304,10 @@ export default {
       }
 
       let data = {
-        address: this.addressProvince + this.addressCity + (this.addressXian ? this.addressXian : '') + (this.addressStreet ? this.addressStreet : '') + (iGetInnerText(this.desMore) ? iGetInnerText(this.desMore) : ''),
+        address: this.addressString + this.addressStreet+(iGetInnerText(this.desMore) ? iGetInnerText(this.desMore) : ''),
         cityName: _city,
         companyname: _this.companyName,
-        newValue: this.addressProvince + this.addressCity + (this.addressXian ? this.addressXian : '') + (this.addressStreet ? this.addressStreet : '') + (iGetInnerText(this.desMore) ? iGetInnerText(this.desMore) : ''),
+        newValue:  this.addressString + this.addressStreet+(iGetInnerText(this.desMore) ? iGetInnerText(this.desMore) : ''),
         operationType: 1,
         shortName: _this.companyName
       };

@@ -877,6 +877,18 @@ const GET_COMPANY_LICENSE = params => {
   })
 }
 
+/**
+ * 补开发票
+ * @param params
+ * @constructor
+ */
+const POST_VOICE = params => {
+  return fetch({
+url : `/invoice/applyinvoice?receiveId=${params.receiveId}`,
+    method: 'post', 
+    data: params})
+}
+
 const apiList = {
   login,
   initWeiXinOpenId,
@@ -945,7 +957,8 @@ const apiList = {
   VISITOR_LOGIN,
   CHECK_COMPANY_NAME,
   CHECK_BUSINESS_LICENSE,
-  GET_COMPANY_LICENSE
+  GET_COMPANY_LICENSE,
+POST_VOICE
 }
 
 export default apiList

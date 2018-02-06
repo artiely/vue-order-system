@@ -46,6 +46,7 @@ const config = {
   }
 }
 const targetPath = 'http://ct.fwone.com' //服务器的地址 可以使www.fwone.com
+// const targetPath = 'http://localhost:8087' //服务器的地址 可以使www.fwone.com
 const pathX = '/*'
 var keysArr = [
   pathX + '/orderinfo/**/*',
