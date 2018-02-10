@@ -49,6 +49,7 @@
             <div class="rq_text">{{$t('message.invoice_date')}}：{{item.invoiceDate}} </div>
             <div class="rq_text">{{$t('message.Collection_date')}}：{{item.receiveDate}} </div>
             <div class="rq_text">{{$t('message.ordernumber')}}：{{item.orderNumber}} </div>
+            <div class="rq_text">发票类型：{{item.invoiceType?item.invoiceType:'--'}} </div>
           </div>
           <div class="rq_text" v-if="item.eInvoiceUrl"></div>
            <div class="rq_text" v-else-if="item.kaifapiao"><mt-button size="small" @click.self="kaifapiao(item.receiveId,item.orderNumber)">申请发票</mt-button></div>
