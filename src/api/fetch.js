@@ -10,7 +10,11 @@ export default function fetch (options) {
       baseURL: SERVER_BASE_URL,
       headers: {},
       transformResponse: [function (data) {
-        data = JSON.parse(data)
+        try{
+           data = JSON.parse(data)
+        }catch(e){
+          console.log(e)
+        }
         if (typeof data != 'object') {
 
           return {
